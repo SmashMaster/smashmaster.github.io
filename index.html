@@ -1,245 +1,119 @@
+<!DOCTYPE html>
 <html>
 
 <head>
 <title>Sam's Website</title>
 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 
+<script type='text/javascript' src='http://code.jquery.com/jquery-1.11.1.js'></script>
+
 <style type="text/css">
-/*FIREFOX*/
-@-moz-document url-prefix() {
-	body {
-		background: -moz-element(#webglcanvas);
-		background-attachment: fixed;
-		background-repeat: no-repeat;
-		background-position: center;
-		color: white;
-	}
+.accordion {
+    margin: 0 0 30px;
+    border-top: 1px solid #DDD;
+    border-right: 1px solid #DDD;
+    border-left: 1px solid #DDD;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+.accordion dt {
+    border-bottom: 1px solid #DDD;
+}
+.accordion dd {
+    display: none;
+    padding: 20px;
+    border-bottom: 1px solid #DDD;
+}
+.accordion dt {
+    cursor: pointer;
+    padding: 8px 15px;
+    margin: 0;
+}
+.accordion dt:before {
+    content: "\25B6";
+    padding-right: 5px;
+}
+.accordion dt.accordion-active:before {
+    content: "\25BE";
+    padding-right: 5px;
+}
+.accordion dt.accordion-active:hover {
+    cursor: default;
 }
 
-/*CHROME*/
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-	body {
-		background: -webkit-canvas(glbackground);
-		background-attachment: fixed;
-		background-repeat: no-repeat;
-		background-position: center;
-		color: white;
-	}
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 20px;
+    color: #333;
+    padding: 30px;
+}
+
+h2 {
+    margin: 0 0 20px;
+    font-weight: bold;
 }
 </style>
 
-<script type="text/javascript" src="glMatrix-0.9.5.min.js"></script>
+<script type='text/javascript'>
+$(function(){
+(function($) {
+  //Hide all panels
+  var allPanels = $('.accordion > dd').hide();
+  //Show first panel
+  $('.accordion > dd:first-of-type').show();
+  //Add active class to first panel 
+  $('.accordion > dt:first-of-type').addClass('accordion-active');
+  //Handle click function
+  jQuery('.accordion > dt').on('click', function() {
+      //this clicked panel
+      $this = $(this);
+      //the target panel content
+      $target = $this.next(); 
+	
+      //Only toggle non-displayed 
+      if(!$this.hasClass('accordion-active')){
+          //slide up any open panels and remove active class
+          $this.parent().children('dd').slideUp();
+          
+          //remove any active class
+          $this.parent().children('dt').removeClass('accordion-active');
+          //add active class
+          $this.addClass('accordion-active');
+          //slide down target panel
+          $target.addClass('active').slideDown();
 
-<script id="shader-fs" type="x-shader/x-fragment">
-    precision mediump float;
-
-    void main(void) {
-        gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
-    }
+      }
+	
+    
+    return false;
+  });
+})(jQuery);
+});
 </script>
-
-<script id="shader-vs" type="x-shader/x-vertex">
-    attribute vec3 aVertexPosition;
-
-    uniform mat4 uMVMatrix;
-    uniform mat4 uPMatrix;
-
-    void main(void) {
-        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
-    }
-</script>
-
-
-<script type="text/javascript">
-	var gl;
-	
-	function addEvent(elem, type, eventHandle) {
-		if (elem == null || typeof(elem) == 'undefined') return;
-		if ( elem.addEventListener ) {
-			elem.addEventListener( type, eventHandle, false );
-		} else if ( elem.attachEvent ) {
-			elem.attachEvent( "on" + type, eventHandle );
-		} else {
-			elem["on"+type]=eventHandle;
-		}
-	}
-	
-	function onResize() {
-		if (!gl) return;
-		
-		gl.canvas.width = window.innerWidth;
-		gl.canvas.height = window.innerHeight;
-		gl.viewportWidth = window.innerWidth;
-		gl.viewportHeight = window.innerHeight;
-		
-		drawScene();
-	};
-	
-	function main() {
-		initGL();
-		initShaders();
-		initBuffers();
-			
-        gl.clearColor(0.0, 0.0, 0.0, 1.0);
-        gl.enable(gl.DEPTH_TEST);
-		
-        drawScene();
-		addEvent(window, "resize", onResize);
-    }
-	
-    function initGL() {
-        try {
-			var isFirefox = !!navigator.userAgent.match(/firefox/i);
-			var isChrome = !!window.chrome;
-			
-			if (isFirefox)
-			{
-				var canvas = document.getElementById("webglcanvas");
-				gl = canvas.getContext("experimental-webgl");
-			}
-			else if (isChrome)
-			{
-				gl = document.getCSSCanvasContext("experimental-webgl", "glbackground", window.innerWidth, window.innerHeight);
-			}
-			gl.canvas.width = window.innerWidth;
-			gl.canvas.height = window.innerHeight;
-			gl.viewportWidth = window.innerWidth;
-			gl.viewportHeight = window.innerHeight;
-        } catch (e) {
-			alert(e);
-        }
-		
-        if (!gl) {
-            //alert("Could not initialise WebGL, sorry :-(");
-        }
-    }
-
-    function getShader(gl, id) {
-        var shaderScript = document.getElementById(id);
-        if (!shaderScript) {
-            return null;
-        }
-
-        var str = "";
-        var k = shaderScript.firstChild;
-        while (k) {
-            if (k.nodeType == 3) {
-                str += k.textContent;
-            }
-            k = k.nextSibling;
-        }
-
-        var shader;
-        if (shaderScript.type == "x-shader/x-fragment") {
-            shader = gl.createShader(gl.FRAGMENT_SHADER);
-        } else if (shaderScript.type == "x-shader/x-vertex") {
-            shader = gl.createShader(gl.VERTEX_SHADER);
-        } else {
-            return null;
-        }
-
-        gl.shaderSource(shader, str);
-        gl.compileShader(shader);
-
-        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-            alert(gl.getShaderInfoLog(shader));
-            return null;
-        }
-
-        return shader;
-    }
-
-    var shaderProgram;
-
-    function initShaders() {
-        var fragmentShader = getShader(gl, "shader-fs");
-        var vertexShader = getShader(gl, "shader-vs");
-
-        shaderProgram = gl.createProgram();
-        gl.attachShader(shaderProgram, vertexShader);
-        gl.attachShader(shaderProgram, fragmentShader);
-        gl.linkProgram(shaderProgram);
-
-        if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-            alert("Could not initialise shaders");
-        }
-
-        gl.useProgram(shaderProgram);
-
-        shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
-        gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
-
-        shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
-        shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
-    }
-
-    var mvMatrix = mat4.create();
-    var pMatrix = mat4.create();
-
-    function setMatrixUniforms() {
-        gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
-        gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
-    }
-
-    var triangleVertexPositionBuffer;
-    var squareVertexPositionBuffer;
-
-    function initBuffers() {
-        triangleVertexPositionBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexPositionBuffer);
-        var vertices = [
-             0.0,  1.0,  0.0,
-            -1.0, -1.0,  0.0,
-             1.0, -1.0,  0.0
-        ];
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-        triangleVertexPositionBuffer.itemSize = 3;
-        triangleVertexPositionBuffer.numItems = 3;
-
-        squareVertexPositionBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
-        vertices = [
-             1.0,  1.0,  0.0,
-            -1.0,  1.0,  0.0,
-             1.0, -1.0,  0.0,
-            -1.0, -1.0,  0.0
-        ];
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-        squareVertexPositionBuffer.itemSize = 3;
-        squareVertexPositionBuffer.numItems = 4;
-    }
-
-    function drawScene() {
-        gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-        mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
-
-        mat4.identity(mvMatrix);
-
-        mat4.translate(mvMatrix, [-1.5, 0.0, -7.0]);
-        gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexPositionBuffer);
-        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, triangleVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
-        setMatrixUniforms();
-        gl.drawArrays(gl.TRIANGLES, 0, triangleVertexPositionBuffer.numItems);
-
-
-        mat4.translate(mvMatrix, [3.0, 0.0, 0.0]);
-        gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
-        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, squareVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
-        setMatrixUniforms();
-        gl.drawArrays(gl.TRIANGLE_STRIP, 0, squareVertexPositionBuffer.numItems);
-    }
-</script>
-
 
 </head>
 
-
-
-<body onload="main();">
-	<p>Sam's website! Have a WebGL thingy. More coming soon!</p>
-	<canvas id="webglcanvas" style="display:none" style="border: none;"></canvas>
+<body>
+<h2>Accordion 1</h2>
+<dl class="accordion">
+    <dt>Panel 1</dt>
+    <dd>Pellentesque fermentum dolor. Aliquam quam lectus, facilisis auctor, ultrices ut, elementum vulputate, nunc.</dd>
+    <dt>Panel 2</dt>
+    <dd>Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. Aenean dignissim pellentesque felis.</dd>
+    <dt>Panel 3</dt>
+    <dd>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Phasellus hendrerit. Pellentesque aliquet nibh nec urna. In nisi neque, aliquet vel, dapibus id, mattis vel, nisi. Sed pretium, ligula sollicitudin laoreet viverra, tortor libero sodales leo, eget blandit nunc tortor eu nibh. Nullam mollis. Ut justo. Suspendisse potenti.</dd>
+</dl>
+<h2>Accordion 2</h2>
+<dl class="accordion">
+    <dt>Panel 1</dt>
+    <dd>Pellentesque fermentum dolor. Aliquam quam lectus, facilisis auctor, ultrices ut, elementum vulputate, nunc.</dd>
+    <dt>Panel 2</dt>
+    <dd>Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. Aenean dignissim pellentesque felis.</dd>
+    <dt>Panel 3</dt>
+    <dd>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Phasellus hendrerit. Pellentesque aliquet nibh nec urna. In nisi neque, aliquet vel, dapibus id, mattis vel, nisi. Sed pretium, ligula sollicitudin laoreet viverra, tortor libero sodales leo, eget blandit nunc tortor eu nibh. Nullam mollis. Ut justo. Suspendisse potenti.</dd>
+</dl>
 </body>
 
 </html>
