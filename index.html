@@ -1,4 +1,16 @@
 <html>
+<style type="text/css">
+/*FIREFOX*/
+@-moz-document url-prefix() {
+	body {
+		background: -moz-element(#webglcanvas);
+		background-attachment: fixed;
+		background-repeat: no-repeat;
+		background-position: center;
+		color: white;
+	}
+}
+</style>
 
 <head>
 <title>Sam's Website</title>
@@ -27,20 +39,58 @@
 
 
 <script type="text/javascript">
-
-    var gl;
+	var gl;
+	
+	function addEvent(elem, type, eventHandle) {
+		if (elem == null || typeof(elem) == 'undefined') return;
+		if ( elem.addEventListener ) {
+			elem.addEventListener( type, eventHandle, false );
+		} else if ( elem.attachEvent ) {
+			elem.attachEvent( "on" + type, eventHandle );
+		} else {
+			elem["on"+type]=eventHandle;
+		}
+	}
+	
+	function onResize() {
+		if (!gl) return;
+		
+		gl.canvas.width = window.innerWidth;
+		gl.canvas.height = window.innerHeight;
+		gl.viewportWidth = window.innerWidth;
+		gl.viewportHeight = window.innerHeight;
+		
+		drawScene();
+	};
+	
+	function main() {
+		initGL();
+		initShaders();
+		initBuffers();
+			
+        gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        gl.enable(gl.DEPTH_TEST);
+		
+        drawScene();
+		addEvent(window, "resize", onResize);
+    }
+	
     function initGL(canvas) {
         try {
-            gl = canvas.getContext("experimental-webgl");
-            gl.viewportWidth = canvas.width;
-            gl.viewportHeight = canvas.height;
+			var canvas = document.getElementById("webglcanvas");
+		
+			gl = canvas.getContext("experimental-webgl");
+			gl.canvas.width = window.innerWidth;
+			gl.canvas.height = window.innerHeight;
+			gl.viewportWidth = window.innerWidth;
+			gl.viewportHeight = window.innerHeight;
         } catch (e) {
+			alert(e);
         }
         if (!gl) {
-            alert("Could not initialise WebGL, sorry :-(");
+            //alert("Could not initialise WebGL, sorry :-(");
         }
     }
-
 
     function getShader(gl, id) {
         var shaderScript = document.getElementById(id);
@@ -77,7 +127,6 @@
         return shader;
     }
 
-
     var shaderProgram;
 
     function initShaders() {
@@ -102,7 +151,6 @@
         shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
     }
 
-
     var mvMatrix = mat4.create();
     var pMatrix = mat4.create();
 
@@ -110,8 +158,6 @@
         gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
         gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
     }
-
-
 
     var triangleVertexPositionBuffer;
     var squareVertexPositionBuffer;
@@ -141,7 +187,6 @@
         squareVertexPositionBuffer.numItems = 4;
     }
 
-
     function drawScene() {
         gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -163,32 +208,16 @@
         setMatrixUniforms();
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, squareVertexPositionBuffer.numItems);
     }
-
-
-
-    function main() {
-        var canvas = document.getElementById("webgl-canvas");
-        initGL(canvas);
-        initShaders();
-        initBuffers();
-
-        gl.clearColor(0.0, 0.0, 0.0, 1.0);
-        gl.enable(gl.DEPTH_TEST);
-
-        drawScene();
-    }
-
-
 </script>
 
 
 </head>
 
 
+
 <body onload="main();">
-    <p>Sam's website! Have a WebGL thingy:</p>
-    <canvas id="webgl-canvas" style="border: none;" width="500" height="500"></canvas>
-    <p>More coming soon!</p>
+	<p>Sam's website! Have a WebGL thingy. More coming soon!</p>
+	<canvas id="webglcanvas" style="display:none" style="border: none;"></canvas>
 </body>
 
 </html>
