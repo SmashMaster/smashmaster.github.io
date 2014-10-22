@@ -1,4 +1,9 @@
 <html>
+
+<head>
+<title>Sam's Website</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
 <style type="text/css">
 /*FIREFOX*/
 @-moz-document url-prefix() {
@@ -10,11 +15,18 @@
 		color: white;
 	}
 }
-</style>
 
-<head>
-<title>Sam's Website</title>
-<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+/*CHROME*/
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	body {
+		background: -webkit-canvas(glbackground);
+		background-attachment: fixed;
+		background-repeat: no-repeat;
+		background-position: center;
+		color: white;
+	}
+}
+</style>
 
 <script type="text/javascript" src="glMatrix-0.9.5.min.js"></script>
 
@@ -75,11 +87,20 @@
 		addEvent(window, "resize", onResize);
     }
 	
-    function initGL(canvas) {
+    function initGL() {
         try {
-			var canvas = document.getElementById("webglcanvas");
-		
-			gl = canvas.getContext("experimental-webgl");
+			var isFirefox = !!navigator.userAgent.match(/firefox/i);
+			var isChrome = !!window.chrome;
+			
+			if (isFirefox)
+			{
+				var canvas = document.getElementById("webglcanvas");
+				gl = canvas.getContext("experimental-webgl");
+			}
+			else if (isChrome)
+			{
+				gl = document.getCSSCanvasContext("experimental-webgl", "glbackground", window.innerWidth, window.innerHeight);
+			}
 			gl.canvas.width = window.innerWidth;
 			gl.canvas.height = window.innerHeight;
 			gl.viewportWidth = window.innerWidth;
@@ -87,6 +108,7 @@
         } catch (e) {
 			alert(e);
         }
+		
         if (!gl) {
             //alert("Could not initialise WebGL, sorry :-(");
         }
