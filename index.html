@@ -5,6 +5,8 @@
 <title>Sam's Website</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 
+<link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
 <style type="text/css">
 #webglcanvas {
     background: #000; /*Put fallback image here*/
@@ -16,23 +18,25 @@
 }
 
 body {
+	background: #ccc;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 14px;
     line-height: 18px;
     color: #333;
-    
     margin: 0px auto;
+	min-width: 500px;
     max-width: 1200px;
-    background: #ccc;
 }
 
 h2 {
     font-weight: bold;
 }
 
+/*MAIN MENU*/
 .accordion {
     background-color: #ddd;
     margin: 0px auto;
+		min-width: 500px;
 }
 .accordion dd {
     display: none;
@@ -42,9 +46,14 @@ h2 {
 .accordion dt {
     background-color: #eee;
     font-size: 32px;
-    line-height: 36px;
+    line-height: 32px;
     font-weight: bold;
     text-align: center;
+}
+.accordion dt .fa {
+	display:block;
+	font-size: 16px;
+    line-height: 16px;
 }
 .accordion dt:hover {
     background-color: #b0c4de;
@@ -55,6 +64,20 @@ h2 {
 }
 .accordion dt.accordion-active:hover {
     cursor: default;
+}
+
+/*MENU CHEVRONS*/
+.accordion dt:before {
+	font-family:'FontAwesome'; content: "\f105"; margin-left: 120px; width: 32px; float: left;
+}
+.accordion dt:after {
+    font-family:'FontAwesome'; content: "\f104"; margin-right: 120px; width: 32px; float: right;
+}
+.accordion dt.accordion-active:before {
+	content: "\f107";
+}
+.accordion dt.accordion-active:after {
+    content: "\f107";
 }
 
 #footer {
@@ -270,7 +293,7 @@ h2 {
     <dd>Contact info</dd>
 </dl>
 <div id="footer">
-&copy 2014 Sam Johnson <br>
+&copy 2014 Sam Johnson<br>
 <a href="https://github.com/SmashMaster/smashmaster.github.io">This website is open source and published under the MIT license.</a>
 </div>
 </body>
