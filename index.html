@@ -91,23 +91,30 @@ h2 {
     background-color: #1f1f1f;
     text-align: center;
 }
+
+/*LINK COLORS*/
+a:link    {color: #6495bb;}
+a:visited {color: #6495bb;}
+a:hover   {color: #ededed;}
+a:active  {color: #ffffff;}
 </style>
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="accordion.js"></script>
-<script type="text/javascript" src="glMatrix-0.9.5.min.js"></script>
 
 <script id="shader-fs" type="x-shader/x-fragment">
     precision mediump float;
     
     uniform float u_aspectRatio;
+    uniform sampler2D u_tex_clouds;
     
     varying vec2 v_pos;
 
     void main(void) {
         vec3 rayDir = normalize(vec3(v_pos.x, v_pos.y*u_aspectRatio, -1.0));
         
-        gl_FragColor = vec4(rayDir*0.5 + 0.5, 1.0);
+        gl_FragColor = vec4(texture2D(u_tex_clouds, v_pos*0.5 + 0.5).rgb,  1.0);
+        //gl_FragColor = vec4(rayDir*0.5 + 0.5, 1.0);
     }
 </script>
 
@@ -124,6 +131,7 @@ h2 {
 
 <script type="text/javascript">
     var gl;
+    var cloudTexture;
     
     /*requestAnimationFrame polyfill - https://gist.github.com/paulirish/1579671 */
     (function() {
@@ -170,17 +178,25 @@ h2 {
         gl.viewportHeight = gl.canvas.height;
     };
     
-    function initGL(canvas) {
-        try {
-            gl = canvas.getContext("experimental-webgl");
-            onResize();
-        } catch (e) {
-        }
-        if (!gl) {
-            alert("Could not initialise WebGL, sorry :-(");
-        }
+    function handleTextureLoaded(image, texture) {
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
+        gl.bindTexture(gl.TEXTURE_2D, null);
     }
-
+    
+    function initTextures() {
+        cloudTexture = gl.createTexture();
+        var cloudImage = new Image();
+        $(cloudImage).one('load', function() {
+            handleTextureLoaded(cloudImage, cloudTexture);
+        });
+        cloudImage.src = "clouds.png";
+    }
+    
     function getShader(id) {
         var shaderScript = document.getElementById(id);
         if (!shaderScript) {
@@ -236,13 +252,14 @@ h2 {
         shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "in_pos");
         gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
         gl.uniform1f(gl.getUniformLocation(shaderProgram, "u_aspectRatio"), gl.viewportHeight/gl.viewportWidth);
+        gl.uniform1i(gl.getUniformLocation(shaderProgram, "u_tex_clouds"), 0);
     }
 
-    var squareVertexPositionBuffer;
+    var fsqBuffer;
 
     function initBuffers() {
-        squareVertexPositionBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
+        fsqBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, fsqBuffer);
         vertices = [
             -1.0, -1.0,
              1.0, -1.0,
@@ -250,24 +267,32 @@ h2 {
              1.0,  1.0
         ];
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-        squareVertexPositionBuffer.itemSize = 2;
-        squareVertexPositionBuffer.numItems = 4;
+        fsqBuffer.itemSize = 2;
+        fsqBuffer.numItems = 4;
     }
 
     function drawScene() {
         gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
         gl.clear(gl.COLOR_BUFFER_BIT);
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
-        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, squareVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
-        gl.drawArrays(gl.TRIANGLE_STRIP, 0, squareVertexPositionBuffer.numItems);
+        gl.bindBuffer(gl.ARRAY_BUFFER, fsqBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, fsqBuffer.itemSize, gl.FLOAT, false, 0, 0);
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, cloudTexture);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, fsqBuffer.numItems);
     }
 
     function main() {
         var canvas = document.getElementById("webglcanvas");
-        initGL(canvas);
-        initShaders();
-        initBuffers();
+        try {
+            gl = canvas.getContext("experimental-webgl");
+            onResize();
+            initTextures();
+            initShaders();
+            initBuffers();
+        } catch (e) {
+            alert(e);
+        }
 
         gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
@@ -276,6 +301,7 @@ h2 {
             window.requestAnimationFrame(animloop);
             drawScene();
         })();
+        
     }
 </script>
 </head>
