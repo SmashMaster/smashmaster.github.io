@@ -94,20 +94,27 @@ h2 {
 
 <script id="shader-fs" type="x-shader/x-fragment">
     precision mediump float;
+    
+    uniform float u_aspectRatio;
+    
+    varying vec2 v_pos;
 
-    void main(void) {
-        gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+    void main(void)
+    {
+        vec3 rayDir = normalize(vec3(v_pos.x, v_pos.y*u_aspectRatio, -1.0));
+        
+        gl_FragColor = vec4(rayDir*0.5 + 0.5, 1.0);
     }
 </script>
 
 <script id="shader-vs" type="x-shader/x-vertex">
-    attribute vec3 aVertexPosition;
-
-    uniform mat4 uMVMatrix;
-    uniform mat4 uPMatrix;
+    attribute vec2 in_pos;
+    
+    varying vec2 v_pos;
 
     void main(void) {
-        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+        v_pos = in_pos;
+        gl_Position = vec4(in_pos, 0.0, 1.0);
     }
 </script>
 
@@ -198,68 +205,33 @@ h2 {
 
         gl.useProgram(shaderProgram);
 
-        shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
+        shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "in_pos");
         gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
-
-        shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
-        shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
+        gl.uniform1f(gl.getUniformLocation(shaderProgram, "u_aspectRatio"), gl.viewportHeight/gl.viewportWidth);
     }
 
-    var mvMatrix = mat4.create();
-    var pMatrix = mat4.create();
-
-    function setMatrixUniforms() {
-        gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
-        gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
-    }
-
-    var triangleVertexPositionBuffer;
     var squareVertexPositionBuffer;
 
     function initBuffers() {
-        triangleVertexPositionBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexPositionBuffer);
-        var vertices = [
-             0.0,  1.0,  0.0,
-            -1.0, -1.0,  0.0,
-             1.0, -1.0,  0.0
-        ];
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-        triangleVertexPositionBuffer.itemSize = 3;
-        triangleVertexPositionBuffer.numItems = 3;
-
         squareVertexPositionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
         vertices = [
-             1.0,  1.0,  0.0,
-            -1.0,  1.0,  0.0,
-             1.0, -1.0,  0.0,
-            -1.0, -1.0,  0.0
+            -1.0, -1.0,
+             1.0, -1.0,
+            -1.0,  1.0,
+             1.0,  1.0
         ];
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-        squareVertexPositionBuffer.itemSize = 3;
+        squareVertexPositionBuffer.itemSize = 2;
         squareVertexPositionBuffer.numItems = 4;
     }
 
     function drawScene() {
         gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        gl.clear(gl.COLOR_BUFFER_BIT);
 
-        mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
-
-        mat4.identity(mvMatrix);
-
-        mat4.translate(mvMatrix, [-1.5, 0.0, -7.0]);
-        gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexPositionBuffer);
-        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, triangleVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
-        setMatrixUniforms();
-        gl.drawArrays(gl.TRIANGLES, 0, triangleVertexPositionBuffer.numItems);
-
-
-        mat4.translate(mvMatrix, [3.0, 0.0, 0.0]);
         gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, squareVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
-        setMatrixUniforms();
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, squareVertexPositionBuffer.numItems);
     }
 
@@ -270,7 +242,6 @@ h2 {
         initBuffers();
 
         gl.clearColor(0.0, 0.0, 0.0, 1.0);
-        gl.enable(gl.DEPTH_TEST);
 
         drawScene();
         addEvent(window, "resize", onResize);
