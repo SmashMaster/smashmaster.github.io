@@ -1,3 +1,6 @@
+<!--Author: Samuel Johnson (SmashMaster)-->
+<!--Copyright: 2014 Samuel Johnson-->
+<!--License: https://github.com/SmashMaster/smashmaster.github.io/blob/master/LICENSE-->
 <!DOCTYPE html>
 <html>
 
@@ -18,13 +21,13 @@
 }
 
 body {
-	background: #0d0d0d;
+    background: #0d0d0d;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 14px;
     line-height: 18px;
     color: #c4c4c4;
     margin: 0px auto;
-	min-width: 500px;
+    min-width: 500px;
     max-width: 1200px;
 }
 
@@ -34,9 +37,11 @@ h2 {
 
 /*MAIN MENU*/
 .accordion {
+    display: inline-block;
     background-color: #1f1f1f;
     margin: 0px auto;
-		min-width: 500px;
+    width: 100%;
+    vertical-align: bottom;
 }
 .accordion dd {
     display: none;
@@ -51,18 +56,18 @@ h2 {
     text-align: center;
 }
 .accordion dt .fa {
-	display:block;
-	font-size: 16px;
-    line-height: 16px;
+    display:block;
+    font-size: 16px;
+    line-height: 18px;
 }
 .accordion dt:hover {
     background-color: #7c7c7c;
-	color: #ededed;
+    color: #ededed;
     cursor: pointer;
 }
 .accordion dt.accordion-active {
     background-color: #6495bb;
-	color: #ededed;
+    color: #ededed;
 }
 .accordion dt.accordion-active:hover {
     cursor: default;
@@ -70,13 +75,13 @@ h2 {
 
 /*MENU CHEVRONS*/
 .accordion dt:before {
-	font-family:'FontAwesome'; content: "\f105"; margin-left: 120px; width: 32px; float: left;
+    font-family:'FontAwesome'; content: "\f105"; margin-left: 120px; width: 32px; float: left;
 }
 .accordion dt:after {
     font-family:'FontAwesome'; content: "\f104"; margin-right: 120px; width: 32px; float: right;
 }
 .accordion dt.accordion-active:before {
-	content: "\f107";
+    content: "\f107";
 }
 .accordion dt.accordion-active:after {
     content: "\f107";
@@ -99,8 +104,7 @@ h2 {
     
     varying vec2 v_pos;
 
-    void main(void)
-    {
+    void main(void) {
         vec3 rayDir = normalize(vec3(v_pos.x, v_pos.y*u_aspectRatio, -1.0));
         
         gl_FragColor = vec4(rayDir*0.5 + 0.5, 1.0);
@@ -121,6 +125,7 @@ h2 {
 <script type="text/javascript">
     var gl;
     
+    /*requestAnimationFrame polyfill - https://gist.github.com/paulirish/1579671 */
     (function() {
     var lastTime = 0;
     var vendors = ['ms', 'moz', 'webkit', 'o'];
@@ -146,23 +151,24 @@ h2 {
         };
     }());
     
+    /*addevent polyfill - https://gist.github.com/paulirish/1579671 */
     function addEvent(elem, type, eventHandle) {
-		if (elem == null || typeof(elem) == 'undefined') return;
-		if ( elem.addEventListener ) {
-			elem.addEventListener( type, eventHandle, false );
-		} else if ( elem.attachEvent ) {
-			elem.attachEvent( "on" + type, eventHandle );
-		} else {
-			elem["on"+type]=eventHandle;
-		}
-	}
+        if (elem == null || typeof(elem) == 'undefined') return;
+        if ( elem.addEventListener ) {
+            elem.addEventListener( type, eventHandle, false );
+        } else if ( elem.attachEvent ) {
+            elem.attachEvent( "on" + type, eventHandle );
+        } else {
+            elem["on"+type]=eventHandle;
+        }
+    }
     
     function onResize() {
-		if (!gl) return;
-		
-		gl.viewportWidth = gl.canvas.width;
-		gl.viewportHeight = gl.canvas.height;
-	};
+        if (!gl) return;
+        
+        gl.viewportWidth = gl.canvas.width;
+        gl.viewportHeight = gl.canvas.height;
+    };
     
     function initGL(canvas) {
         try {
@@ -284,11 +290,17 @@ h2 {
         <p>Even more about sam</p>
     </dd>
     <dt>Skills</dt>
-    <dd>Stuff I'm good at</dd>
+    <dd>
+        <p>Stuff I'm good at</p>
+    </dd>
     <dt>Projects</dt>
-    <dd>Link to my GitHub</dd>
+    <dd>
+        <p>Link to my GitHub</p>
+    </dd>
     <dt>Contact</dt>
-    <dd>Contact info</dd>
+    <dd>
+        <p>Contact info</p>
+    </dd>
 </dl>
 <div id="footer">
 &copy 2014 Sam Johnson<br>
