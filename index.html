@@ -131,14 +131,19 @@ a:active  {color: #ffffff;}
     }
 
     void main(void) {
-        const float topHeight = 0.125;
-        float camOffset = u_pageOffsetY/600.0;
-        vec3 camPos = vec3(0.0, topHeight*(1.0 - camOffset), 0.0);
+        const float canvasHeight = 600.0;
+        float camOffset = u_pageOffsetY/canvasHeight;
+        if (v_pos.y > 1.0 - camOffset*2.0) { //Cull offscreen pixels
+            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+            return;
+        }
+        
+        vec3 camPos = vec3(0.0, 0.125*(1.0 - camOffset), 0.0);
         vec3 rayDir = normalize(vec3(v_pos.x, (v_pos.y + camOffset)*u_aspectRatio, -1.0));
         
         float secT = intersectPlane(camPos, rayDir, 0.0);
         if (secT < 0.0) {
-            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+            gl_FragColor = vec4(0.125, 0.125, 0.125, 1.0);
         }
         else {
             vec3 secPos = camPos + rayDir*secT;
