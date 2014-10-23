@@ -105,6 +105,7 @@ a:active  {color: #ffffff;}
 <script id="shader-fs" type="x-shader/x-fragment">
     precision mediump float;
     
+    uniform float u_time;
     uniform float u_aspectRatio;
     uniform sampler2D u_tex_clouds;
     
@@ -113,7 +114,13 @@ a:active  {color: #ffffff;}
     void main(void) {
         vec3 rayDir = normalize(vec3(v_pos.x, v_pos.y*u_aspectRatio, -1.0));
         
-        gl_FragColor = vec4(texture2D(u_tex_clouds, v_pos*0.5 + 0.5).rgb,  1.0);
+        vec2 uv = v_pos*0.5 + 0.5;
+        float b = (texture2D(u_tex_clouds, vec2(uv.x + u_time/10.0, uv.y)).r +
+                   texture2D(u_tex_clouds, vec2(uv.x - u_time/10.0, uv.y + 0.5)).r +
+                   texture2D(u_tex_clouds, vec2(uv.x, uv.y + u_time/10.0)).r +
+                   texture2D(u_tex_clouds, vec2(uv.x + 0.5, uv.y - u_time/10.0)).r)/4.0;
+        
+        gl_FragColor = vec4(vec3(b),  1.0);
         //gl_FragColor = vec4(rayDir*0.5 + 0.5, 1.0);
     }
 </script>
@@ -130,6 +137,7 @@ a:active  {color: #ffffff;}
 </script>
 
 <script type="text/javascript">
+    var startTime, currentTime;
     var gl;
     var cloudTexture;
     
@@ -275,6 +283,7 @@ a:active  {color: #ffffff;}
         gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
         gl.clear(gl.COLOR_BUFFER_BIT);
 
+        gl.uniform1f(gl.getUniformLocation(shaderProgram, "u_time"), (currentTime - startTime)/1000.0);
         gl.bindBuffer(gl.ARRAY_BUFFER, fsqBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, fsqBuffer.itemSize, gl.FLOAT, false, 0, 0);
         gl.activeTexture(gl.TEXTURE0);
@@ -296,9 +305,11 @@ a:active  {color: #ffffff;}
 
         gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
+        startTime = (new Date).getTime();
         addEvent(window, "resize", onResize);
         (function animloop(){
             window.requestAnimationFrame(animloop);
+            currentTime = (new Date).getTime();
             drawScene();
         })();
         
