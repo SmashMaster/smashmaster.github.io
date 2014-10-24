@@ -25,8 +25,8 @@ body {
 #webglcanvas {
     background: #000; /*Put fallback image here*/
     width: 100%;
-	min-width: 500px;
-	height: 600px;
+    min-width: 500px;
+    height: 600px;
     border: none;
     vertical-align: bottom;
     line-height: 1px;
@@ -47,7 +47,7 @@ body {
 .accordion p {
     text-indent: 20px;
     margin: 10px auto;
-	padding: 0px 10px;
+    padding: 0px 10px;
     max-width: 800px;
     text-align: justify;
 }
@@ -91,12 +91,12 @@ body {
 }
 
 hr {
-	background-color: #6495bb;
-	color: #6495bb;
-	margin: 0px;
-	padding: 0px;
-	height: 2px;
-	border: none;
+    background-color: #6495bb;
+    color: #6495bb;
+    margin: 0px;
+    padding: 0px;
+    height: 2px;
+    border: none;
 }
 
 #footer {
@@ -104,9 +104,9 @@ hr {
     text-align: center;
 }
 #footer p {
-	display: block;
-	margin: 0px;
-	padding: 5px;
+    display: block;
+    margin: 0px;
+    padding: 5px;
 }
 
 /*LINK COLORS*/
@@ -123,93 +123,85 @@ a:active  {color: #ffffff;}
     precision mediump float;
     
     uniform float u_time;
-	uniform float u_canvasHeight;
+    uniform float u_canvasHeight;
     uniform float u_pageOffsetY;
     uniform float u_aspectRatio;
     uniform sampler2D u_tex_clouds;
     
     varying vec2 v_pos;
-	
-	const float CAMERA_HEIGHT = 0.125;
-	const float WATER_DEPTH = 1.0/8.0;
-	const int WATER_SAMPLES = 5;
+    
+    const float CAMERA_HEIGHT = 0.25;
+    const float WATER_DEPTH = 1.0/16.0;
     
     float intersectPlane(vec3 start, vec3 dir, float planeY) {
         return (planeY - start.y)/dir.y;
     }
     
     float waterHeight(vec3 pos) {
-		float t = u_time/32.0;
-	
+        float t = u_time/32.0;
+    
         return (texture2D(u_tex_clouds, vec2(pos.x + t, pos.z      )).r +
                 texture2D(u_tex_clouds, vec2(pos.x - t, pos.z + 0.5)).r +
                 texture2D(u_tex_clouds, vec2(pos.x,       pos.z + t)).r +
                 texture2D(u_tex_clouds, vec2(pos.x + 0.5, pos.z - t)).r)/4.0;
     }
-	
-	float waterY(vec3 pos) {
-		return (waterHeight(pos) - 1.0)*WATER_DEPTH;
-	}
-
+    
+    float waterY(vec3 pos) {
+        return (waterHeight(pos) - 1.0)*WATER_DEPTH;
+    }
+    
     void main(void) {
-		//Cull offscreen pixels
+        //Cull offscreen pixels
         float camOffset = u_pageOffsetY/u_canvasHeight;
         if (v_pos.y > 1.0 - camOffset*2.0) {
             gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
             return;
         }
         
-		//Set up view ray
+        //Set up view ray
         vec3 camPos = vec3(0.0, CAMERA_HEIGHT*(1.0 - camOffset), 0.0);
         vec3 rayDir = normalize(vec3(v_pos.x/u_aspectRatio, v_pos.y + camOffset, -1.0));
         if (rayDir.y > 0.0) {
             gl_FragColor = vec4(0.125, 0.125, 0.125, 1.0);
-			return;
+            return;
         }
-		
-		vec3 p;
-		{//Intersect water
-			float secWaterSt = intersectPlane(camPos, rayDir, 0.0);
-			float secWaterEnd = intersectPlane(camPos, rayDir, -WATER_DEPTH);
-			
-			vec3 secWaterStPos = camPos + rayDir*secWaterSt;
-			vec3 secWaterEndPos = camPos + rayDir*secWaterEnd;
-			
-			vec3 dp = (secWaterEndPos - secWaterStPos)/float(WATER_SAMPLES);
-			vec3 p0 = secWaterStPos, p1 = p0 + dp;
-			float y0 = waterY(p0), y1;
-			
-			for (int i=1; i<WATER_SAMPLES; i++) {
-				y1 = waterY(p1);
-				if (p1.y <= y1) break;
-				p0 = p1;
-				y0 = y1;
-				p1 += dp;
-			}
-			
-			float t = (p0.y - y0)/(y1 - y0 + p0.y - p1.y);
-			p = p0 + (p1 - p0)*t;
-		}
-		
-		vec3 n;
-		{//Calculate normal
-			const float D = 1.0/512.0;
-		
-			float h = waterHeight(p);
-			float hx = waterHeight(vec3(p.x + D, p.y, p.z));
-			float hz = waterHeight(vec3(p.x, p.y, p.z + D));
-			
-			const float FAC = WATER_DEPTH/D;
-			
-			n = normalize(vec3((h - hx)*FAC, 1.0, (h - hz)*FAC));
-		}
-		
-		const vec3 LIGHT_DIR = vec3(0.0, 0.293, -.956);
-		
-		vec3 ref = reflect(LIGHT_DIR, n);
-		float spec = pow(dot(rayDir, ref), 32.0);
-		
-		gl_FragColor = vec4(vec3(spec), 1.0);
+        
+        const vec3 LIGHT_DIR = vec3(0.0, 0.293, -.956);
+        const float WATER_FADE_START = 0.25;
+        const float WATER_FADE_END = 8.0;
+        const float WATER_FADE_DIST = WATER_FADE_END - WATER_FADE_START;
+        const float WATER_SPEC_EXP_CLOSE = 32.0;
+        const float WATER_SPEC_EXP_FAR = 14.0;
+        
+        //Intersect water
+        float t = intersectPlane(camPos, rayDir, 0.0);
+        float fadeT = sqrt(clamp((t - WATER_FADE_START)/WATER_FADE_DIST, 0.0, 1.0));
+        vec3 p = camPos + rayDir*t;
+        
+        float specular = 0.0;
+        if (t < WATER_FADE_END) {
+            const float D = 1.0/512.0;
+        
+            float h = waterHeight(p);
+            float hx = waterHeight(vec3(p.x + D, p.y, p.z));
+            float hz = waterHeight(vec3(p.x, p.y, p.z + D));
+            
+            const float F = WATER_DEPTH/D;
+            
+            vec3 n = normalize(vec3((h - hx)*F, 1.0, (h - hz)*F));
+            vec3 ref = reflect(LIGHT_DIR, n);
+            
+            specular += (1.0 - fadeT)*pow(dot(rayDir, ref), WATER_SPEC_EXP_CLOSE);
+        }
+        
+        if (t > WATER_FADE_START) {
+            const vec3 n = vec3(0.0, 1.0, 0.0);
+            vec3 ref = reflect(LIGHT_DIR, n);
+            
+            specular += fadeT*pow(dot(rayDir, ref), WATER_SPEC_EXP_FAR);
+        }
+        
+        gl_FragColor = vec4(vec3(specular), 1.0);
     }
 </script>
 
@@ -248,7 +240,7 @@ a:active  {color: #ffffff;}
             lastTime = currTime + timeToCall;
             return id;
         };
-	}
+    }
  
     if (!window.cancelAnimationFrame)
         window.cancelAnimationFrame = function(id) {
@@ -266,16 +258,16 @@ a:active  {color: #ffffff;}
             elem["on"+type]=eventHandle;
         }
     }
-	
-	function clamp(x, min, max) {
-		return Math.min(Math.max(x, min), max);
-	}
+    
+    function clamp(x, min, max) {
+        return Math.min(Math.max(x, min), max);
+    }
     
     function onResize() {
         if (!gl) return;
-		
-		gl.canvas.width = clamp(window.innerWidth, 500, 1200);
-		gl.canvas.height = 600.0;
+        
+        gl.canvas.width = clamp(window.innerWidth, 500, 1200);
+        gl.canvas.height = 600.0;
         gl.viewportWidth = gl.canvas.width;
         gl.viewportHeight = gl.canvas.height;
     };
@@ -378,7 +370,7 @@ a:active  {color: #ffffff;}
         
         gl.uniform1f(gl.getUniformLocation(shaderProgram, "u_time"), (currentTime - startTime)/1000.0);
         gl.uniform1f(gl.getUniformLocation(shaderProgram, "u_pageOffsetY"), window.pageYOffset);
-		gl.uniform1f(gl.getUniformLocation(shaderProgram, "u_canvasHeight"), gl.viewportHeight);
+        gl.uniform1f(gl.getUniformLocation(shaderProgram, "u_canvasHeight"), gl.viewportHeight);
         gl.uniform1f(gl.getUniformLocation(shaderProgram, "u_aspectRatio"), gl.viewportHeight/gl.viewportWidth);
         gl.bindBuffer(gl.ARRAY_BUFFER, fsqBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, fsqBuffer.itemSize, gl.FLOAT, false, 0, 0);
@@ -391,7 +383,7 @@ a:active  {color: #ffffff;}
         var canvas = document.getElementById("webglcanvas");
         try {
             gl = canvas.getContext("experimental-webgl");
-			onResize();
+            onResize();
             initTextures();
             initShaders();
             initBuffers();
@@ -549,11 +541,11 @@ a:active  {color: #ffffff;}
 </dl>
 <hr>
 <div id="footer">
-	<p>&copy 2014 Sam Johnson</p>
-	<img src="devl1.png"><br>
-	<p><a href="https://github.com/SmashMaster/smashmaster.github.io">
-		This website is open source and published under the MIT license.
-	</a></p>
+    <p>&copy 2014 Sam Johnson</p>
+    <img src="devl1.png"><br>
+    <p><a href="https://github.com/SmashMaster/smashmaster.github.io">
+        This website is open source and published under the MIT license.
+    </a></p>
 </div>
 </body>
 
