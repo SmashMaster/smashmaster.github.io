@@ -90,9 +90,23 @@ body {
     content: "\f107";
 }
 
+hr {
+	background-color: #6495bb;
+	color: #6495bb;
+	margin: 0px;
+	padding: 0px;
+	height: 2px;
+	border: none;
+}
+
 #footer {
     background-color: #1f1f1f;
     text-align: center;
+}
+#footer p {
+	display: block;
+	margin: 0px;
+	padding: 5px;
 }
 
 /*LINK COLORS*/
@@ -115,18 +129,25 @@ a:active  {color: #ffffff;}
     uniform sampler2D u_tex_clouds;
     
     varying vec2 v_pos;
+	
+	const float CAMERA_HEIGHT = 0.125;
+	const float WATER_DEPTH = 0.0625;
+	const int WATER_SAMPLES = 12;
     
     float intersectPlane(vec3 start, vec3 dir, float planeY) {
         return (planeY - start.y)/dir.y;
     }
     
-    float waterHeight(vec3 pos)
-    {
-        return (texture2D(u_tex_clouds, vec2(pos.x + u_time/10.0, pos.z)).r +
+    float waterHeight(vec3 pos) {
+        return (texture2D(u_tex_clouds, vec2(pos.x + u_time/10.0, pos.z      )).r +
                 texture2D(u_tex_clouds, vec2(pos.x - u_time/10.0, pos.z + 0.5)).r +
-                texture2D(u_tex_clouds, vec2(pos.x, pos.z + u_time/10.0)).r +
+                texture2D(u_tex_clouds, vec2(pos.x,       pos.z + u_time/10.0)).r +
                 texture2D(u_tex_clouds, vec2(pos.x + 0.5, pos.z - u_time/10.0)).r)/4.0;
     }
+	
+	float waterY(vec3 pos) {
+		return (waterHeight(pos) - 1.0)*WATER_DEPTH;
+	}
 
     void main(void) {
         float camOffset = u_pageOffsetY/u_canvasHeight;
@@ -135,19 +156,35 @@ a:active  {color: #ffffff;}
             return;
         }
         
-        vec3 camPos = vec3(0.0, 0.125*(1.0 - camOffset), 0.0);
+        vec3 camPos = vec3(0.0, CAMERA_HEIGHT*(1.0 - camOffset), 0.0);
         vec3 rayDir = normalize(vec3(v_pos.x/u_aspectRatio, v_pos.y + camOffset, -1.0));
-        
-        float secT = intersectPlane(camPos, rayDir, 0.0);
-        if (secT < 0.0) {
+        if (rayDir.y > 0.0) {
             gl_FragColor = vec4(0.125, 0.125, 0.125, 1.0);
+			return;
         }
-        else {
-            vec3 secPos = camPos + rayDir*secT;
-            gl_FragColor = vec4(vec3(waterHeight(secPos)), 1.0);
-        }
-        
-        //gl_FragColor = vec4(rayDir*0.5 + 0.5, 1.0);
+		
+        float secWaterSt = intersectPlane(camPos, rayDir, 0.0);
+		float secWaterEnd = intersectPlane(camPos, rayDir, -WATER_DEPTH);
+		
+		vec3 secWaterStPos = camPos + rayDir*secWaterSt;
+		vec3 secWaterEndPos = camPos + rayDir*secWaterEnd;
+		
+		vec3 dp = (secWaterEndPos - secWaterStPos)/float(WATER_SAMPLES);
+		vec3 p0 = secWaterStPos, p1 = p0 + dp;
+		float y0 = waterY(p0), y1;
+		
+		for (int i=1; i<WATER_SAMPLES; i++) {
+			y1 = waterY(p1);
+			if (p1.y <= y1) break;
+			p0 = p1;
+			y0 = y1;
+			p1 += dp;
+		}
+		
+		float t = (p0.y - y0)/(y1 - y0 + p0.y - p1.y);
+		vec3 p = p0 + (p1 - p0)*t;
+		
+		gl_FragColor = vec4(vec3(waterHeight(p)), 1.0);
     }
 </script>
 
@@ -194,7 +231,6 @@ a:active  {color: #ffffff;}
         };
     }());
     
-    /*addevent polyfill - https://gist.github.com/paulirish/1579671 */
     function addEvent(elem, type, eventHandle) {
         if (elem == null || typeof(elem) == 'undefined') return;
         if ( elem.addEventListener ) {
@@ -347,7 +383,6 @@ a:active  {color: #ffffff;}
             currentTime = (new Date).getTime();
             drawScene();
         })();
-        
     }
 </script>
 </head>
@@ -487,9 +522,13 @@ a:active  {color: #ffffff;}
         alias consequatur aut perferendis doloribus asperiores repellat...</p>
     </dd>
 </dl>
+<hr>
 <div id="footer">
-&copy 2014 Sam Johnson<br>
-<a href="https://github.com/SmashMaster/smashmaster.github.io">This website is open source and published under the MIT license.</a>
+	<p>&copy 2014 Sam Johnson</p>
+	<img src="devl1.png"><br>
+	<p><a href="https://github.com/SmashMaster/smashmaster.github.io">
+		This website is open source and published under the MIT license.
+	</a></p>
 </div>
 </body>
 
