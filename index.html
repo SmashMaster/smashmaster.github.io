@@ -130,8 +130,8 @@ a:active  {color: #ffffff;}
     
     varying vec2 v_pos;
 	
-	const float CAMERA_HEIGHT = 0.0625;
-	const float WATER_DEPTH = 1.0/16.0;
+	const float CAMERA_HEIGHT = 0.125;
+	const float WATER_DEPTH = 1.0/8.0;
 	const int WATER_SAMPLES = 5;
     
     float intersectPlane(vec3 start, vec3 dir, float planeY) {
@@ -139,7 +139,7 @@ a:active  {color: #ffffff;}
     }
     
     float waterHeight(vec3 pos) {
-		float t = u_time/100.0;
+		float t = u_time/32.0;
 	
         return (texture2D(u_tex_clouds, vec2(pos.x + t, pos.z      )).r +
                 texture2D(u_tex_clouds, vec2(pos.x - t, pos.z + 0.5)).r +
