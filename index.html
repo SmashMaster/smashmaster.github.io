@@ -138,7 +138,10 @@ a:active  {color: #ffffff;}
     }
     
     float waterHeight(vec3 pos) {
-        float t = u_time/32.0;
+        float t = u_time/48.0;
+        
+        pos.x += -1.5*t;
+        pos.z += 0.5*t;
     
         return (texture2D(u_tex_clouds, vec2(pos.x + t, pos.z      )).r +
                 texture2D(u_tex_clouds, vec2(pos.x - t, pos.z + 0.5)).r +
