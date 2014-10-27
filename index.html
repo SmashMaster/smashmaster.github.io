@@ -131,7 +131,7 @@ a:active  {color: #ffffff;}
     varying vec2 v_pos;
     
     const float CAMERA_HEIGHT = 0.25;
-    const float WATER_DEPTH = 1.0/16.0;
+    const float WATER_DEPTH = 1.0/32.0;
     
     float intersectPlane(vec3 start, vec3 dir, float planeY) {
         return (planeY - start.y)/dir.y;
@@ -149,8 +149,20 @@ a:active  {color: #ffffff;}
                 texture2D(u_tex_clouds, vec2(pos.x + 0.5, pos.z - t)).r)/4.0;
     }
     
+    float auroraBrightness(vec3 pos) {
+        pos.xz /= 128.0;
+        return texture2D(u_tex_clouds, vec2(pos.x, pos.z)).r;
+    }
+    
     float waterY(vec3 pos) {
         return (waterHeight(pos) - 1.0)*WATER_DEPTH;
+    }
+    
+    vec3 aurora(vec3 rayPos, vec3 rayDir)
+    {
+        float t = intersectPlane(rayPos, rayDir, 10.0);
+        vec3 p = rayPos + rayDir*t;
+        return vec3(auroraBrightness(p));
     }
     
     void main(void) {
@@ -165,13 +177,14 @@ a:active  {color: #ffffff;}
         vec3 camPos = vec3(0.0, CAMERA_HEIGHT*(1.0 - camOffset), 0.0);
         vec3 rayDir = normalize(vec3(v_pos.x/u_aspectRatio, v_pos.y + camOffset, -1.0));
         if (rayDir.y > 0.0) {
-            gl_FragColor = vec4(0.125, 0.125, 0.125, 1.0);
+            
+            gl_FragColor = vec4(aurora(camPos, rayDir), 1.0);
             return;
         }
         
         const vec3 LIGHT_DIR = vec3(0.0, 0.293, -.956);
         const float WATER_FADE_START = 0.25;
-        const float WATER_FADE_END = 8.0;
+        const float WATER_FADE_END = 3.0;
         const float WATER_FADE_DIST = WATER_FADE_END - WATER_FADE_START;
         const float WATER_SPEC_EXP_CLOSE = 32.0;
         const float WATER_SPEC_EXP_FAR = 14.0;
@@ -181,7 +194,7 @@ a:active  {color: #ffffff;}
         float fadeT = sqrt(clamp((t - WATER_FADE_START)/WATER_FADE_DIST, 0.0, 1.0));
         vec3 p = camPos + rayDir*t;
         
-        float specular = 0.0;
+        vec3 color = vec3(0.0);
         if (t < WATER_FADE_END) {
             const float D = 1.0/512.0;
         
@@ -192,19 +205,18 @@ a:active  {color: #ffffff;}
             const float F = WATER_DEPTH/D;
             
             vec3 n = normalize(vec3((h - hx)*F, 1.0, (h - hz)*F));
-            vec3 ref = reflect(LIGHT_DIR, n);
+            vec3 ref = reflect(rayDir, n);
             
-            specular += (1.0 - fadeT)*pow(dot(rayDir, ref), WATER_SPEC_EXP_CLOSE);
+            color += aurora(p, ref);
         }
-        
         if (t > WATER_FADE_START) {
             const vec3 n = vec3(0.0, 1.0, 0.0);
-            vec3 ref = reflect(LIGHT_DIR, n);
+            vec3 ref = reflect(rayDir, n);
             
-            specular += fadeT*pow(dot(rayDir, ref), WATER_SPEC_EXP_FAR);
+            color += vec3(0.0);
         }
         
-        gl_FragColor = vec4(vec3(specular), 1.0);
+        gl_FragColor = vec4(color, 1.0);
     }
 </script>
 
