@@ -131,11 +131,82 @@ a:active  {color: #ffffff;}
     varying vec2 v_pos;
     
     const float CAMERA_HEIGHT = 0.125;
-    const float WATER_DEPTH = 1.0/32.0;
+    const float ATMOSPHERIC_DENSITY = 0.05;
+    const vec3 ATMOSPHERIC_ATTENUATION = vec3(0.06, 0.09, 0.1);
+    const vec3 ATMOSPHERIC_INSCATTERING = vec3(0.06, 0.09, 0.1);
     
     float intersectPlane(vec3 start, vec3 dir, float planeY) {
         return (planeY - start.y)/dir.y;
     }
+    
+    void attenuate(in float opticalDepth, inout vec3 luminance)
+    {
+        vec3 t = exp(-opticalDepth*ATMOSPHERIC_DENSITY*ATMOSPHERIC_ATTENUATION);
+        luminance = mix(ATMOSPHERIC_INSCATTERING, luminance, t);
+    }
+    
+    /*AURORA*/
+    
+    const float AURORA_HEIGHT = 48.0;
+    const float AURORA_SCALE = 512.0;
+    const float AURORA_DISTORT_SCALE = 2048.0;
+    const float AURORA_DISTORT_AMOUNT = 2.0;
+    const float AURORA_BRIGHTNESS = 2.5;
+    const vec3 AURORA_COLOR_A = vec3(0.0, 0.9, 0.1);
+    const vec3 AURORA_COLOR_B = vec3(0.0, 0.4, 0.6);
+    const vec3 AURORA_AVERAGE_COLOR = (AURORA_COLOR_A + AURORA_COLOR_B)*(0.5*AURORA_BRIGHTNESS);
+    const float AURORA_FADE_START = 100.0;
+    const float AURORA_FADE_END = 750.0;
+    const float AURORA_FADE_DIST = AURORA_FADE_END - AURORA_FADE_START;
+    
+    float auroraDensity(vec3 pos) {
+        float t = u_time/64.0;
+        vec2 p = vec2(pos.x, pos.z);
+        
+        vec2 dp = p/AURORA_DISTORT_SCALE;
+        float dt = t/16.0;
+        vec2 d = vec2(
+            texture2D(u_tex_clouds, vec2(dp.x + dt,  dp.y + 0.5)).r,
+            texture2D(u_tex_clouds, vec2(dp.x + 0.5, dp.y + dt )).r);
+        d = (d*2.0 - 1.0)*AURORA_DISTORT_AMOUNT;
+        
+        float b = texture2D(u_tex_clouds, p/AURORA_SCALE - t + d).r;
+        
+        return pow(b, 24.0);
+    }
+    
+    vec3 auroraColor(vec3 pos) {
+        pos.xz /= 256.0;
+        
+        vec2 texCoord = vec2(pos.x + u_time/32.0, pos.z);
+        float ct = texture2D(u_tex_clouds, texCoord).r;
+        return mix(AURORA_COLOR_A, AURORA_COLOR_B, ct*ct);
+    }
+    
+    vec3 rayAurora(vec3 rayPos, vec3 rayDir) {
+        float t = intersectPlane(rayPos, rayDir, AURORA_HEIGHT);
+        vec3 p = rayPos + rayDir*t;
+        float fadeT = clamp((t - AURORA_FADE_START)/AURORA_FADE_DIST, 0.0, 1.0);
+        
+        vec3 luminance = vec3(0.0);
+        if (fadeT < 1.0) {
+            luminance += ((1.0 - fadeT)*AURORA_BRIGHTNESS*auroraDensity(p))*auroraColor(p);
+        }
+        if (fadeT > 0.0) {
+            luminance += AURORA_AVERAGE_COLOR*(fadeT*0.175);
+        }
+        
+        attenuate(t, luminance);
+        return luminance;
+    }
+    
+    /*WATER*/
+    
+    const float WATER_DEPTH = 1.0/32.0;
+    const float WATER_FADE_START = 0.35;
+    const float WATER_FADE_END = 0.025;
+    const float WATER_FADE_DIST = WATER_FADE_START - WATER_FADE_END;
+    const vec3 WATER_FAR_COLOR = ATMOSPHERIC_INSCATTERING;
     
     float waterHeight(vec3 pos) {
         float t = u_time/48.0;
@@ -149,56 +220,53 @@ a:active  {color: #ffffff;}
                 texture2D(u_tex_clouds, vec2(pos.x + 0.5, pos.z - t)).r)/4.0;
     }
     
-    float waterY(vec3 pos) {
-        return (waterHeight(pos) - 1.0)*WATER_DEPTH;
+    vec3 waterNormal(vec3 pos) {
+        const float D = 1.0/512.0;
+        
+        float h = waterHeight(pos);
+        float hx = waterHeight(vec3(pos.x + D, pos.y, pos.z));
+        float hz = waterHeight(vec3(pos.x, pos.y, pos.z + D));
+        
+        const float F = WATER_DEPTH/D;
+        
+        return normalize(vec3((h - hx)*F, 1.0, (h - hz)*F));
     }
     
-    const float AURORA_HEIGHT = 48.0;
-    const int AURORA_SAMPLES = 4;
-    const float AURORA_BRIGHTNESS = 1.5;
-    const vec3 AURORA_COLOR_A = vec3(0.0, 0.9, 0.1);
-    const vec3 AURORA_COLOR_B = vec3(0.0, 0.4, 0.6);
-    const vec3 AURORA_AVERAGE_COLOR = (AURORA_COLOR_A + AURORA_COLOR_B)*0.5;
-    const float AURORA_FADE_START = 100.0;
-    const float AURORA_FADE_END = 750.0;
-    const float AURORA_FADE_DIST = AURORA_FADE_END - AURORA_FADE_START;
-    
-    float auroraDensity(vec3 pos) {
-        float t = u_time/64.0;
-        pos.xz /= 1024.0;
-        
-        const float DISTORT_SCALE = 0.75;
-        
-        pos.x += DISTORT_SCALE*texture2D(u_tex_clouds, vec2(pos.x, pos.z - t*0.125)).r*2.0 - 1.0;
-        float b = texture2D(u_tex_clouds, vec2(pos.x + t, pos.z - t*0.25)).r;
-        return pow(b, 16.0);
-    }
-    
-    vec3 auroraColor(vec3 pos) {
-        pos.xz /= 256.0;
-        
-        vec2 texCoord = vec2(pos.x + u_time/32.0, pos.z);
-        float ct = texture2D(u_tex_clouds, texCoord).r;
-        return mix(AURORA_COLOR_A, AURORA_COLOR_B, ct*ct);
-    }
-    
-    vec3 auroraLuminance(vec3 rayPos, vec3 rayDir) {
-        if (rayDir.y < 0.0) return vec3(0.0);
-    
-        float t = intersectPlane(rayPos, rayDir, AURORA_HEIGHT);
+    vec3 rayWater(vec3 rayPos, vec3 rayDir)
+    {
+        float t = intersectPlane(rayPos, rayDir, 0.0);
         vec3 p = rayPos + rayDir*t;
-        float fadeT = clamp((t - AURORA_FADE_START)/AURORA_FADE_DIST, 0.0, 1.0);
-        vec3 color = auroraColor(p);
+        
+        const vec3 WATER_BASE_NORMAL = vec3(0.0, 1.0, 0.0);
+        vec3 baseReflect = reflect(rayDir, WATER_BASE_NORMAL);
+        float fadeT = clamp((WATER_FADE_START - baseReflect.y)/WATER_FADE_DIST, 0.0, 1.0);
         
         vec3 luminance = vec3(0.0);
         if (fadeT < 1.0) {
-            luminance += color*((1.0 - fadeT)*auroraDensity(p)*AURORA_BRIGHTNESS);
+            vec3 n = waterNormal(p);
+            vec3 ref = reflect(rayDir, n);
+            
+            if (ref.y > 0.0) {
+                luminance += (1.0 - fadeT)*rayAurora(p, ref);
+            }
         }
         if (fadeT > 0.0) {
-            luminance += AURORA_AVERAGE_COLOR*(fadeT*0.175);
+            luminance += fadeT*WATER_FAR_COLOR;
         }
         
+        attenuate(t, luminance);
+        
         return luminance;
+    }
+    
+    /*MAIN*/
+    
+    vec3 ray(vec3 rayPos, vec3 rayDir) {
+        if (rayDir.y > 0.0) {
+            return rayAurora(rayPos, rayDir);
+        } else {
+            return rayWater(rayPos, rayDir);
+        }
     }
     
     void main() {
@@ -212,44 +280,8 @@ a:active  {color: #ffffff;}
         //Set up view ray
         vec3 camPos = vec3(0.0, CAMERA_HEIGHT*(1.0 - camOffset), 0.0);
         vec3 rayDir = normalize(vec3(v_pos.x/u_aspectRatio, v_pos.y + camOffset, -1.0));
-        if (rayDir.y > 0.0) {
-            
-            gl_FragColor = vec4(auroraLuminance(camPos, rayDir), 1.0);
-            return;
-        }
         
-        const float WATER_FADE_START = 0.35;
-        const float WATER_FADE_END = 0.025;
-        const float WATER_FADE_DIST = WATER_FADE_START - WATER_FADE_END;
-        const float WATER_SPEC_EXP_CLOSE = 32.0;
-        const float WATER_SPEC_EXP_FAR = 14.0;
-        
-        //Intersect water
-        float t = intersectPlane(camPos, rayDir, 0.0);
-        vec3 p = camPos + rayDir*t;
-        
-        const vec3 WATER_BASE_NORMAL = vec3(0.0, 1.0, 0.0);
-        vec3 baseReflect = reflect(rayDir, WATER_BASE_NORMAL);
-        float fadeT = clamp((WATER_FADE_START - baseReflect.y)/WATER_FADE_DIST, 0.0, 1.0);
-        
-        vec3 color = vec3(0.0);
-        if (fadeT < 1.0) {
-            const float D = 1.0/512.0;
-        
-            float h = waterHeight(p);
-            float hx = waterHeight(vec3(p.x + D, p.y, p.z));
-            float hz = waterHeight(vec3(p.x, p.y, p.z + D));
-            
-            const float F = WATER_DEPTH/D;
-            
-            vec3 n = normalize(vec3((h - hx)*F, 1.0, (h - hz)*F));
-            vec3 ref = reflect(rayDir, n);
-            
-            color += (1.0 - fadeT)*auroraLuminance(p, ref);
-        }
-        if (fadeT > 0.0) {
-            color += AURORA_AVERAGE_COLOR*(fadeT*0.125);
-        }
+        vec3 color = ray(camPos, rayDir);
         
         gl_FragColor = vec4(color, 1.0);
     }
