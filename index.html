@@ -28,7 +28,7 @@ body {
     background: #000; /*Put fallback image here*/
     width: 100%;
     min-width: 500px;
-    height: 600px;
+    height: 900px;
     border: none;
     vertical-align: bottom;
     line-height: 1px;
@@ -167,7 +167,7 @@ a:active  {color: #ffffff;}
     
     /*NAME*/
     
-    const float NAME_DISTANCE = 0.5;
+    const float NAME_DISTANCE = 1.0;
     const float NAME_SCALE = 0.125;
     const float NAME_HEIGHT = 0.075;
     const float NAME_ASPECT_RATIO = 4.0;
@@ -397,7 +397,7 @@ a:active  {color: #ffffff;}
         if (!gl) return;
         
         gl.canvas.width = clamp(window.innerWidth, 500, 1200);
-        gl.canvas.height = 600.0;
+        gl.canvas.height = 900.0;
         gl.viewportWidth = gl.canvas.width;
         gl.viewportHeight = gl.canvas.height;
     };
@@ -547,7 +547,7 @@ a:active  {color: #ffffff;}
 </head>
 
 <body onload="main();">
-<canvas id="webglcanvas" width="1200" height="600"></canvas>
+<canvas id="webglcanvas" width="1200" height="900"></canvas>
 <dl class="accordion">
     <dt>About</dt>
     <dd>
