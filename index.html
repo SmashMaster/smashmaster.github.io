@@ -26,12 +26,14 @@ body {
 
 #webglcanvas {
     background: #000; /*Put fallback image here*/
+    position: fixed;
     width: 100%;
-    min-width: 500px;
-    height: 900px;
+    height: 100%;
+    left: 0;
     border: none;
     vertical-align: bottom;
     line-height: 1px;
+    z-index: -1;
 }
 
 /*MAIN MENU*/
@@ -61,6 +63,7 @@ body {
 }
 .accordion dt {
     background-color: #505050;
+    transition: background-color 0.125s ease, color 0.125s ease;
     font-family: "Raleway";
     font-size: 32px;
     line-height: 40px;
@@ -250,11 +253,12 @@ a:active  {color: #ffffff;}
     /*WATER*/
     
     const int WATER_SAMPLES = 2;
-    const float WATER_DEPTH = 1.0/32.0;
+    const float WATER_DEPTH = 1.0/64.0;
     const float WATER_FADE_START = 0.35;
     const float WATER_FADE_END = 0.025;
     const float WATER_FADE_DIST = WATER_FADE_START - WATER_FADE_END;
     const vec3 WATER_FAR_COLOR = ATMOSPHERIC_INSCATTERING;
+    const float WATER_ETA = 1.05;
     
     float waterHeight(vec3 pos) {
         float t = u_time/48.0;
@@ -284,7 +288,7 @@ a:active  {color: #ffffff;}
         return normalize(vec3((h - hx)*F, 1.0, (h - hz)*F));
     }
     
-    vec3 rayWater(vec3 rayPos, vec3 rayDir)
+    vec3 rayWaterTop(vec3 rayPos, vec3 rayDir)
     {
         vec3 p;
         {//Intersect water
@@ -334,27 +338,66 @@ a:active  {color: #ffffff;}
         return luminance;
     }
     
+    vec3 rayWaterBottom(vec3 rayPos, vec3 rayDir)
+    {
+        vec3 p;
+        {//Intersect water
+            float secWaterSt = intersectPlaneY(rayPos, rayDir, -WATER_DEPTH);
+            float secWaterEnd = intersectPlaneY(rayPos, rayDir, 0.0);
+            
+            vec3 secWaterStPos = rayPos + rayDir*secWaterSt;
+            vec3 secWaterEndPos = rayPos + rayDir*secWaterEnd;
+            
+            vec3 dp = (secWaterEndPos - secWaterStPos)/float(WATER_SAMPLES);
+            vec3 p0 = secWaterStPos, p1 = p0 + dp;
+            float y0 = waterY(p0), y1;
+            
+            for (int i=1; i<WATER_SAMPLES; i++) {
+                y1 = waterY(p1);
+                if (p1.y >= y1) break;
+                p0 = p1;
+                y0 = y1;
+                p1 += dp;
+            }
+            
+            float t = (p0.y - y0)/(y1 - y0 + p0.y - p1.y);
+            p = p0 + (p1 - p0)*t;
+        }
+        
+        vec3 ref = refract(rayDir, -waterNormal(p), WATER_ETA);
+        if (ref == vec3(0.0)) {
+            return vec3(0.0); //Total internal reflection
+        } else {
+            return rayAurora(p, ref);
+        }
+    }
+    
     /*MAIN*/
     
     vec3 ray(vec3 rayPos, vec3 rayDir) {
-        if (rayDir.y > 0.0) {
-            return rayAurora(rayPos, rayDir);
-        } else {
-            return rayWater(rayPos, rayDir);
+        if (rayPos.y < waterY(rayPos)) {
+            if (rayDir.y > 0.0) {
+                return rayWaterBottom(rayPos, rayDir);
+            } else {
+                return vec3(0.0);
+            }
+        }
+        else {
+            if (rayDir.y > 0.0) {
+                return rayAurora(rayPos, rayDir);
+            } else {
+                return rayWaterTop(rayPos, rayDir);
+            }
         }
     }
     
     void main() {
         //Cull offscreen pixels
-        float camOffset = u_pageOffsetY/u_canvasHeight;
-        if (v_pos.y > 1.0 - camOffset*2.0) {
-            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
-            return;
-        }
+        float camOffset = u_pageOffsetY/400.0;
         
         //Set up view ray
         vec3 camPos = vec3(0.0, CAMERA_HEIGHT*(1.0 - camOffset), 0.0);
-        vec3 rayDir = normalize(vec3(v_pos.x/u_aspectRatio, v_pos.y + camOffset, -1.0));
+        vec3 rayDir = normalize(vec3(v_pos.x/u_aspectRatio, v_pos.y, -1.0));
         
         vec3 color = ray(camPos, rayDir);
         
@@ -423,8 +466,8 @@ a:active  {color: #ffffff;}
     function onResize() {
         if (!gl) return;
         
-        gl.canvas.width = clamp(window.innerWidth, 500, 1200);
-        gl.canvas.height = 900.0;
+        gl.canvas.width = window.innerWidth;
+        gl.canvas.height = window.innerHeight;
         gl.viewportWidth = gl.canvas.width;
         gl.viewportHeight = gl.canvas.height;
     };
@@ -575,10 +618,80 @@ a:active  {color: #ffffff;}
 
 <body onload="main();">
 <canvas id="webglcanvas" width="1200" height="900"></canvas>
+<div style="height:1200px" style="display:block"></div>
 <dl class="accordion">
     <dt>About</dt>
     <dd>
         <h2>Who I am:</h2>
+        <p>Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium
+        doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore
+        veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim
+        ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia
+        consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque
+        porro quisquam est, qui dolorem ipsum, quia dolor sit amet consectetur adipisci
+        velit, sed quia non numquam eius modi tempora incidunt, ut labore et dolore
+        magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum
+        exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea
+        commodi consequatur? Quis autem vel eum iure reprehenderit, qui in ea voluptate
+        velit esse, quam nihil molestiae consequatur, vel illum, qui dolorem eum fugiat,
+        quo voluptas nulla pariatur?</p>
+        <p>At vero eos et accusamus et iusto odio dignissimos ducimus, qui blanditiis
+        praesentium voluptatum deleniti atque corrupti, quos dolores et quas molestias
+        excepturi sint, obcaecati cupiditate non provident, similique sunt in culpa,
+        qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum
+        quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta
+        nobis est eligendi optio, cumque nihil impedit, quo minus id, quod maxime placeat,
+        facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus
+        autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet,
+        ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum
+        rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores
+        alias consequatur aut perferendis doloribus asperiores repellat...</p>
+        <p>Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium
+        doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore
+        veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim
+        ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia
+        consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque
+        porro quisquam est, qui dolorem ipsum, quia dolor sit amet consectetur adipisci
+        velit, sed quia non numquam eius modi tempora incidunt, ut labore et dolore
+        magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum
+        exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea
+        commodi consequatur? Quis autem vel eum iure reprehenderit, qui in ea voluptate
+        velit esse, quam nihil molestiae consequatur, vel illum, qui dolorem eum fugiat,
+        quo voluptas nulla pariatur?</p>
+        <p>At vero eos et accusamus et iusto odio dignissimos ducimus, qui blanditiis
+        praesentium voluptatum deleniti atque corrupti, quos dolores et quas molestias
+        excepturi sint, obcaecati cupiditate non provident, similique sunt in culpa,
+        qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum
+        quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta
+        nobis est eligendi optio, cumque nihil impedit, quo minus id, quod maxime placeat,
+        facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus
+        autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet,
+        ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum
+        rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores
+        alias consequatur aut perferendis doloribus asperiores repellat...</p>
+        <p>Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium
+        doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore
+        veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim
+        ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia
+        consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque
+        porro quisquam est, qui dolorem ipsum, quia dolor sit amet consectetur adipisci
+        velit, sed quia non numquam eius modi tempora incidunt, ut labore et dolore
+        magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum
+        exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea
+        commodi consequatur? Quis autem vel eum iure reprehenderit, qui in ea voluptate
+        velit esse, quam nihil molestiae consequatur, vel illum, qui dolorem eum fugiat,
+        quo voluptas nulla pariatur?</p>
+        <p>At vero eos et accusamus et iusto odio dignissimos ducimus, qui blanditiis
+        praesentium voluptatum deleniti atque corrupti, quos dolores et quas molestias
+        excepturi sint, obcaecati cupiditate non provident, similique sunt in culpa,
+        qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum
+        quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta
+        nobis est eligendi optio, cumque nihil impedit, quo minus id, quod maxime placeat,
+        facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus
+        autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet,
+        ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum
+        rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores
+        alias consequatur aut perferendis doloribus asperiores repellat...</p>
         <h2>Where I am:</h2>
     </dd>
     <dt>Skills</dt>
