@@ -39,7 +39,7 @@ body {
 /*MAIN MENU*/
 .accordion {
     display: inline-block;
-    background-color: #1f1f1f;
+    background-color: rgba(32, 32, 32, 0.75);
     margin: 0px auto;
     width: 100%;
     vertical-align: bottom;
@@ -214,8 +214,7 @@ a:active  {color: #ffffff;}
         vec2 dp = p/AURORA_DISTORT_SCALE;
         float dt = t/16.0;
         vec2 d = vec2(
-            texture2D(u_tex_clouds, vec2(dp.x + dt,  dp.y + 0.5)).r,
-            texture2D(u_tex_clouds, vec2(dp.x + 0.5, dp.y + dt )).r);
+            texture2D(u_tex_clouds, vec2(dp.x + dt,  dp.y + 0.5)).r, 0.0);
         d = (d*2.0 - 1.0)*AURORA_DISTORT_AMOUNT;
         
         float b = texture2D(u_tex_clouds, p/AURORA_SCALE - t + d).r;
@@ -252,7 +251,6 @@ a:active  {color: #ffffff;}
     
     /*WATER*/
     
-    const int WATER_SAMPLES = 2;
     const float WATER_DEPTH = 1.0/64.0;
     const float WATER_FADE_START = 0.35;
     const float WATER_FADE_END = 0.025;
@@ -269,7 +267,7 @@ a:active  {color: #ffffff;}
         return (texture2D(u_tex_clouds, vec2(pos.x + t, pos.z      )).r +
                 texture2D(u_tex_clouds, vec2(pos.x - t, pos.z + 0.5)).r +
                 texture2D(u_tex_clouds, vec2(pos.x,       pos.z + t)).r +
-                texture2D(u_tex_clouds, vec2(pos.x + 0.5, pos.z - t)).r)/4.0;
+                texture2D(u_tex_clouds, vec2(pos.x + 0.5, pos.z - t)).r)*0.25;
     }
     
     float waterY(vec3 pos) {
@@ -290,29 +288,8 @@ a:active  {color: #ffffff;}
     
     vec3 rayWaterTop(vec3 rayPos, vec3 rayDir)
     {
-        vec3 p;
-        {//Intersect water
-            float secWaterSt = intersectPlaneY(rayPos, rayDir, 0.0);
-            float secWaterEnd = intersectPlaneY(rayPos, rayDir, -WATER_DEPTH);
-            
-            vec3 secWaterStPos = rayPos + rayDir*secWaterSt;
-            vec3 secWaterEndPos = rayPos + rayDir*secWaterEnd;
-            
-            vec3 dp = (secWaterEndPos - secWaterStPos)/float(WATER_SAMPLES);
-            vec3 p0 = secWaterStPos, p1 = p0 + dp;
-            float y0 = waterY(p0), y1;
-            
-            for (int i=1; i<WATER_SAMPLES; i++) {
-                y1 = waterY(p1);
-                if (p1.y <= y1) break;
-                p0 = p1;
-                y0 = y1;
-                p1 += dp;
-            }
-            
-            float t = (p0.y - y0)/(y1 - y0 + p0.y - p1.y);
-            p = p0 + (p1 - p0)*t;
-        }
+        float t = intersectPlaneY(rayPos, rayDir, -WATER_DEPTH*0.5);
+        vec3 p = rayPos + t*rayDir;
         
         const vec3 WATER_BASE_NORMAL = vec3(0.0, 1.0, 0.0);
         vec3 baseReflect = reflect(rayDir, WATER_BASE_NORMAL);
@@ -332,7 +309,6 @@ a:active  {color: #ffffff;}
             luminance += fadeT*WATER_FAR_COLOR;
         }
         
-        float t = length(p);
         attenuate(t, luminance);
         luminance += rayName(rayPos, rayDir, t);
         return luminance;
@@ -340,29 +316,8 @@ a:active  {color: #ffffff;}
     
     vec3 rayWaterBottom(vec3 rayPos, vec3 rayDir)
     {
-        vec3 p;
-        {//Intersect water
-            float secWaterSt = intersectPlaneY(rayPos, rayDir, -WATER_DEPTH);
-            float secWaterEnd = intersectPlaneY(rayPos, rayDir, 0.0);
-            
-            vec3 secWaterStPos = rayPos + rayDir*secWaterSt;
-            vec3 secWaterEndPos = rayPos + rayDir*secWaterEnd;
-            
-            vec3 dp = (secWaterEndPos - secWaterStPos)/float(WATER_SAMPLES);
-            vec3 p0 = secWaterStPos, p1 = p0 + dp;
-            float y0 = waterY(p0), y1;
-            
-            for (int i=1; i<WATER_SAMPLES; i++) {
-                y1 = waterY(p1);
-                if (p1.y >= y1) break;
-                p0 = p1;
-                y0 = y1;
-                p1 += dp;
-            }
-            
-            float t = (p0.y - y0)/(y1 - y0 + p0.y - p1.y);
-            p = p0 + (p1 - p0)*t;
-        }
+        float t = intersectPlaneY(rayPos, rayDir, -WATER_DEPTH*0.5);
+        vec3 p = rayPos + t*rayDir;
         
         vec3 ref = refract(rayDir, -waterNormal(p), WATER_ETA);
         if (ref == vec3(0.0)) {
@@ -381,8 +336,7 @@ a:active  {color: #ffffff;}
             } else {
                 return vec3(0.0);
             }
-        }
-        else {
+        } else {
             if (rayDir.y > 0.0) {
                 return rayAurora(rayPos, rayDir);
             } else {
@@ -617,7 +571,7 @@ a:active  {color: #ffffff;}
 </head>
 
 <body onload="main();">
-<canvas id="webglcanvas" width="1200" height="900"></canvas>
+<canvas id="webglcanvas"></canvas>
 <div style="height:1200px" style="display:block"></div>
 <dl class="accordion">
     <dt>About</dt>
