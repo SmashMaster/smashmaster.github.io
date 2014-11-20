@@ -16,8 +16,8 @@
 body {
     background: #0d0d0d;
     font-family: "Prociono";
-    font-size: 16px;
-    line-height: 18px;
+    font-size: 20px;
+    line-height: 24px;
     color: #c4c4c4;
     margin: 0px auto;
     min-width: 500px;
@@ -36,78 +36,71 @@ body {
     z-index: -1;
 }
 
-/*MAIN MENU*/
-.accordion {
+#header {
+    display: block;
+    height: 1200px;
+}
+
+/*BODY*/
+#body {
     display: inline-block;
     background-color: rgba(32, 32, 32, 0.75);
     margin: 0px auto;
     width: 100%;
     vertical-align: bottom;
 }
-.accordion h2 {
+#body h2 {
     font-family: "Raleway";
     text-align: center;
     margin: 20px 0px 10px 0px;
 }
-.accordion p {
+#body p {
     text-indent: 20px;
     margin: 10px auto;
-    padding: 0px 10px;
+    padding: 0px 0px 10px 40px;
     max-width: 800px;
     text-align: justify;
 }
-.accordion dd {
-    display: none;
+#body .content {
     text-align: center;
     margin: 0px auto;
+    padding-top: 10px;
+    padding-bottom: 40px;
+    overflow: hidden;
 }
-.accordion dt {
-    background-color: #505050;
+#body .content-left {
+    display: block;
+    float: left;
+    width: 40%;
+    text-align: right;
+}
+#body .content-right {
+    display: block;
+    float: left;
+    padding-left: 10px;
+    text-align: left;
+}
+#body .title {
     transition: background-color 0.125s ease, color 0.125s ease;
     font-family: "Raleway";
-    font-size: 32px;
-    line-height: 40px;
-    text-align: center;
-}
-.accordion dt:hover {
-    background-color: #7c7c7c;
-    color: #ededed;
-    cursor: pointer;
-}
-.accordion dt.accordion-active {
-    background-color: #6495bb;
-    color: #ededed;
-}
-.accordion dt.accordion-active:hover {
-    cursor: default;
+    font-size: 64px;
+    line-height: 80px;
+    text-align: left;
+    padding-left: 60px;
 }
 
 /*CONTACT INFO*/
-.contactinfo a {
+#contactinfo a {
     display: inline-block;
-    font-size: 52px;
-    line-height: 52px;
+    font-size: 80px;
+    line-height: 80px;
     vertical-align: bottom;
     margin: 10px 20px;
 }
-.contactinfo a:link    {color: #c4c4c4;}
-.contactinfo a:visited {color: #c4c4c4;}
-.contactinfo a:hover   {color: #ededed;}
-.contactinfo a:active  {color: #ffffff;}
-
-/*MENU CHEVRONS*/
-.accordion dt:before {
-    font-family:'FontAwesome'; content: "\f105"; margin-left: 120px; width: 32px; float: left;
-}
-.accordion dt:after {
-    font-family:'FontAwesome'; content: "\f104"; margin-right: 120px; width: 32px; float: right;
-}
-.accordion dt.accordion-active:before {
-    content: "\f107";
-}
-.accordion dt.accordion-active:after {
-    content: "\f107";
-}
+#contactinfo a:link    {color: #c4c4c4;}
+#contactinfo a:visited {color: #c4c4c4;}
+#contactinfo a:hover   {color: #ededed;}
+#contactinfo a:active  {color: #ffffff;}
 
 hr {
     background-color: #6495bb;
@@ -119,7 +112,7 @@ hr {
 }
 
 #footer {
-    background-color: #1f1f1f;
+    background-color: rgba(32, 32, 32, 0.75);
     text-align: center;
 }
 #footer p {
@@ -572,101 +565,40 @@ a:active  {color: #ffffff;}
 
 <body onload="main();">
 <canvas id="webglcanvas"></canvas>
-<div style="height:1200px" style="display:block"></div>
-<dl class="accordion">
-    <dt>About</dt>
-    <dd>
-        <h2>Who I am:</h2>
-        <p>Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium
-        doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore
-        veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim
-        ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia
-        consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque
-        porro quisquam est, qui dolorem ipsum, quia dolor sit amet consectetur adipisci
-        velit, sed quia non numquam eius modi tempora incidunt, ut labore et dolore
-        magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum
-        exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea
-        commodi consequatur? Quis autem vel eum iure reprehenderit, qui in ea voluptate
-        velit esse, quam nihil molestiae consequatur, vel illum, qui dolorem eum fugiat,
-        quo voluptas nulla pariatur?</p>
-        <p>At vero eos et accusamus et iusto odio dignissimos ducimus, qui blanditiis
-        praesentium voluptatum deleniti atque corrupti, quos dolores et quas molestias
-        excepturi sint, obcaecati cupiditate non provident, similique sunt in culpa,
-        qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum
-        quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta
-        nobis est eligendi optio, cumque nihil impedit, quo minus id, quod maxime placeat,
-        facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus
-        autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet,
-        ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum
-        rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores
-        alias consequatur aut perferendis doloribus asperiores repellat...</p>
-        <p>Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium
-        doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore
-        veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim
-        ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia
-        consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque
-        porro quisquam est, qui dolorem ipsum, quia dolor sit amet consectetur adipisci
-        velit, sed quia non numquam eius modi tempora incidunt, ut labore et dolore
-        magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum
-        exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea
-        commodi consequatur? Quis autem vel eum iure reprehenderit, qui in ea voluptate
-        velit esse, quam nihil molestiae consequatur, vel illum, qui dolorem eum fugiat,
-        quo voluptas nulla pariatur?</p>
-        <p>At vero eos et accusamus et iusto odio dignissimos ducimus, qui blanditiis
-        praesentium voluptatum deleniti atque corrupti, quos dolores et quas molestias
-        excepturi sint, obcaecati cupiditate non provident, similique sunt in culpa,
-        qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum
-        quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta
-        nobis est eligendi optio, cumque nihil impedit, quo minus id, quod maxime placeat,
-        facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus
-        autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet,
-        ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum
-        rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores
-        alias consequatur aut perferendis doloribus asperiores repellat...</p>
-        <p>Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium
-        doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore
-        veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim
-        ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia
-        consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque
-        porro quisquam est, qui dolorem ipsum, quia dolor sit amet consectetur adipisci
-        velit, sed quia non numquam eius modi tempora incidunt, ut labore et dolore
-        magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum
-        exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea
-        commodi consequatur? Quis autem vel eum iure reprehenderit, qui in ea voluptate
-        velit esse, quam nihil molestiae consequatur, vel illum, qui dolorem eum fugiat,
-        quo voluptas nulla pariatur?</p>
-        <p>At vero eos et accusamus et iusto odio dignissimos ducimus, qui blanditiis
-        praesentium voluptatum deleniti atque corrupti, quos dolores et quas molestias
-        excepturi sint, obcaecati cupiditate non provident, similique sunt in culpa,
-        qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum
-        quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta
-        nobis est eligendi optio, cumque nihil impedit, quo minus id, quod maxime placeat,
-        facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus
-        autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet,
-        ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum
-        rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores
-        alias consequatur aut perferendis doloribus asperiores repellat...</p>
-        <h2>Where I am:</h2>
-    </dd>
-    <dt>Skills</dt>
-    <dd>
-        <h2>What I'm good at:</h2>
-    </dd>
-    <dt>Projects</dt>
-    <dd>
-        <h2>What I've worked on:</h2>
-    </dd>
-    <dt>Contact</dt>
-    <dd class="contactinfo">
-        <h2>How to get ahold of me:</h2>
+<div id="header"></div>
+<div id="body">
+    <div class="title">Who I am</div>
+    <div class="content">
+        <p>Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo.</p>
+        <div class="content-left">
+            Age:<br>
+            Location:<br>
+            Occupation:<br>
+        </div>
+        <div class="content-right">
+            21<br>
+            Boulder, Colorado<br>
+            Tech Support, IBM<br>
+        </div>
+    </div>
+    <div class="title">Code is art</div>
+    <div class="content">
+        <p>Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo.</p>
+    </div>
+    <div class="title">Fun is learning</div>
+    <div class="content">
+        <p>Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo.</p>
+    </div>
+    <div class="title">Contact me</div>
+    <div class="content" id="contactinfo">
         <a href="mailto:sam@samrj.com" title="Email">
             <i class="fa fa-envelope"></i></a>
         <a href="http://github.com/SmashMaster" title="GitHub">
             <i class="fa fa-github"></i></a>
         <a href="http://steamcommunity.com/id/SmashMaster" title="Steam">
             <i class="fa fa-steam"></i></a>
-    </dd>
-</dl>
+    </div>
+</div>
 <hr>
 <div id="footer">
     <p>&copy; 2014 Sam Johnson</p>
