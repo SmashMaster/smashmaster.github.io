@@ -160,7 +160,7 @@ a:active  {color: #ffffff;}
         return (planeZ - rayPos.z)/rayDir.z;
     }
     
-    void attenuate(in float opticalDepth, inout vec3 luminance) {
+    void atmAttenuate(in float opticalDepth, inout vec3 luminance) {
         vec3 t = exp(-opticalDepth*ATMOSPHERIC_DENSITY*ATMOSPHERIC_ATTENUATION);
         luminance = mix(ATMOSPHERIC_INSCATTERING, luminance, t);
     }
@@ -241,7 +241,7 @@ a:active  {color: #ffffff;}
             luminance += AURORA_AVERAGE_COLOR*(fadeT*0.175);
         }
         
-        attenuate(t, luminance);
+        atmAttenuate(t, luminance);
         luminance += rayName(rayPos, rayDir, t);
         return luminance;
     }
@@ -254,6 +254,10 @@ a:active  {color: #ffffff;}
     const float WATER_FADE_DIST = WATER_FADE_START - WATER_FADE_END;
     const vec3 WATER_FAR_COLOR = ATMOSPHERIC_INSCATTERING;
     const float WATER_ETA = 1.05;
+    
+    const float WATER_DENSITY = 60.0;
+    const vec3 WATER_ATTENUATION = vec3(0.05, 0.05, 0.05);
+    const vec3 WATER_INSCATTERING = vec3(0.05, 0.05, 0.05);
     
     float waterHeight(vec3 pos) {
         float t = u_time/48.0;
@@ -284,7 +288,7 @@ a:active  {color: #ffffff;}
         float t = intersectPlaneY(rayPos, rayDir, 0.0);
         vec3 p = rayPos + t*rayDir;
         
-        if (p.z > -Z_CLIP_NEAR) return vec3(0.0);
+        if (p.z > -Z_CLIP_NEAR) return WATER_INSCATTERING;
         
         const vec3 WATER_BASE_NORMAL = vec3(0.0, 1.0, 0.0);
         vec3 baseReflect = reflect(rayDir, WATER_BASE_NORMAL);
@@ -304,9 +308,14 @@ a:active  {color: #ffffff;}
             luminance += fadeT*WATER_FAR_COLOR;
         }
         
-        attenuate(t, luminance);
+        atmAttenuate(t, luminance);
         luminance += rayName(rayPos, rayDir, t);
         return luminance;
+    }
+    
+    void watAttenuate(in float opticalDepth, inout vec3 luminance) {
+        vec3 t = exp(-opticalDepth*WATER_DENSITY*WATER_ATTENUATION);
+        luminance = mix(WATER_INSCATTERING, luminance, t);
     }
     
     vec3 rayWaterBottom(vec3 rayPos, vec3 rayDir)
@@ -318,9 +327,11 @@ a:active  {color: #ffffff;}
         
         vec3 ref = refract(rayDir, -waterNormal(p), WATER_ETA);
         if (ref == vec3(0.0)) {
-            return vec3(0.0); //Total internal reflection
+            return WATER_INSCATTERING; //Total internal reflection
         } else {
-            return rayAurora(p, ref);
+            vec3 luminance = rayAurora(p, ref);
+            watAttenuate(t, luminance);
+            return luminance;
         }
     }
     
@@ -331,7 +342,7 @@ a:active  {color: #ffffff;}
             if (rayDir.y > 0.0) {
                 return rayWaterBottom(rayPos, rayDir);
             } else {
-                return vec3(0.0);
+                return WATER_INSCATTERING;
             }
         } else {
             if (rayDir.y > 0.0) {
