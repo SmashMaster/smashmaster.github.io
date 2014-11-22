@@ -147,6 +147,7 @@ a:active  {color: #ffffff;}
     varying vec2 v_pos;
     
     const float CAMERA_HEIGHT = 0.125;
+    const float Z_CLIP_NEAR = 0.0625;
     const float ATMOSPHERIC_DENSITY = 0.05;
     const vec3 ATMOSPHERIC_ATTENUATION = vec3(0.06, 0.09, 0.1);
     const vec3 ATMOSPHERIC_INSCATTERING = vec3(0.06, 0.09, 0.1);
@@ -168,7 +169,7 @@ a:active  {color: #ffffff;}
     
     const float NAME_DISTANCE = 1.0;
     const float NAME_SCALE = 0.125;
-    const float NAME_HEIGHT = 0.06;
+    const float NAME_HEIGHT = 0.07;
     const float NAME_ASPECT_RATIO = 4.0;
     const float NAME_Y_FACTOR = NAME_HEIGHT/NAME_ASPECT_RATIO;
     const vec3 NAME_COLOR = vec3(0.875);
@@ -266,10 +267,6 @@ a:active  {color: #ffffff;}
                 texture2D(u_tex_clouds, vec2(pos.x + 0.5, pos.z - t)).r)*0.25;
     }
     
-    float waterY(vec3 pos) {
-        return (waterHeight(pos) - 1.0)*WATER_DEPTH;
-    }
-    
     vec3 waterNormal(vec3 pos) {
         const float D = 1.0/512.0;
         
@@ -284,8 +281,10 @@ a:active  {color: #ffffff;}
     
     vec3 rayWaterTop(vec3 rayPos, vec3 rayDir)
     {
-        float t = intersectPlaneY(rayPos, rayDir, -WATER_DEPTH*0.5);
+        float t = intersectPlaneY(rayPos, rayDir, 0.0);
         vec3 p = rayPos + t*rayDir;
+        
+        if (p.z > -Z_CLIP_NEAR) return vec3(0.0);
         
         const vec3 WATER_BASE_NORMAL = vec3(0.0, 1.0, 0.0);
         vec3 baseReflect = reflect(rayDir, WATER_BASE_NORMAL);
@@ -312,8 +311,10 @@ a:active  {color: #ffffff;}
     
     vec3 rayWaterBottom(vec3 rayPos, vec3 rayDir)
     {
-        float t = intersectPlaneY(rayPos, rayDir, -WATER_DEPTH*0.5);
+        float t = intersectPlaneY(rayPos, rayDir, 0.0);
         vec3 p = rayPos + t*rayDir;
+        
+        if (p.z > -Z_CLIP_NEAR) return rayAurora(rayPos, rayDir);
         
         vec3 ref = refract(rayDir, -waterNormal(p), WATER_ETA);
         if (ref == vec3(0.0)) {
@@ -326,7 +327,7 @@ a:active  {color: #ffffff;}
     /*MAIN*/
     
     vec3 ray(vec3 rayPos, vec3 rayDir) {
-        if (rayPos.y < waterY(rayPos)) {
+        if (rayPos.y < 0.0) {
             if (rayDir.y > 0.0) {
                 return rayWaterBottom(rayPos, rayDir);
             } else {
