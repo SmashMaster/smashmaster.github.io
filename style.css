@@ -1,0 +1,116 @@
+body {
+    background: #0d0d0d;
+    font-family: "Prociono";
+    font-size: 20px;
+    line-height: 24px;
+    color: #c4c4c4;
+    text-shadow: 1px 2px 2px rgba(0, 0, 0, 1.0);
+    margin: 0px auto;
+    min-width: 500px;
+    max-width: 1200px;
+}
+
+#webglcanvas {
+    background: #000; /*Put fallback image here*/
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    border: none;
+    vertical-align: bottom;
+    line-height: 1px;
+    z-index: -1;
+}
+
+#header {
+    display: block;
+    height: 1200px;
+}
+
+/*BODY*/
+#body {
+    display: inline-block;
+    background-color: rgba(32, 32, 32, 0.8);
+    margin: 0px auto;
+    width: 100%;
+    vertical-align: bottom;
+}
+#body h2 {
+    font-family: "Raleway";
+    font-size: 32px;
+    line-height: 36px;
+    text-align: center;
+    margin: 20px 0px 10px 0px;
+}
+#body p {
+    text-indent: 20px;
+    margin: 10px auto;
+    padding: 0px 10px 0px 10px;
+    max-width: 800px;
+    text-align: justify;
+}
+#body .content {
+    text-align: center;
+    margin: 0px auto;
+    padding-top: 10px;
+    padding-bottom: 40px;
+    overflow: hidden;
+}
+#body .content-left {
+    display: block;
+    float: left;
+    width: 45%;
+    text-align: right;
+}
+#body .content-right {
+    display: block;
+    float: left;
+    padding-left: 10px;
+    text-align: left;
+}
+#body .title {
+    transition: background-color 0.125s ease, color 0.125s ease;
+    font-family: "Raleway";
+    font-size: 56px;
+    line-height: 72px;
+    text-align: left;
+    padding-left: 60px;
+}
+
+/*CONTACT INFO*/
+#contactinfo a {
+    display: inline-block;
+    font-size: 80px;
+    line-height: 80px;
+    vertical-align: bottom;
+    margin: 10px 20px;
+}
+#contactinfo a:link    {color: #c4c4c4;}
+#contactinfo a:visited {color: #c4c4c4;}
+#contactinfo a:hover   {color: #ededed;}
+#contactinfo a:active  {color: #ffffff;}
+
+hr {
+    background-color: #6495bb;
+    color: #6495bb;
+    margin: 0px;
+    padding: 0px;
+    height: 2px;
+    border: none;
+}
+
+#footer {
+    background-color: rgba(32, 32, 32, 0.75);
+    text-align: center;
+}
+#footer p {
+    display: block;
+    margin: 0px;
+    padding: 5px;
+}
+
+/*LINK COLORS*/
+a:link    {color: #6495bb;}
+a:visited {color: #6495bb;}
+a:hover   {color: #ededed;}
+a:active  {color: #ffffff;}
