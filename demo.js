@@ -79,31 +79,15 @@ function initTextures() {
     nameImage.src = "name.png";
 }
 
-function getShader(id) {
-    var shaderScript = document.getElementById(id);
-    if (!shaderScript) {
-        return null;
-    }
+function getShader(url, type) {
+    var req = new XMLHttpRequest();
+    req.open("GET", url, false);
+    req.send(null);
+    var src = (req.status == 200) ? req.responseText : null;
 
-    var str = "";
-    var k = shaderScript.firstChild;
-    while (k) {
-        if (k.nodeType == 3) {
-            str += k.textContent;
-        }
-        k = k.nextSibling;
-    }
+    var shader = gl.createShader(type);
 
-    var shader;
-    if (shaderScript.type == "x-shader/x-fragment") {
-        shader = gl.createShader(gl.FRAGMENT_SHADER);
-    } else if (shaderScript.type == "x-shader/x-vertex") {
-        shader = gl.createShader(gl.VERTEX_SHADER);
-    } else {
-        return null;
-    }
-
-    gl.shaderSource(shader, str);
+    gl.shaderSource(shader, src);
     gl.compileShader(shader);
 
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
@@ -117,8 +101,8 @@ function getShader(id) {
 var shaderProgram;
 
 function initShaders() {
-    var fragmentShader = getShader("shader-fs");
-    var vertexShader = getShader("shader-vs");
+    var fragmentShader = getShader("shader.frag", gl.FRAGMENT_SHADER);
+    var vertexShader = getShader("shader.vert", gl.VERTEX_SHADER);
 
     shaderProgram = gl.createProgram();
     gl.attachShader(shaderProgram, vertexShader);
