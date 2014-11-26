@@ -114,3 +114,29 @@ a:link    {color: #6495bb;}
 a:visited {color: #6495bb;}
 a:hover   {color: #ededed;}
 a:active  {color: #ffffff;}
+
+/*LOADING SCREEN*/
+.loading-circle {
+    margin: 0 auto;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 4px solid #BEB69D;
+    position: relative;
+    animation: spin 2s infinite linear;
+}
+
+.loading-circle:before {
+    content: "";
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: block;
+    position: absolute;
+    left: -4px;
+    top: -4px;
+    border-right: 4px solid #BEB69D;
+    border-top: 4px solid #BEB69D;
+    border-left: 4px solid #FFF;
+    border-bottom: 4px solid #BEB69D;
+}
