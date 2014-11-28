@@ -1,6 +1,7 @@
 var startTime, currentTime;
 var gl;
 var cloudTexture, nameTexture;
+var debugDiv;
 
 /*requestAnimationFrame polyfill - https://gist.github.com/paulirish/1579671 */
 (function() {
@@ -154,7 +155,20 @@ function drawScene() {
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, fsqBuffer.numItems);
 }
 
+function animloop(){
+    var prevTime = currentTime;
+    currentTime = (new Date).getTime();
+    var fps = Math.round(1000.0/(currentTime - prevTime));
+    debugDiv.innerHTML = "" + fps;
+    
+    //Reset clock at 20 minutes
+    if (currentTime - startTime > 1200000) startTime = currentTime;
+    drawScene();
+    window.requestAnimationFrame(animloop);
+};
+
 function main() {
+    debugDiv = document.getElementById("debug");
     var canvas = document.getElementById("webglcanvas");
     try {
         gl = canvas.getContext("experimental-webgl");
@@ -170,11 +184,5 @@ function main() {
 
     startTime = (new Date).getTime();
     addEvent(window, "resize", onResize);
-    (function animloop(){
-        window.requestAnimationFrame(animloop);
-        currentTime = (new Date).getTime();
-        //Reset clock at 20 minutes
-        if (currentTime - startTime > 1200000) startTime = currentTime;
-        drawScene();
-    })();
+    window.requestAnimationFrame(animloop);
 }

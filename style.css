@@ -22,6 +22,15 @@ body {
     z-index: -1;
 }
 
+#debug {
+    -webkit-backface-visibility: hidden; 
+    -webkit-transform: translateZ(0);
+    margin: 20px;
+    z-index: 1;
+    left: 0;
+    position: fixed;
+}
+
 #header {
     display: block;
     height: 1200px;
