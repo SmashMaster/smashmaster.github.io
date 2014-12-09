@@ -16,6 +16,7 @@ const vec3 ATMOSPHERIC_ATTENUATION = vec3(0.06, 0.09, 0.1);
 const vec3 ATMOSPHERIC_INSCATTERING = vec3(0.06, 0.09, 0.1);
 
 float intersectPlaneY(vec3 rayPos, vec3 rayDir, float planeY) {
+    if (rayDir.y == 0.0) return -1.0;
     return (planeY - rayPos.y)/rayDir.y;
 }
 
@@ -92,19 +93,26 @@ vec3 auroraColor(vec3 pos) {
 
 vec3 rayAurora(vec3 rayPos, vec3 rayDir) {
     float t = intersectPlaneY(rayPos, rayDir, AURORA_HEIGHT);
-    vec3 p = rayPos + rayDir*t;
-    float fadeT = clamp((t - AURORA_FADE_START)/AURORA_FADE_DIST, 0.0, 1.0);
-    
     vec3 luminance = vec3(0.0);
     
-    if (fadeT < 1.0) {
-        luminance += ((1.0 - fadeT)*AURORA_BRIGHTNESS*auroraDensity(p))*auroraColor(p);
+    if (t > 0.0) {
+        vec3 p = rayPos + rayDir*t;
+        float fadeT = clamp((t - AURORA_FADE_START)/AURORA_FADE_DIST, 0.0, 1.0);
+        
+        if (fadeT < 1.0) {
+            luminance += ((1.0 - fadeT)*AURORA_BRIGHTNESS*auroraDensity(p))*auroraColor(p);
+        }
+        if (fadeT > 0.0) {
+            luminance += AURORA_AVERAGE_COLOR*(fadeT*0.175);
+        }
+        
+        atmAttenuate(t, luminance);
     }
-    if (fadeT > 0.0) {
-        luminance += AURORA_AVERAGE_COLOR*(fadeT*0.175);
+    else {
+        luminance += ATMOSPHERIC_INSCATTERING;
+        t = 100000.0;
     }
     
-    atmAttenuate(t, luminance);
     luminance += rayName(rayPos, rayDir, t);
     return luminance;
 }
@@ -146,32 +154,38 @@ vec3 waterNormal(vec3 pos) {
     return normalize(vec3((h - hx)*F, 1.0, (h - hz)*F));
 }
 
-vec3 rayWaterTop(vec3 rayPos, vec3 rayDir)
-{
+vec3 rayWaterTop(vec3 rayPos, vec3 rayDir) {
     float t = intersectPlaneY(rayPos, rayDir, 0.0);
-    vec3 p = rayPos + t*rayDir;
-    
-    if (p.z > -Z_CLIP_NEAR) return WATER_INSCATTERING;
-    
-    const vec3 WATER_BASE_NORMAL = vec3(0.0, 1.0, 0.0);
-    vec3 baseReflect = reflect(rayDir, WATER_BASE_NORMAL);
-    float fadeT = clamp((WATER_FADE_START - baseReflect.y)/WATER_FADE_DIST, 0.0, 1.0);
-    
     vec3 luminance = vec3(0.0);
     
-    if (fadeT < 1.0) {
-        vec3 n = waterNormal(p);
-        vec3 ref = reflect(rayDir, n);
+    if (t > 0.0) {
+        vec3 p = rayPos + t*rayDir;
         
-        if (ref.y > 0.0) {
-            luminance += (1.0 - fadeT)*rayAurora(p, ref);
+        if (p.z > -Z_CLIP_NEAR) return WATER_INSCATTERING;
+        
+        const vec3 WATER_BASE_NORMAL = vec3(0.0, 1.0, 0.0);
+        vec3 baseReflect = reflect(rayDir, WATER_BASE_NORMAL);
+        float fadeT = clamp((WATER_FADE_START - baseReflect.y)/WATER_FADE_DIST, 0.0, 1.0);
+        
+        if (fadeT < 1.0) {
+            vec3 n = waterNormal(p);
+            vec3 ref = reflect(rayDir, n);
+            
+            if (ref.y > 0.0) {
+                luminance += (1.0 - fadeT)*rayAurora(p, ref);
+            }
         }
+        if (fadeT > 0.0) {
+            luminance += fadeT*WATER_FAR_COLOR;
+        }
+        
+        atmAttenuate(t, luminance);
     }
-    if (fadeT > 0.0) {
-        luminance += fadeT*WATER_FAR_COLOR;
+    else {
+        luminance += ATMOSPHERIC_INSCATTERING;
+        t = 100000.0;
     }
     
-    atmAttenuate(t, luminance);
     luminance += rayName(rayPos, rayDir, t);
     return luminance;
 }
@@ -181,8 +195,7 @@ void watAttenuate(in float opticalDepth, inout vec3 luminance) {
     luminance = mix(WATER_INSCATTERING, luminance, t);
 }
 
-vec3 rayWaterBottom(vec3 rayPos, vec3 rayDir)
-{
+vec3 rayWaterBottom(vec3 rayPos, vec3 rayDir) {
     float t = intersectPlaneY(rayPos, rayDir, 0.0);
     vec3 p = rayPos + t*rayDir;
     
