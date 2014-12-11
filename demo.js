@@ -64,18 +64,32 @@ function handleTextureLoaded(image, texture, wrap) {
     gl.bindTexture(gl.TEXTURE_2D, null);
 }
 
+var numBlockers = 0;
+
+function block() {
+    numBlockers++;
+}
+
+function unblock() {
+    if (--numBlockers == 0) main2();
+}
+
 function initTextures() {
+    block();
     cloudTexture = gl.createTexture();
     var cloudImage = new Image();
     $(cloudImage).one('load', function() {
         handleTextureLoaded(cloudImage, cloudTexture, gl.REPEAT);
+        unblock();
     });
     cloudImage.src = "clouds.png";
     
+    block();
     nameTexture = gl.createTexture();
     var nameImage = new Image();
     $(nameImage).one('load', function() {
         handleTextureLoaded(nameImage, nameTexture, gl.CLAMP_TO_EDGE);
+        unblock();
     });
     nameImage.src = "name.png";
 }
@@ -171,16 +185,27 @@ function main() {
     debugDiv = document.getElementById("debug");
     var canvas = document.getElementById("webglcanvas");
     try {
+        block();
         gl = canvas.getContext("experimental-webgl");
         onResize();
         initTextures();
         initShaders();
         initBuffers();
+        unblock();
     } catch (e) {
         alert(e);
     }
+}
 
+function main2() {
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    
+    var testStartTime = (new Date).getTime();
+    for (i=0; i<30; i++) {
+        drawScene();
+    }
+    var testEndTime = (new Date).getTime();
+    alert(testEndTime - testStartTime); //...what?
 
     startTime = (new Date).getTime();
     addEvent(window, "resize", onResize);
