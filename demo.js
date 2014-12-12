@@ -172,16 +172,17 @@ function drawScene() {
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, fsqBuffer.numItems);
 }
 
+var testLength = 10;
 var testFrame = 0;
 
 function testLoop() {
     drawScene();
     currentTime = (new Date).getTime();
     
-    if (++testFrame < 60) {
+    if (++testFrame < testLength) {
         window.requestAnimationFrame(testLoop);
     } else {
-        alert((currentTime - startTime)/(1000.0/60.0));
+        alert((1000.0*testLength)/(currentTime - startTime));
         
         window.requestAnimationFrame(mainLoop);
     }
