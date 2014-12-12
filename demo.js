@@ -1,7 +1,6 @@
 var startTime, currentTime;
-var gl;
+var gl, canvas;
 var cloudTexture, nameTexture;
-var debugDiv;
 
 /*requestAnimationFrame polyfill - https://gist.github.com/paulirish/1579671 */
 (function() {
@@ -46,12 +45,12 @@ function clamp(x, min, max) {
 }
 
 function onResize() {
-    if (!gl) return;
+    if (gl == null) return;
     
-    gl.canvas.width = window.innerWidth;
-    gl.canvas.height = window.innerHeight;
-    gl.viewportWidth = gl.canvas.width;
-    gl.viewportHeight = gl.canvas.height;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    gl.viewportWidth = canvas.width;
+    gl.viewportHeight = canvas.height;
 }
 
 function handleTextureLoaded(image, texture, wrap) {
@@ -71,7 +70,7 @@ function block() {
 }
 
 function unblock() {
-    if (--numBlockers == 0) run();
+    if (--numBlockers <= 0) run();
 }
 
 function initTextures() {
@@ -182,9 +181,17 @@ function testLoop() {
     if (++testFrame < testLength) {
         window.requestAnimationFrame(testLoop);
     } else {
-        alert((1000.0*testLength)/(currentTime - startTime));
+        var frameRate = (1000.0*testLength)/(currentTime - startTime);
         
-        window.requestAnimationFrame(mainLoop);
+        if (frameRate > 45.0 && gl != null) {
+            window.requestAnimationFrame(mainLoop);
+        }
+        else {
+            canvas.style.display = "none";
+            //Display backup background
+        }
+        
+        $('body').addClass('loaded');
     }
 }
 
@@ -195,16 +202,12 @@ function mainLoop() {
     currentTime = (new Date).getTime();
     if (currentTime - startTime > 1200000) startTime = currentTime; //Reset clock at 20 minutes
     
-    var fps = Math.round(1000.0/(currentTime - prevTime));
-    debugDiv.innerHTML = "" + fps;
-    
     window.requestAnimationFrame(mainLoop);
 }
 
 
 function main() {
-    debugDiv = document.getElementById("debug");
-    var canvas = document.getElementById("webglcanvas");
+    canvas = document.getElementById("webglcanvas");
     try {
         block();
         gl = canvas.getContext("experimental-webgl");
@@ -212,10 +215,11 @@ function main() {
         initTextures();
         initShaders();
         initBuffers();
-        unblock();
     } catch (e) {
-        alert(e);
+        gl = null;
+        numBlockers = 0;
     }
+    unblock();
 }
 
 function run() {
