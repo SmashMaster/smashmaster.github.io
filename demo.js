@@ -5,29 +5,29 @@ var debugDiv;
 
 /*requestAnimationFrame polyfill - https://gist.github.com/paulirish/1579671 */
 (function() {
-var lastTime = 0;
-var vendors = ['ms', 'moz', 'webkit', 'o'];
-for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-    window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-    window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] 
-                               || window[vendors[x]+'CancelRequestAnimationFrame'];
-}
+    var lastTime = 0;
+    var vendors = ['ms', 'moz', 'webkit', 'o'];
+    for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+        window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] 
+                                   || window[vendors[x]+'CancelRequestAnimationFrame'];
+    }
 
-if (!window.requestAnimationFrame) {
-    window.requestAnimationFrame = function(callback, element) {
-        var currTime = new Date().getTime();
-        var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-        var id = window.setTimeout(function() { callback(currTime + timeToCall); }, 
-          timeToCall);
-        lastTime = currTime + timeToCall;
-        return id;
-    };
-}
+    if (!window.requestAnimationFrame) {
+        window.requestAnimationFrame = function(callback, element) {
+            var currTime = new Date().getTime();
+            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+            var id = window.setTimeout(function() { callback(currTime + timeToCall); }, 
+              timeToCall);
+            lastTime = currTime + timeToCall;
+            return id;
+        };
+    }
 
-if (!window.cancelAnimationFrame)
-    window.cancelAnimationFrame = function(id) {
-        clearTimeout(id);
-    };
+    if (!window.cancelAnimationFrame)
+        window.cancelAnimationFrame = function(id) {
+            clearTimeout(id);
+        };
 }());
 
 function addEvent(elem, type, eventHandle) {
@@ -52,7 +52,7 @@ function onResize() {
     gl.canvas.height = window.innerHeight;
     gl.viewportWidth = gl.canvas.width;
     gl.viewportHeight = gl.canvas.height;
-};
+}
 
 function handleTextureLoaded(image, texture, wrap) {
     gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -71,7 +71,7 @@ function block() {
 }
 
 function unblock() {
-    if (--numBlockers == 0) main2();
+    if (--numBlockers == 0) run();
 }
 
 function initTextures() {
@@ -154,12 +154,15 @@ function initBuffers() {
 
 function drawScene() {
     gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+    
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
     
     gl.uniform1f(gl.getUniformLocation(shaderProgram, "u_time"), (currentTime - startTime)/1000.0);
     gl.uniform1f(gl.getUniformLocation(shaderProgram, "u_pageOffsetY"), window.pageYOffset);
     gl.uniform1f(gl.getUniformLocation(shaderProgram, "u_canvasHeight"), gl.viewportHeight);
     gl.uniform1f(gl.getUniformLocation(shaderProgram, "u_aspectRatio"), gl.viewportHeight/gl.viewportWidth);
+    
     gl.bindBuffer(gl.ARRAY_BUFFER, fsqBuffer);
     gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, fsqBuffer.itemSize, gl.FLOAT, false, 0, 0);
     gl.activeTexture(gl.TEXTURE0);
@@ -169,17 +172,34 @@ function drawScene() {
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, fsqBuffer.numItems);
 }
 
-function animloop(){
+var testFrame = 0;
+
+function testLoop() {
+    drawScene();
+    currentTime = (new Date).getTime();
+    
+    if (++testFrame < 60) {
+        window.requestAnimationFrame(testLoop);
+    } else {
+        alert((currentTime - startTime)/(1000.0/60.0));
+        
+        window.requestAnimationFrame(mainLoop);
+    }
+}
+
+function mainLoop() {
+    drawScene();
+    
     var prevTime = currentTime;
     currentTime = (new Date).getTime();
+    if (currentTime - startTime > 1200000) startTime = currentTime; //Reset clock at 20 minutes
+    
     var fps = Math.round(1000.0/(currentTime - prevTime));
     debugDiv.innerHTML = "" + fps;
     
-    //Reset clock at 20 minutes
-    if (currentTime - startTime > 1200000) startTime = currentTime;
-    drawScene();
-    window.requestAnimationFrame(animloop);
-};
+    window.requestAnimationFrame(mainLoop);
+}
+
 
 function main() {
     debugDiv = document.getElementById("debug");
@@ -197,17 +217,8 @@ function main() {
     }
 }
 
-function main2() {
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
-    
-    var testStartTime = (new Date).getTime();
-    for (i=0; i<30; i++) {
-        drawScene();
-    }
-    var testEndTime = (new Date).getTime();
-    alert(testEndTime - testStartTime); //...what?
-
-    startTime = (new Date).getTime();
+function run() {
     addEvent(window, "resize", onResize);
-    window.requestAnimationFrame(animloop);
+    startTime = (new Date).getTime();
+    window.requestAnimationFrame(testLoop);
 }
