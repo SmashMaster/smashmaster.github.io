@@ -1,3 +1,7 @@
+/* Author: Samuel Johnson (SmashMaster) */
+/* Copyright: 2014 Samuel Johnson */
+/* License: https://github.com/SmashMaster/smashmaster.github.io/blob/master/LICENSE */
+
 attribute vec2 in_pos;
 
 varying vec2 v_pos;

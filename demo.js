@@ -1,8 +1,13 @@
+/* Author: Samuel Johnson (SmashMaster) */
+/* Copyright: 2014 Samuel Johnson */
+/* License: https://github.com/SmashMaster/smashmaster.github.io/blob/master/LICENSE */
+
 var startTime, currentTime;
 var gl, canvas;
 var cloudTexture, nameTexture;
 
-/*requestAnimationFrame polyfill - https://gist.github.com/paulirish/1579671 */
+/* requestAnimationFrame polyfill - https://gist.github.com/paulirish/1579671 */
+/* MIT license */
 (function() {
     var lastTime = 0;
     var vendors = ['ms', 'moz', 'webkit', 'o'];
@@ -171,7 +176,7 @@ function drawScene() {
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, fsqBuffer.numItems);
 }
 
-var testLength = 10;
+var testLength = 20;
 var testFrame = 0;
 
 function testLoop() {
@@ -198,7 +203,6 @@ function testLoop() {
 function mainLoop() {
     drawScene();
     
-    var prevTime = currentTime;
     currentTime = (new Date).getTime();
     if (currentTime - startTime > 1200000) startTime = currentTime; //Reset clock at 20 minutes
     
@@ -225,5 +229,6 @@ function main() {
 function run() {
     addEvent(window, "resize", onResize);
     startTime = (new Date).getTime();
+    currentTime = startTime;
     window.requestAnimationFrame(testLoop);
 }

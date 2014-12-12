@@ -1,3 +1,7 @@
+/* Author: Samuel Johnson (SmashMaster) */
+/* Copyright: 2014 Samuel Johnson */
+/* License: https://github.com/SmashMaster/smashmaster.github.io/blob/master/LICENSE */
+
 precision lowp float;
 
 uniform float u_time;
@@ -29,7 +33,7 @@ void atmAttenuate(in float opticalDepth, inout vec3 luminance) {
     luminance = mix(ATMOSPHERIC_INSCATTERING, luminance, t);
 }
 
-/*NAME*/
+/* NAME */
 
 const float NAME_DISTANCE = 1.0;
 const float NAME_SCALE = 0.125;
@@ -54,7 +58,7 @@ vec3 rayName(vec3 rayPos, vec3 rayDir, float prevT) {
     return NAME_COLOR*texture2D(u_tex_name, tc).r;
 }
 
-/*AURORA*/
+/* AURORA */
 
 const float AURORA_HEIGHT = 48.0;
 const float AURORA_SCALE = 512.0;
@@ -117,7 +121,7 @@ vec3 rayAurora(vec3 rayPos, vec3 rayDir) {
     return luminance;
 }
 
-/*WATER*/
+/* WATER */
 
 const float WATER_DEPTH = 1.0/64.0;
 const float WATER_FADE_START = 0.35;
@@ -211,7 +215,7 @@ vec3 rayWaterBottom(vec3 rayPos, vec3 rayDir) {
     }
 }
 
-/*MAIN*/
+/* MAIN */
 
 vec3 ray(vec3 rayPos, vec3 rayDir) {
     if (rayPos.y < 0.0) {
