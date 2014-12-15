@@ -158,6 +158,7 @@ body {
     position: fixed;
     width: 100%;
     height: 100%;
+    top: 0;
     left: 0;
     border: none;
     vertical-align: bottom;
@@ -168,6 +169,16 @@ body {
 #header {
     display: block;
     height: 1200px;
+    z-index: -2;
+}
+
+#header h1 {
+    font-family: "Raleway";
+    font-size: 72px;
+    line-height: 76px;
+    text-align: center;
+    padding-top: 250px;
+    margin: 0px 0px;
 }
 
 /* BODY */
