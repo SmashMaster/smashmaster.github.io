@@ -14,7 +14,7 @@ uniform sampler2D u_tex_name;
 varying vec2 v_pos;
 
 const float CAMERA_HEIGHT = 0.125;
-const float Z_CLIP_NEAR = 0.0625;
+const float Z_CLIP_NEAR = 0.125;
 const float ATMOSPHERIC_DENSITY = 0.05;
 const vec3 ATMOSPHERIC_ATTENUATION = vec3(0.06, 0.09, 0.1);
 const vec3 ATMOSPHERIC_INSCATTERING = vec3(0.06, 0.09, 0.1);
@@ -35,9 +35,9 @@ void atmAttenuate(in float opticalDepth, inout vec3 luminance) {
 
 /* NAME */
 
-const float NAME_DISTANCE = 1.0;
-const float NAME_SCALE = 0.125;
-const float NAME_HEIGHT = 0.07;
+const float NAME_DISTANCE = 1.5;
+const float NAME_SCALE = 0.1;
+const float NAME_HEIGHT = 0.08;
 const float NAME_ASPECT_RATIO = 4.0;
 const float NAME_Y_FACTOR = NAME_HEIGHT/NAME_ASPECT_RATIO;
 const vec3 NAME_COLOR = vec3(0.875);
@@ -64,7 +64,7 @@ const float AURORA_HEIGHT = 48.0;
 const float AURORA_SCALE = 512.0;
 const float AURORA_DISTORT_SCALE = 2048.0;
 const float AURORA_DISTORT_AMOUNT = 2.0;
-const float AURORA_BRIGHTNESS = 2.5;
+const float AURORA_BRIGHTNESS = 3.0;
 const vec3 AURORA_COLOR_A = vec3(0.0, 0.9, 0.1);
 const vec3 AURORA_COLOR_B = vec3(0.0, 0.4, 0.6);
 const vec3 AURORA_AVERAGE_COLOR = (AURORA_COLOR_A + AURORA_COLOR_B)*(0.5*AURORA_BRIGHTNESS);
@@ -123,12 +123,12 @@ vec3 rayAurora(vec3 rayPos, vec3 rayDir) {
 
 /* WATER */
 
-const float WATER_DEPTH = 1.0/64.0;
+const float WATER_DEPTH = 1.0/96.0;
 const float WATER_FADE_START = 0.35;
 const float WATER_FADE_END = 0.025;
 const float WATER_FADE_DIST = WATER_FADE_START - WATER_FADE_END;
 const vec3 WATER_FAR_COLOR = ATMOSPHERIC_INSCATTERING;
-const float WATER_ETA = 1.05;
+const float WATER_ETA = 1.0125;
 
 const float WATER_DENSITY = 60.0;
 const vec3 WATER_ATTENUATION = vec3(0.05, 0.05, 0.05);
@@ -239,7 +239,9 @@ void main() {
     
     //Set up view ray
     vec3 camPos = vec3(0.0, CAMERA_HEIGHT*(1.0 - camOffset), 0.0);
-    vec3 rayDir = normalize(vec3(v_pos.x/u_aspectRatio, v_pos.y, -1.0));
+    vec3 rayDir = u_aspectRatio > 1.0 ?
+            normalize(vec3(v_pos.x/u_aspectRatio, v_pos.y, -1.0)) :
+            normalize(vec3(v_pos.x, v_pos.y*u_aspectRatio, -1.0));
     
     vec3 color = ray(camPos, rayDir);
     

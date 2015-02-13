@@ -172,15 +172,6 @@ body {
     z-index: -2;
 }
 
-#header h1 {
-    font-family: "Raleway";
-    font-size: 72px;
-    line-height: 76px;
-    text-align: center;
-    padding-top: 250px;
-    margin: 0px 0px;
-}
-
 /* BODY */
 #body {
     display: inline-block;
