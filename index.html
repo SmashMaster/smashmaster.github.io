@@ -7,113 +7,18 @@
 <head>
 <title>Sam's Website</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-
-<link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Prociono">
-<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Raleway:300">
 <link rel="stylesheet" type="text/css" href="style.css">
-
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="demo.js"></script>
 </head>
 
-<body onload="main();">
-<div id="loader">
-    <div class="spinner">
-        <div class="spinner-container container1">
-            <div class="circle1"></div>
-            <div class="circle2"></div>
-            <div class="circle3"></div>
-            <div class="circle4"></div>
-        </div>
-        <div class="spinner-container container2">
-            <div class="circle1"></div>
-            <div class="circle2"></div>
-            <div class="circle3"></div>
-            <div class="circle4"></div>
-        </div>
-        <div class="spinner-container container3">
-            <div class="circle1"></div>
-            <div class="circle2"></div>
-            <div class="circle3"></div>
-            <div class="circle4"></div>
+<body>
+<div id="demo">
+    <div id="sun" class="centered">
+        <div id="planet-moon-system" class="centered">
+            <div id="planet" class="centered"></div>
+            <div id="moon" class="centered"></div>
         </div>
     </div>
-</div>
-<canvas id="webglcanvas"></canvas>
-<div id="header"></div>
-<hr>
-<div id="body">
-    <div class="title">Who I am</div>
-    <div class="content">
-        <p>Every night, I look to the stars and attempt to appreciate the vastness of our universe.
-        I like to explore worlds; whether they're outside my front door, stored on a computer, or inside my own head.
-        To delve into a system, understand it, and to make my mark there; that's what life is all about to me.</p>
-        <div class="content-left">
-            Age:<br>
-            Location:<br>
-            Occupation:<br>
-        </div>
-        <div class="content-right">
-            21<br>
-            Boulder, Colorado<br>
-            Tech Support, IBM<br>
-        </div>
-        <p>My name is Sam. I'm a technophile, a self-taught programmer, and an avid gamer.
-        I was raised behind a keyboard, and I have no idea who I would be without computers.
-        For me, they're another world to explore; and the more I learn about them, the more I learn about myself.</p>
-    </div>
-    <div class="title">Dreaming in Java</div>
-    <div class="content">
-        <p>Something about programming deeply appeals to me.
-        It represents the opportunity not just to explore worlds, but to create them.
-        For me, writing code professionally would be a dream come true.</p>
-        <h2>Languages:</h2>
-        <div class="content-left">
-            Java<br>
-            GLSL<br>
-            JavaScript<br>
-            C/C++<br>
-            Python<br>
-            C#<br>
-            Lua<br>
-        </div>
-        <div class="content-right">
-            <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <br>
-            <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-half"></i> <br>
-            <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-half"></i> <br>
-            <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-half"></i> <br>
-            <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <br>
-            <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <br>
-            <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <br>
-        </div>
-        <p>If I had to pick a speciality, it would be graphics programming with OpenGL. (Any language/platform.)</p>
-    </div>
-    <div class="title">Fun is learning</div>
-    <div class="content">
-        <p>In my free time, I play computer games like Dark Souls, Morrowind, ARMA 3, and Team Fortress 2.
-        When I'm not on my computer, I practice historical longsword fencing,
-        and brew my own wines, ciders, and mead.</p>
-        <p>Oh, and I also like music. I mainly listen to big beat and instrumental hip hop,
-        but I like anything that sounds good. My favorite artist is <a href="http://www.professorkliq.com/">Professor Kliq</a>.</p>
-    </div>
-    <div class="title">Contact me</div>
-    <div class="content" id="contactinfo">
-        <a href="mailto:sam@samrj.com" title="Email">
-            <i class="fa fa-envelope"></i></a>
-        <a href="http://github.com/SmashMaster" title="GitHub">
-            <i class="fa fa-github"></i></a>
-        <a href="http://steamcommunity.com/id/SmashMaster" title="Steam">
-            <i class="fa fa-steam"></i></a>
-    </div>
-</div>
-<hr>
-<div id="footer">
-    <p>&copy; 2014 Sam Johnson</p>
-    <img src="devl1.png" alt=""><br>
-    <p><a href="http://github.com/SmashMaster/smashmaster.github.io">
-        This website is open source and published under the MIT license.
-    </a></p>
 </div>
 </body>
 

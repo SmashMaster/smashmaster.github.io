@@ -1,290 +1,121 @@
 /* Author: Samuel Johnson (SmashMaster) */
 /* Copyright: 2014 Samuel Johnson */
 /* License: https://github.com/SmashMaster/smashmaster.github.io/blob/master/LICENSE */
-
 body {
-    background: #0d0d0d;
-    font-family: "Prociono";
-    font-size: 20px;
-    line-height: 24px;
-    color: #c4c4c4;
-    text-shadow: 1px 2px 2px rgba(0, 0, 0, 1.0);
-    margin: 0px auto;
-    min-width: 500px;
-    max-width: 1200px;
-}
-
-#loader {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: #000;
-    z-index: 100;
-    
-    -webkit-transition: all 1.5s linear; 
-       -moz-transition: all 1.5s linear; 
-            transition: all 1.5s linear;
-}
-
-.loaded #loader {
-    opacity: 0;
-    visibility: hidden;
-}
-
-/* SpinKit spinner: https://github.com/tobiasahlin/SpinKit */
-/* Copyright (c) 2014 Tobias Ahlin */
-/* License: https://github.com/tobiasahlin/SpinKit/blob/master/LICENSE */
-
-.spinner {
-    width: 48px;
-    height: 48px;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    bottom: 60px;
-    right: 0px;
-    margin: auto;
-}
-
-.container1 > div, .container2 > div, .container3 > div {
-    width: 8px;
-    height: 8px;
-    background-color: #FFF;
-
-    border-radius: 100%;
-    position: absolute;
-    -webkit-animation: bouncedelay 1.2s infinite ease-in-out;
-    animation: bouncedelay 1.2s infinite ease-in-out;
-    /* Prevent first frame from flickering when animation starts */
-    -webkit-animation-fill-mode: both;
-    animation-fill-mode: both;
-}
-
-.spinner .spinner-container {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-}
-
-.container2 {
-    -webkit-transform: rotateZ(45deg);
-    transform: rotateZ(45deg);
-}
-
-.container3 {
-    -webkit-transform: rotateZ(90deg);
-    transform: rotateZ(90deg);
-}
-
-.circle1 { top: 0; left: 0; }
-.circle2 { top: 0; right: 0; }
-.circle3 { right: 0; bottom: 0; }
-.circle4 { left: 0; bottom: 0; }
-
-.container2 .circle1 {
-    -webkit-animation-delay: -1.1s;
-    animation-delay: -1.1s;
-}
-
-.container3 .circle1 {
-    -webkit-animation-delay: -1.0s;
-    animation-delay: -1.0s;
-}
-
-.container1 .circle2 {
-    -webkit-animation-delay: -0.9s;
-    animation-delay: -0.9s;
-}
-
-.container2 .circle2 {
-    -webkit-animation-delay: -0.8s;
-    animation-delay: -0.8s;
-}
-
-.container3 .circle2 {
-    -webkit-animation-delay: -0.7s;
-    animation-delay: -0.7s;
-}
-
-.container1 .circle3 {
-    -webkit-animation-delay: -0.6s;
-    animation-delay: -0.6s;
-}
-
-.container2 .circle3 {
-    -webkit-animation-delay: -0.5s;
-    animation-delay: -0.5s;
-}
-
-.container3 .circle3 {
-    -webkit-animation-delay: -0.4s;
-    animation-delay: -0.4s;
-}
-
-.container1 .circle4 {
-    -webkit-animation-delay: -0.3s;
-    animation-delay: -0.3s;
-}
-
-.container2 .circle4 {
-    -webkit-animation-delay: -0.2s;
-    animation-delay: -0.2s;
-}
-
-.container3 .circle4 {
-    -webkit-animation-delay: -0.1s;
-    animation-delay: -0.1s;
-}
-
-@-webkit-keyframes bouncedelay {
-    0%, 80%, 100% { -webkit-transform: scale(0.0) }
-    40% { -webkit-transform: scale(1.0) }
-}
-
-@keyframes bouncedelay {
-    0%, 80%, 100% {
-        transform: scale(0.0);
-        -webkit-transform: scale(0.0);
-    } 40% { 
-        transform: scale(1.0);
-        -webkit-transform: scale(1.0);
-    }
-}
-
-#webglcanvas {
-    background: #000; /*Put fallback image here*/
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    border: none;
-    vertical-align: bottom;
-    line-height: 1px;
-    z-index: -1;
-}
-
-#header {
-    display: block;
-    height: 1200px;
-    z-index: -2;
-}
-
-/* BODY */
-#body {
-    display: inline-block;
-    background-color: rgba(32, 32, 32, 0.8);
-    margin: 0px auto;
-    width: 100%;
-    vertical-align: bottom;
-}
-#body h2 {
-    font-family: "Raleway";
-    font-size: 32px;
-    line-height: 36px;
-    text-align: center;
-    margin: 20px 0px 10px 0px;
-}
-#body p {
-    text-indent: 20px;
-    margin: 10px auto;
-    padding: 0px 10px 0px 10px;
-    max-width: 800px;
-    text-align: justify;
-    clear: both;
-}
-#body .content {
-    text-align: center;
-    margin: 0px auto;
-    padding-top: 10px;
-    padding-bottom: 40px;
-    overflow: hidden;
-}
-#body .content-left {
-    display: block;
-    float: left;
-    margin-bottom: 20px;
-    width: 45%;
-    text-align: right;
-}
-#body .content-right {
-    display: block;
-    float: left;
-    margin-bottom: 20px;
-    padding-left: 10px;
-    text-align: left;
-}
-#body .title {
-    transition: background-color 0.125s ease, color 0.125s ease;
-    font-family: "Raleway";
-    font-size: 56px;
-    line-height: 72px;
-    text-align: left;
-    padding-left: 60px;
-}
-
-/* CONTACT INFO */
-#contactinfo a {
-    display: inline-block;
-    font-size: 80px;
-    line-height: 80px;
-    vertical-align: bottom;
-    margin: 10px 20px;
-}
-#contactinfo a:link    {color: #c4c4c4;}
-#contactinfo a:visited {color: #c4c4c4;}
-#contactinfo a:hover   {color: #ededed;}
-#contactinfo a:active  {color: #ffffff;}
-
-hr {
-    background-color: #6495bb;
-    color: #6495bb;
     margin: 0px;
-    padding: 0px;
-    height: 2px;
-    border: none;
 }
 
-#footer {
-    background-color: rgba(32, 32, 32, 0.75);
-    text-align: center;
-}
-#footer p {
-    display: block;
-    margin: 0px;
-    padding: 5px;
-}
+/*ORBITAL DEMO STYLES*/
 
-/* LINK COLORS */
-a:link    {color: #6495bb;}
-a:visited {color: #6495bb;}
-a:hover   {color: #ededed;}
-a:active  {color: #ffffff;}
-
-/* LOADING SCREEN */
-.loading-circle {
+#demo {
+    position: relative; /*Hack so that we can center stuff more easily.*/
+    width: 100vmin;
+    height: 100vmin;
+    max-width: 75vh;
+    max-height: 75vh;
     margin: 0 auto;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 4px solid #BEB69D;
-    position: relative;
-    animation: spin 2s infinite linear;
+    background-color: #ccc;
 }
 
-.loading-circle:before {
-    content: "";
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: block;
+.centered {
     position: absolute;
-    left: -4px;
-    top: -4px;
-    border-right: 4px solid #BEB69D;
-    border-top: 4px solid #BEB69D;
-    border-left: 4px solid #FFF;
-    border-bottom: 4px solid #BEB69D;
+    left: 50%;
+    top: 50%;
+    border-radius: 50%;
+}
+
+#sun {
+    width: 20%;
+    height: 20%;
+    margin: -10% 0 0 -10%; /*Must be half of width and height*/
+    background-color: #555;
+}
+
+#planet-moon-system { /*Planet and moon orbit around common center of gravity*/
+    width: 100%;
+    height: 100%;
+    margin: -50% 0 0 -50%;
+    visibility: hidden;
+    
+    -webkit-animation: planetMoonSystemOrbit 15.8s linear infinite;
+       -moz-animation: planetMoonSystemOrbit 15.8s linear infinite;
+         -o-animation: planetMoonSystemOrbit 15.8s linear infinite;
+            animation: planetMoonSystemOrbit 15.8s linear infinite;
+}
+
+@-webkit-keyframes planetMoonSystemOrbit { from {
+    -webkit-transform: rotate(0deg)    translateX(175%) rotate(0deg); } to {
+    -webkit-transform: rotate(-360deg) translateX(175%) rotate(360deg); }
+}
+@-moz-keyframes planetMoonSystemOrbit { from {
+       -moz-transform: rotate(0deg)    translateX(175%) rotate(0deg); } to {
+       -moz-transform: rotate(-360deg) translateX(175%) rotate(360deg); }
+}
+@-o-keyframes planetMoonSystemOrbit { from {
+         -o-transform: rotate(0deg)    translateX(175%) rotate(0deg); } to {
+         -o-transform: rotate(-360deg) translateX(175%) rotate(360deg); }
+}
+@keyframes planetMoonSystemOrbit { from {
+            transform: rotate(0deg)    translateX(175%) rotate(0deg); } to {
+            transform: rotate(-360deg) translateX(175%) rotate(360deg); }
+}
+
+#planet {
+    width: 50%;
+    height: 50%;
+    margin: -25% 0 0 -25%;
+    visibility: visible;
+    background-color: #eee;
+    
+    -webkit-animation: planetOrbit 2.2s linear infinite;
+       -moz-animation: planetOrbit 2.2s linear infinite;
+         -o-animation: planetOrbit 2.2s linear infinite;
+            animation: planetOrbit 2.2s linear infinite;
+}
+
+@-webkit-keyframes planetOrbit { from {
+    -webkit-transform: rotate(0deg)    translateX(-25%) rotate(0deg); } to {
+    -webkit-transform: rotate(-360deg) translateX(-25%) rotate(360deg); }
+}
+@-moz-keyframes planetOrbit { from {
+       -moz-transform: rotate(0deg)    translateX(-25%) rotate(0deg); } to {
+       -moz-transform: rotate(-360deg) translateX(-25%) rotate(360deg); }
+}
+@-o-keyframes planetOrbit { from {
+         -o-transform: rotate(0deg)    translateX(-25%) rotate(0deg); } to {
+         -o-transform: rotate(-360deg) translateX(-25%) rotate(360deg); }
+}
+@keyframes planetOrbit { from {
+            transform: rotate(0deg)    translateX(-25%) rotate(0deg); } to {
+            transform: rotate(-360deg) translateX(-25%) rotate(360deg); }
+}
+
+#moon {
+    width: 24%;
+    height: 24%;
+    margin: -12% 0 0 -12%;
+    visibility: visible;
+    background-color: #fff;
+    
+    -webkit-animation: moonOrbit 2.2s linear infinite;
+       -moz-animation: moonOrbit 2.2s linear infinite;
+         -o-animation: moonOrbit 2.2s linear infinite;
+            animation: moonOrbit 2.2s linear infinite;
+}
+
+@-webkit-keyframes moonOrbit { from {
+    -webkit-transform: rotate(0deg)    translateX(200%) rotate(0deg); } to {
+    -webkit-transform: rotate(-360deg) translateX(200%) rotate(360deg); }
+}
+@-moz-keyframes moonOrbit { from {
+       -moz-transform: rotate(0deg)    translateX(200%) rotate(0deg); } to {
+       -moz-transform: rotate(-360deg) translateX(200%) rotate(360deg); }
+}
+@-o-keyframes moonOrbit { from {
+         -o-transform: rotate(0deg)    translateX(200%) rotate(0deg); } to {
+         -o-transform: rotate(-360deg) translateX(200%) rotate(360deg); }
+}
+@keyframes moonOrbit { from {
+            transform: rotate(0deg)    translateX(200%) rotate(0deg); } to {
+            transform: rotate(-360deg) translateX(200%) rotate(360deg); }
 }
