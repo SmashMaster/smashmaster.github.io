@@ -17,18 +17,17 @@ body {
     background-color: #ccc;
 }
 
+#demo canvas {
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+}
+
 .centered {
     position: absolute;
     left: 50%;
     top: 50%;
     border-radius: 50%;
-}
-
-#system {
-    width: 100%;
-    height: 100%;
-    margin: -50% 0 0 -50%; /*Must be half of width and height*/
-    visibility: hidden;
 }
 
 #sun {
@@ -38,10 +37,10 @@ body {
     visibility: visible;
     background-color: #555;
     
-    -webkit-animation: sunOrbit 15.8s linear infinite;
-       -moz-animation: sunOrbit 15.8s linear infinite;
-         -o-animation: sunOrbit 15.8s linear infinite;
-            animation: sunOrbit 15.8s linear infinite;
+    -webkit-animation: sunOrbit 15.5s linear infinite;
+       -moz-animation: sunOrbit 15.5s linear infinite;
+         -o-animation: sunOrbit 15.5s linear infinite;
+            animation: sunOrbit 15.5s linear infinite;
 }
 
 @-webkit-keyframes sunOrbit { from {
@@ -67,10 +66,10 @@ body {
     margin: -10% 0 0 -10%;
     visibility: hidden;
     
-    -webkit-animation: planetMoonSystemOrbit 15.8s linear infinite;
-       -moz-animation: planetMoonSystemOrbit 15.8s linear infinite;
-         -o-animation: planetMoonSystemOrbit 15.8s linear infinite;
-            animation: planetMoonSystemOrbit 15.8s linear infinite;
+    -webkit-animation: planetMoonSystemOrbit 15.5s linear infinite;
+       -moz-animation: planetMoonSystemOrbit 15.5s linear infinite;
+         -o-animation: planetMoonSystemOrbit 15.5s linear infinite;
+            animation: planetMoonSystemOrbit 15.5s linear infinite;
 }
 
 @-webkit-keyframes planetMoonSystemOrbit { from {
