@@ -24,17 +24,47 @@ body {
     border-radius: 50%;
 }
 
+#system {
+    width: 100%;
+    height: 100%;
+    margin: -50% 0 0 -50%; /*Must be half of width and height*/
+    visibility: hidden;
+}
+
 #sun {
     width: 20%;
     height: 20%;
-    margin: -10% 0 0 -10%; /*Must be half of width and height*/
+    margin: -10% 0 0 -10%;
+    visibility: visible;
     background-color: #555;
+    
+    -webkit-animation: sunOrbit 15.8s linear infinite;
+       -moz-animation: sunOrbit 15.8s linear infinite;
+         -o-animation: sunOrbit 15.8s linear infinite;
+            animation: sunOrbit 15.8s linear infinite;
 }
 
-#planet-moon-system { /*Planet and moon orbit around common center of gravity*/
-    width: 100%;
-    height: 100%;
-    margin: -50% 0 0 -50%;
+@-webkit-keyframes sunOrbit { from {
+    -webkit-transform: rotate(0deg)    translateX(-50%) rotate(0deg); } to {
+    -webkit-transform: rotate(-360deg) translateX(-50%) rotate(360deg); }
+}
+@-moz-keyframes sunOrbit { from {
+       -moz-transform: rotate(0deg)    translateX(-50%) rotate(0deg); } to {
+       -moz-transform: rotate(-360deg) translateX(-50%) rotate(360deg); }
+}
+@-o-keyframes sunOrbit { from {
+         -o-transform: rotate(0deg)    translateX(-50%) rotate(0deg); } to {
+         -o-transform: rotate(-360deg) translateX(-50%) rotate(360deg); }
+}
+@keyframes sunOrbit { from {
+            transform: rotate(0deg)    translateX(-50%) rotate(0deg); } to {
+            transform: rotate(-360deg) translateX(-50%) rotate(360deg); }
+}
+
+#planet-moon-system {
+    width: 20%;
+    height: 20%;
+    margin: -10% 0 0 -10%;
     visibility: hidden;
     
     -webkit-animation: planetMoonSystemOrbit 15.8s linear infinite;
