@@ -41,7 +41,7 @@ function addEvent(elem, type, eventHandle) {
     }
 }
 
-function getShader(drawer, url, type) {
+function loadShader(drawer, url, type) {
     var req = new XMLHttpRequest();
     req.open("GET", url, false);
     req.send(null);
@@ -59,6 +59,27 @@ function getShader(drawer, url, type) {
     return shader;
 }
 
+function loadTexture(drawer, url, wrap) {
+    drawer.loading++;
+    var gl = drawer.gl;
+    var texture = gl.createTexture();
+    
+    var image = new Image();
+    $(image).one('load', function() {
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrap);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrap);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
+        gl.bindTexture(gl.TEXTURE_2D, null);
+        drawer.loading--;
+    });
+    image.src = url;
+    
+    return texture;
+}
+
 var sunDrawer, planetDrawer, moonDrawer;
 
 function makeDrawer(canvasName, shaderName) {
@@ -69,8 +90,8 @@ function makeDrawer(canvasName, shaderName) {
     drawer.gl = gl;
     
     //INIT SHADERS
-    var fragmentShader = getShader(drawer, "shaders/" + shaderName + ".frag", gl.FRAGMENT_SHADER);
-    var vertexShader = getShader(drawer, "shaders/shader.vert", gl.VERTEX_SHADER);
+    var fragmentShader = loadShader(drawer, "shaders/" + shaderName + ".frag", gl.FRAGMENT_SHADER);
+    var vertexShader = loadShader(drawer, "shaders/shader.vert", gl.VERTEX_SHADER);
     
     drawer.shader = gl.createProgram();
     gl.attachShader(drawer.shader, vertexShader);
@@ -121,9 +142,10 @@ function makeDrawer(canvasName, shaderName) {
     
         var gl = this.gl;
         gl.viewport(0, 0, this.width, this.height);
-        
         gl.clearColor(0.0, 0.0, 0.0, 0.0);
         gl.clear(gl.COLOR_BUFFER_BIT);
+        
+        if (this.onDraw) this.onDraw();
         
         gl.bindBuffer(gl.ARRAY_BUFFER, this.quadBuffer);
         gl.vertexAttribPointer(this.shader.vertexPositionAttribute, this.quadBuffer.itemSize, gl.FLOAT, false, 0, 0);
@@ -158,6 +180,11 @@ function animate() {
 
 function loadSun() {
     sunDrawer = makeDrawer("#sun-canvas", "sun");
+    var gl = sunDrawer.gl;
+    sunDrawer.texture = loadTexture(sunDrawer, "clouds.png", gl.REPEAT);
+    sunDrawer.onDraw = function() {
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
+    }
     sunDrawer.loading--;
 }
 
