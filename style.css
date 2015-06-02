@@ -14,7 +14,7 @@ body {
     max-width: 75vh;
     max-height: 75vh;
     margin: 0 auto;
-    background-color: #ccc;
+    background-color: #333;
 }
 
 #demo canvas {
