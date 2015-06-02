@@ -68,17 +68,72 @@ function getShader(drawer, url, type) {
     gl.compileShader(shader);
 
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        alert(gl.getShaderInfoLog(shader));
-        return null;
+        throw gl.getShaderInfoLog(shader);
     }
 
     return shader;
 }
 
+function initShader(drawer) {
+    var gl = drawer.gl;
+    var fragmentShader = getShader(drawer, "shader.frag", gl.FRAGMENT_SHADER);
+    var vertexShader = getShader(drawer, "shader.vert", gl.VERTEX_SHADER);
+    
+    drawer.shader = gl.createProgram();
+    gl.attachShader(drawer.shader, vertexShader);
+    gl.attachShader(drawer.shader, fragmentShader);
+    gl.linkProgram(drawer.shader);
+
+    if (!gl.getProgramParameter(drawer.shader, gl.LINK_STATUS)) {
+        throw gl.getProgramInfoLog(shader);
+    }
+    
+    gl.useProgram(drawer.shader);
+
+    drawer.shader.vertexPositionAttribute = gl.getAttribLocation(drawer.shader, "in_pos");
+    gl.enableVertexAttribArray(drawer.shader.vertexPositionAttribute);
+}
+
+function draw(drawer) {
+    var gl = drawer.gl;
+    gl.viewport(0, 0, drawer.width, drawer.height);
+    
+    gl.clearColor(1.0, 0.0, 0.0, 1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    
+    gl.bindBuffer(gl.ARRAY_BUFFER, drawer.quadBuffer);
+    gl.vertexAttribPointer(drawer.shader.vertexPositionAttribute, drawer.quadBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, drawer.quadBuffer.numItems);
+}
+
+function resize(drawer) {
+    drawer.width = drawer.canvas.width();
+    drawer.height = drawer.canvas.height();
+    drawer.canvas[0].width = drawer.width;
+    drawer.canvas[0].height = drawer.height;
+}
+
 function onResize() {
+    try {
+        resize(sunDrawer);
+        resize(planetDrawer);
+        resize(moonDrawer);
+    }
+    catch (e) {
+        alert(e);
+    }
 }
 
 function animate() {
+    try {
+        draw(sunDrawer);
+        draw(planetDrawer);
+        draw(moonDrawer);
+        window.requestAnimationFrame(animate);
+    }
+    catch (e) {
+        alert(e);
+    }
 }
 
 function makeDrawer(canvasName) {
@@ -92,8 +147,9 @@ function makeDrawer(canvasName) {
         
         return {x:offset.left + width/2.0, y:-offset.top - height/2.0};
     }
-    
+    initShader(drawer);
     initBuffer(drawer);
+    resize(drawer);
     return drawer;
 }
 
