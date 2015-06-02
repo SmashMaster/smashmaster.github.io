@@ -74,10 +74,10 @@ function getShader(drawer, url, type) {
     return shader;
 }
 
-function initShader(drawer) {
+function initShader(drawer, shaderName) {
     var gl = drawer.gl;
-    var fragmentShader = getShader(drawer, "shader.frag", gl.FRAGMENT_SHADER);
-    var vertexShader = getShader(drawer, "shader.vert", gl.VERTEX_SHADER);
+    var fragmentShader = getShader(drawer, "shaders/" + shaderName + ".frag", gl.FRAGMENT_SHADER);
+    var vertexShader = getShader(drawer, "shaders/shader.vert", gl.VERTEX_SHADER);
     
     drawer.shader = gl.createProgram();
     gl.attachShader(drawer.shader, vertexShader);
@@ -136,7 +136,7 @@ function animate() {
     }
 }
 
-function makeDrawer(canvasName) {
+function makeDrawer(canvasName, shaderName) {
     var drawer = {};
     drawer.canvas = $(canvasName);
     drawer.gl = drawer.canvas[0].getContext('experimental-webgl');
@@ -147,7 +147,7 @@ function makeDrawer(canvasName) {
         
         return {x:offset.left + width/2.0, y:-offset.top - height/2.0};
     }
-    initShader(drawer);
+    initShader(drawer, shaderName);
     initBuffer(drawer);
     resize(drawer);
     return drawer;
@@ -157,9 +157,9 @@ var sunDrawer, planetDrawer, moonDrawer;
 
 function main() {
     try {
-        sunDrawer = makeDrawer("#sun-canvas");
-        planetDrawer = makeDrawer("#planet-canvas");
-        moonDrawer = makeDrawer("#moon-canvas");
+        sunDrawer = makeDrawer("#sun-canvas", "sun");
+        planetDrawer = makeDrawer("#planet-canvas", "planet");
+        moonDrawer = makeDrawer("#moon-canvas", "moon");
         
         addEvent(window, "resize", onResize);
         window.requestAnimationFrame(animate);

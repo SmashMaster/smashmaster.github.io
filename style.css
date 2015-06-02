@@ -33,9 +33,9 @@ body {
 }
 
 #sun {
-    width: 20%;
-    height: 20%;
-    margin: -10% 0 0 -10%;
+    width: 40%;
+    height: 40%;
+    margin: -20% 0 0 -20%;
     
     -webkit-animation: sunOrbit 15.5s linear infinite;
        -moz-animation: sunOrbit 15.5s linear infinite;
@@ -44,20 +44,20 @@ body {
 }
 
 @-webkit-keyframes sunOrbit { from {
-    -webkit-transform: rotate(0deg)    translateX(-50%) rotate(0deg); } to {
-    -webkit-transform: rotate(-360deg) translateX(-50%) rotate(360deg); }
+    -webkit-transform: rotate(0deg)    translateX(-10%) rotate(0deg); } to {
+    -webkit-transform: rotate(-360deg) translateX(-10%) rotate(360deg); }
 }
 @-moz-keyframes sunOrbit { from {
-       -moz-transform: rotate(0deg)    translateX(-50%) rotate(0deg); } to {
-       -moz-transform: rotate(-360deg) translateX(-50%) rotate(360deg); }
+       -moz-transform: rotate(0deg)    translateX(-10%) rotate(0deg); } to {
+       -moz-transform: rotate(-360deg) translateX(-10%) rotate(360deg); }
 }
 @-o-keyframes sunOrbit { from {
-         -o-transform: rotate(0deg)    translateX(-50%) rotate(0deg); } to {
-         -o-transform: rotate(-360deg) translateX(-50%) rotate(360deg); }
+         -o-transform: rotate(0deg)    translateX(-10%) rotate(0deg); } to {
+         -o-transform: rotate(-360deg) translateX(-10%) rotate(360deg); }
 }
 @keyframes sunOrbit { from {
-            transform: rotate(0deg)    translateX(-50%) rotate(0deg); } to {
-            transform: rotate(-360deg) translateX(-50%) rotate(360deg); }
+            transform: rotate(0deg)    translateX(-10%) rotate(0deg); } to {
+            transform: rotate(-360deg) translateX(-10%) rotate(360deg); }
 }
 
 #planet-moon-system {
