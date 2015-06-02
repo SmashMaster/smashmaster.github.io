@@ -137,7 +137,7 @@ function makeDrawer(canvasName, shaderName) {
         return {x:offset.left + width/2.0, y:-offset.top - height/2.0};
     }
     
-    drawer.draw = function() {
+    drawer.draw = function(time) {
         if (this.loading) return;
     
         var gl = this.gl;
@@ -145,7 +145,7 @@ function makeDrawer(canvasName, shaderName) {
         gl.clearColor(0.0, 0.0, 0.0, 0.0);
         gl.clear(gl.COLOR_BUFFER_BIT);
         
-        if (this.onDraw) this.onDraw();
+        if (this.onDraw) this.onDraw(time);
         
         gl.bindBuffer(gl.ARRAY_BUFFER, this.quadBuffer);
         gl.vertexAttribPointer(this.shader.vertexPositionAttribute, this.quadBuffer.itemSize, gl.FLOAT, false, 0, 0);
@@ -166,11 +166,19 @@ function onResize() {
     }
 }
 
+var startTime = 0;
+
 function animate() {
+    var currentTime = (new Date).getTime();
+    if (!startTime || (currentTime - startTime) >= 1200000) {
+        startTime = currentTime;
+    }
+    var time = (currentTime - startTime)/1000.0
+    
     try {
-        sunDrawer.draw();
-        planetDrawer.draw();
-        moonDrawer.draw();
+        sunDrawer.draw(time);
+        planetDrawer.draw(time);
+        moonDrawer.draw(time);
         window.requestAnimationFrame(animate);
     }
     catch (e) {
@@ -182,8 +190,10 @@ function loadSun() {
     sunDrawer = makeDrawer("#sun-canvas", "sun");
     var gl = sunDrawer.gl;
     sunDrawer.texture = loadTexture(sunDrawer, "clouds.png", gl.REPEAT);
-    sunDrawer.onDraw = function() {
-        this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
+    sunDrawer.onDraw = function(time) {
+    
+        gl.uniform1f(gl.getUniformLocation(this.shader, "u_time"), time);
+        gl.bindTexture(gl.TEXTURE_2D, this.texture);
     }
     sunDrawer.loading--;
 }
