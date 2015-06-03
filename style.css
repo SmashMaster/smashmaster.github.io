@@ -33,9 +33,9 @@ body {
 }
 
 #sun {
-    width: 40%;
-    height: 40%;
-    margin: -20% 0 0 -20%;
+    width: 80%;
+    height: 80%;
+    margin: -40% 0 0 -40%;
     
     -webkit-animation: sunOrbit 15.5s linear infinite;
        -moz-animation: sunOrbit 15.5s linear infinite;
