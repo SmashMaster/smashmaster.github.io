@@ -3,6 +3,7 @@
 /* License: https://github.com/SmashMaster/smashmaster.github.io/blob/master/LICENSE */
 body {
     margin: 0;
+    background-color: #000;
 }
 
 /*ORBITAL DEMO STYLES*/
@@ -14,7 +15,7 @@ body {
     /*max-width: 75vh;
     max-height: 75vh;*/
     margin: 0 auto;
-    background-color: #333;
+    visibility: hidden;
 }
 
 #demo canvas {
