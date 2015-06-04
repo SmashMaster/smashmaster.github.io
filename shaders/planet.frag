@@ -4,6 +4,9 @@
 
 precision lowp float;
 
+uniform vec2 u_sun_pos;
+uniform vec2 u_moon_pos;
+
 varying vec2 v_pos;
 
 const float AA_SIZE = 1.0/12.0;
@@ -16,7 +19,12 @@ void main() {
     }
     else {
         r = sqrt(r);
-        gl_FragColor = vec4(1.0, 0.7, 0.9, 1.0);
+        
+        vec3 normal = vec3(v_pos, sqrt(1.0 - r));
+        vec3 lightDir = normalize(vec3(u_sun_pos - v_pos, 0.0));
+        float b = dot(normal, lightDir);
+        
+        gl_FragColor = vec4(vec3(b), 1.0);
         
         if (r > AA_THRESHOLD) {
             gl_FragColor *= (1.0-r)/AA_SIZE;

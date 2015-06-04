@@ -131,10 +131,18 @@ function makeDrawer(canvasName, shaderName) {
     
     drawer.center = function() {
         var offset = this.canvas.offset();
-        var width = this.canvas.width();
-        var height = this.canvas.height();
-        
-        return {x:offset.left + width/2.0, y:-offset.top - height/2.0};
+        return {x:offset.left + this.width/2.0, y:-offset.top - this.height/2.0};
+    }
+    
+    drawer.relPosition = function(d) {
+        var drawCenter = d.center();
+        var center = this.center();
+        return {x:2.0*(drawCenter.x - center.x)/this.width, 
+                y:2.0*(drawCenter.y - center.y)/this.height};
+    }
+    
+    drawer.uLoc = function(name) {
+        return gl.getUniformLocation(this.shader, "u_" + name);
     }
     
     drawer.draw = function(time) {
@@ -191,8 +199,7 @@ function loadSun() {
     var gl = sunDrawer.gl;
     sunDrawer.texture = loadTexture(sunDrawer, "clouds.png", gl.REPEAT);
     sunDrawer.onDraw = function(time) {
-    
-        gl.uniform1f(gl.getUniformLocation(this.shader, "u_time"), time);
+        gl.uniform1f(this.uLoc("time"), time);
         gl.bindTexture(gl.TEXTURE_2D, this.texture);
     }
     sunDrawer.loading--;
@@ -200,11 +207,23 @@ function loadSun() {
 
 function loadPlanet() {
     planetDrawer = makeDrawer("#planet-canvas", "planet");
+    planetDrawer.onDraw = function(time) {
+        var sunPos = this.relPosition(sunDrawer);
+        this.gl.uniform2f(this.uLoc("sun_pos"), sunPos.x, sunPos.y);
+        var moonPos = this.relPosition(moonDrawer);
+        this.gl.uniform2f(this.uLoc("moon_pos"), moonPos.x, moonPos.y);
+    }
     planetDrawer.loading--;
 }
 
 function loadMoon() {
     moonDrawer = makeDrawer("#moon-canvas", "moon");
+    moonDrawer.onDraw = function(time) {
+        var sunPos = this.relPosition(sunDrawer);
+        this.gl.uniform2f(this.uLoc("sun_pos"), sunPos.x, sunPos.y);
+        var planetPos = this.relPosition(planetDrawer);
+        this.gl.uniform2f(this.uLoc("planet_pos"), planetPos.x, planetPos.y);
+    }
     moonDrawer.loading--;
 }
 
