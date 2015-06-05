@@ -80,7 +80,7 @@ function loadTexture(drawer, url, wrap) {
     return texture;
 }
 
-var SUN_LIGHT_COLOR = {x:1.0, y:0.6, z:0.3};
+var SUN_LIGHT_COLOR = {x:20.0, y:10.0, z:3.0};
 var SUN_SIZE_FACTOR = 0.25;
 var sunDrawer, planetDrawer, moonDrawer;
 
@@ -236,11 +236,15 @@ function loadPlanet() {
 
 function loadMoon() {
     moonDrawer = makeDrawer("#moon-canvas", "moon");
+    var gl = moonDrawer.gl;
     moonDrawer.onDraw = function(time) {
+        gl.uniform3f(this.uLoc("sun_light_color"), SUN_LIGHT_COLOR.x, SUN_LIGHT_COLOR.y, SUN_LIGHT_COLOR.z);
+        gl.uniform1f(this.uLoc("sun_radius"), sunDrawer.relRadius(this));
+        gl.uniform1f(this.uLoc("planet_radius"), planetDrawer.relRadius(this));
         var sunPos = this.relPosition(sunDrawer);
-        this.gl.uniform2f(this.uLoc("sun_pos"), sunPos.x, sunPos.y);
+        gl.uniform2f(this.uLoc("sun_pos"), sunPos.x, sunPos.y);
         var planetPos = this.relPosition(planetDrawer);
-        this.gl.uniform2f(this.uLoc("planet_pos"), planetPos.x, planetPos.y);
+        gl.uniform2f(this.uLoc("planet_pos"), planetPos.x, planetPos.y);
     }
     moonDrawer.loading--;
 }

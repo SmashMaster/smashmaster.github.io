@@ -66,7 +66,7 @@ void main() {
                 vec3(u_moon_pos, 0.0), u_moon_radius, vec3(u_sun_pos, 0.0), u_sun_radius,
                 moonCoverage, sunCoverage);
         
-        float b = dot(normal, lightDir)*(sunCoverage - moonSunOverlap)/sunCoverage;
+        float b = dot(normal, lightDir)*(sunCoverage - moonSunOverlap);
         gl_FragColor = vec4(u_sun_light_color*b, 1.0);
         
         if (r > AA_THRESHOLD) {
