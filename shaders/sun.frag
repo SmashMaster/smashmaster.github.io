@@ -4,6 +4,7 @@
 
 precision lowp float;
 
+uniform float u_size_factor;
 uniform float u_time;
 uniform sampler2D u_texture;
 
@@ -12,8 +13,6 @@ varying vec2 v_pos;
 #define COLOR_A vec3(0.7, 0.0, 0.0)
 #define COLOR_B vec3(2.0, 1.0, 0.3)
 
-#define SUN_SIZE 0.25
-#define SUN_SIZE_SQ (SUN_SIZE*SUN_SIZE)
 #define SUN_PERTURB_AMT 0.75
 #define SUN_PERTURB_RATE (1.0/64.0)
 #define SUN_TEX_SCALE 8.0
@@ -68,12 +67,12 @@ void main() {
     if (r < 1.0) {
         float z = 1.0;
     
-        if (r < SUN_SIZE_SQ) {
-            float sr = sqrt(r)/SUN_SIZE;
+        if (r < u_size_factor*u_size_factor) {
+            float sr = sqrt(r)/u_size_factor;
             z = 1.0 - sqrt(1.0 - sr);
             z = (z - CORONA_Z_START)/CORONA_DEPTH;
             
-            vec2 uv = v_pos/(SUN_SIZE*SUN_TEX_SCALE*(SUN_DISTORT_AMT - sr));
+            vec2 uv = v_pos/(u_size_factor*SUN_TEX_SCALE*(SUN_DISTORT_AMT - sr));
             float color_lerp = texture2D(u_texture, megaPerturb(uv)).r;
             float a = 1.0;
             if (sr > SUN_AA_THRESHOLD) a = (1.0-sr)/SUN_AA_SIZE;

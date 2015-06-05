@@ -80,6 +80,8 @@ function loadTexture(drawer, url, wrap) {
     return texture;
 }
 
+var SUN_LIGHT_COLOR = {x:1.0, y:0.6, z:0.3};
+var SUN_SIZE_FACTOR = 0.25;
 var sunDrawer, planetDrawer, moonDrawer;
 
 function makeDrawer(canvasName, shaderName) {
@@ -132,6 +134,14 @@ function makeDrawer(canvasName, shaderName) {
     drawer.center = function() {
         var offset = this.canvas.offset();
         return {x:offset.left + this.width/2.0, y:-offset.top - this.height/2.0};
+    }
+    
+    drawer.radius = function() {
+        return (this.width + this.height)/2.0;
+    }
+    
+    drawer.relRadius = function(d) {
+        return this.radius()/d.radius();
     }
     
     drawer.relPosition = function(d) {
@@ -199,19 +209,27 @@ function loadSun() {
     var gl = sunDrawer.gl;
     sunDrawer.texture = loadTexture(sunDrawer, "clouds.png", gl.REPEAT);
     sunDrawer.onDraw = function(time) {
+        gl.uniform1f(this.uLoc("size_factor"), SUN_SIZE_FACTOR);
         gl.uniform1f(this.uLoc("time"), time);
         gl.bindTexture(gl.TEXTURE_2D, this.texture);
+    }
+    sunDrawer.radius = function() {
+        return (this.width + this.height)*SUN_SIZE_FACTOR/2.0;
     }
     sunDrawer.loading--;
 }
 
 function loadPlanet() {
     planetDrawer = makeDrawer("#planet-canvas", "planet");
+    var gl = planetDrawer.gl;
     planetDrawer.onDraw = function(time) {
+        gl.uniform3f(this.uLoc("sun_light_color"), SUN_LIGHT_COLOR.x, SUN_LIGHT_COLOR.y, SUN_LIGHT_COLOR.z);
+        gl.uniform1f(this.uLoc("sun_radius"), sunDrawer.relRadius(this));
+        gl.uniform1f(this.uLoc("moon_radius"), moonDrawer.relRadius(this));
         var sunPos = this.relPosition(sunDrawer);
-        this.gl.uniform2f(this.uLoc("sun_pos"), sunPos.x, sunPos.y);
+        gl.uniform2f(this.uLoc("sun_pos"), sunPos.x, sunPos.y);
         var moonPos = this.relPosition(moonDrawer);
-        this.gl.uniform2f(this.uLoc("moon_pos"), moonPos.x, moonPos.y);
+        gl.uniform2f(this.uLoc("moon_pos"), moonPos.x, moonPos.y);
     }
     planetDrawer.loading--;
 }
