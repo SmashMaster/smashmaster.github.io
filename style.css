@@ -3,18 +3,30 @@
 /* License: https://github.com/SmashMaster/smashmaster.github.io/blob/master/LICENSE */
 body {
     margin: 0;
-    background-image: url("http://www.startextures.com/starnetblog/wp-content/uploads/2010/09/starnetblog_cloudy_starfield_texture4.jpg");
-    background-color: #000;
+    background-color: #999;
 }
 
 /*ORBITAL DEMO STYLES*/
+
+#demo-background {
+    width: 100%;
+    max-width: 1024px;
+    margin: 0 auto;
+    background-image: url("http://truereality.org/wp-content/uploads/2014/02/hubble-space-wallpapers.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    
+    -webkit-box-shadow: inset -128px 0px 64px -64px #999, inset 128px 0px 64px -64px #999;
+       -moz-box-shadow: inset -128px 0px 64px -64px #999, inset 128px 0px 64px -64px #999;
+            box-shadow: inset -128px 0px 64px -64px #999, inset 128px 0px 64px -64px #999;
+}
 
 #demo {
     position: relative; /*Hack so that we can center stuff more easily.*/
     width: 100vmin;
     height: 100vmin;
-    /*max-width: 75vh;
-    max-height: 75vh;*/
+    max-width: 75vh;
+    max-height: 75vh;
     margin: 0 auto;
     visibility: hidden;
 }
@@ -144,4 +156,33 @@ body {
 @keyframes moonOrbit { from {
             transform: rotate(0deg)    translateX(200%) rotate(0deg); } to {
             transform: rotate(-360deg) translateX(200%) rotate(360deg); }
+}
+
+/*MAIN STYLES*/
+
+#body {
+    width: 100%;
+    max-width: 1024px;
+    margin: 0 auto;
+}
+
+hr {
+    background-color: #fff;
+    color: #fff;
+    margin: 0px;
+    padding: 0px;
+    height: 2px;
+    border: none;
+}
+
+#title {
+    font-family: "Raleway";
+    font-size: 48px;
+    text-align: center;
+}
+
+.heading {
+    font-family: "Raleway";
+    font-size: 32px;
+    text-align: center;
 }
