@@ -3,7 +3,7 @@
 /* License: https://github.com/SmashMaster/smashmaster.github.io/blob/master/LICENSE */
 body {
     margin: 0;
-    background-color: #999;
+    background-color: #333;
 }
 
 /*ORBITAL DEMO STYLES*/
@@ -16,9 +16,9 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
     
-    -webkit-box-shadow: inset -128px 0px 64px -64px #999, inset 128px 0px 64px -64px #999;
-       -moz-box-shadow: inset -128px 0px 64px -64px #999, inset 128px 0px 64px -64px #999;
-            box-shadow: inset -128px 0px 64px -64px #999, inset 128px 0px 64px -64px #999;
+    -webkit-box-shadow: inset -128px 0px 64px -64px #333, inset 128px 0px 64px -64px #333;
+       -moz-box-shadow: inset -128px 0px 64px -64px #333, inset 128px 0px 64px -64px #333;
+            box-shadow: inset -128px 0px 64px -64px #333, inset 128px 0px 64px -64px #333;
 }
 
 #demo {
@@ -167,8 +167,8 @@ body {
 }
 
 hr {
-    background-color: #fff;
-    color: #fff;
+    background-color: #bbb;
+    color: #bbb;
     margin: 0px;
     padding: 0px;
     height: 2px;
@@ -179,10 +179,12 @@ hr {
     font-family: "Raleway";
     font-size: 48px;
     text-align: center;
+    color: #bbb;
 }
 
 .heading {
     font-family: "Raleway";
     font-size: 32px;
     text-align: center;
+    color: #bbb;
 }

@@ -108,7 +108,7 @@ float planetAtten(vec3 p) {
         //Compute occlusion due to phase of moon
         float hemiSunDistance = greatCircleDistance(hemiDir, sunDir);
         float hemiSunOverlap = capOverlap(PI_OVER_2, PI_OVER_2, 0.5, 0.5, hemiSunDistance);
-        //attenuation *= hemiSunOverlap*2.0;
+        attenuation *= hemiSunOverlap*2.0;
     }
     
     vec3 planetDir = vec3(u_planet_pos, 0.0) - p;
@@ -118,7 +118,7 @@ float planetAtten(vec3 p) {
     //Finally, compute occlusion due to planet being on horizon
     float selfPlanetDistance = greatCircleDistance(-p, planetDir);
     float selfPlanetOverlap = capOverlap(PI_OVER_2, planetAR, 0.5, planetFC, selfPlanetDistance);
-    //attenuation *= clamp((planetFC - selfPlanetOverlap)/planetFC, 0.0, 1.0);
+    attenuation *= clamp((planetFC - selfPlanetOverlap)/planetFC, 0.0, 1.0);
     
     return attenuation;
 }
@@ -139,8 +139,8 @@ void main() {
         float pb = 0.25*dot(planetLightDir, normal)*planetAtten(normal);
         vec3 planetColor = u_sun_light_color*pb;
         
-        //gl_FragColor = vec4(sunColor + planetColor, 1.0);
-        gl_FragColor = vec4(vec3(planetAtten(normal)), 1.0);
+        gl_FragColor = vec4(sunColor + planetColor, 1.0);
+        //gl_FragColor = vec4(vec3(planetAtten(normal)), 1.0);
         
         float r = sqrt(rsq);
         
