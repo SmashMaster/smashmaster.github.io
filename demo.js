@@ -80,7 +80,7 @@ function loadTexture(drawer, url, wrap) {
     return texture;
 }
 
-var SUN_LIGHT_COLOR = {x:20.0, y:10.0, z:3.0};
+var SUN_LIGHT_COLOR = {x:0.5, y:0.5, z:0.5};
 var SUN_SIZE_FACTOR = 0.25;
 var sunDrawer, planetDrawer, moonDrawer;
 
