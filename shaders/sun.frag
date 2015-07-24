@@ -4,9 +4,9 @@
 
 precision lowp float;
 
+uniform sampler2D u_texture;
 uniform float u_size_factor;
 uniform float u_time;
-uniform sampler2D u_texture;
 
 varying vec2 v_pos;
 

@@ -4,6 +4,7 @@
 
 precision lowp float;
 
+uniform sampler2D u_tex_normals;
 uniform vec3 u_sun_light_color;
 uniform float u_sun_radius;
 uniform float u_moon_radius;
@@ -15,6 +16,8 @@ varying vec2 v_pos;
 #define AA_SIZE (1.0/12.0)
 #define AA_THRESHOLD (1.0 - AA_SIZE)
 #define PI_OVER_2 1.57079632679
+#define TEX_SCALE 4.0
+#define DISTORT_AMT 1.4
 
 /**
  * Projects a sphere with the given radius and distance onto a unit sphere at
@@ -129,19 +132,26 @@ void main() {
         gl_FragColor = vec4(0.0);
     }
     else {
-        vec3 normal = vec3(v_pos, sqrt(1.0 - rsq));
+        vec2 uv = v_pos*0.5 + 0.5;
+        uv.y = -uv.y;
+        
+        vec3 pos = vec3(v_pos, sqrt(1.0 - rsq));
+        vec3 normal = normalize(texture2D(u_tex_normals, uv).xyz*2.0 - 1.0);
         
         vec3 sunLightDir = normalize(vec3(u_sun_pos - v_pos, 0.0));
-        float sb = 0.75*dot(sunLightDir, normal)*sunAtten(normal);
+        float sb = 0.75*dot(sunLightDir, normal)*sunAtten(pos);
         vec3 sunColor = u_sun_light_color*sb;
         
         vec3 moonLightDir = normalize(vec3(u_moon_pos - v_pos, 0.0));
-        float mb = 0.25*dot(moonLightDir, normal)*moonAtten(normal);
+        float mb = 0.25*dot(moonLightDir, normal)*moonAtten(pos);
         vec3 moonColor = u_sun_light_color*mb;
         
         gl_FragColor = vec4(sunColor + moonColor, 1.0);
         
         float r = sqrt(rsq);
+        /*vec2 uv = v_pos/(TEX_SCALE*(DISTORT_AMT - r));
+        
+        gl_FragColor = texture2D(u_tex_normals, v_pos*0.5 + 0.5);*/
         
         if (r > AA_THRESHOLD) {
             gl_FragColor *= (1.0-r)/AA_SIZE;

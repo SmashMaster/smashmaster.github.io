@@ -83,6 +83,7 @@ function loadTexture(drawer, url, wrap) {
 
 var SUN_LIGHT_COLOR = {x:2.0, y:1.0, z:0.3};
 var SUN_SIZE_FACTOR = 0.25;
+var cloudTexture;
 var sunDrawer, planetDrawer, moonDrawer;
 
 function makeDrawer(canvasName, shaderName) {
@@ -223,6 +224,7 @@ function loadSun() {
 function loadPlanet() {
     planetDrawer = makeDrawer("#planet-canvas", "planet");
     var gl = planetDrawer.gl;
+    planetDrawer.texture = loadTexture(planetDrawer, "planet_normals.png", gl.REPEAT);
     planetDrawer.onDraw = function(time) {
         gl.uniform3f(this.uLoc("sun_light_color"), SUN_LIGHT_COLOR.x, SUN_LIGHT_COLOR.y, SUN_LIGHT_COLOR.z);
         gl.uniform1f(this.uLoc("sun_radius"), sunDrawer.relRadius(this));
@@ -231,6 +233,7 @@ function loadPlanet() {
         gl.uniform2f(this.uLoc("sun_pos"), sunPos.x, sunPos.y);
         var moonPos = this.relPosition(moonDrawer);
         gl.uniform2f(this.uLoc("moon_pos"), moonPos.x, moonPos.y);
+        gl.bindTexture(gl.TEXTURE_2D, this.texture);
     }
     planetDrawer.loading--;
 }
