@@ -96,14 +96,15 @@ float planetAtten(vec3 p) {
         float moonAR, sunAR;
         float moonFC, sunFC;
         
-        sphereCap(1.0, length(moonDir), moonAR, moonFC);
+        sphereCap(1.0, length(moonDir) + u_planet_radius, moonAR, moonFC);
         sphereCap(u_sun_radius, length(sunDir), sunAR, sunFC);
         
         //Compute occlusion due to solar eclipse
         //This could be moved outside of shader code.
+        //Also, adjusted to look better.
         float moonSunDistance = greatCircleDistance(moonDir, sunDir);
         float moonSunOverlap = capOverlap(moonAR, sunAR, moonFC, sunFC, moonSunDistance);
-        attenuation *= clamp((sunFC - moonSunOverlap)/sunFC, 0.0, 1.0); //WRONG
+        attenuation *= clamp((sunFC - moonSunOverlap*0.5)/sunFC, 0.0, 1.0); //WRONG
         
         //Compute occlusion due to phase of moon
         float hemiSunDistance = greatCircleDistance(hemiDir, sunDir);
@@ -139,7 +140,7 @@ void main() {
         float pb = 0.25*dot(planetLightDir, normal)*planetAtten(normal);
         vec3 planetColor = u_sun_light_color*pb;
         
-        gl_FragColor = vec4(sunColor + planetColor, 1.0);
+        gl_FragColor = vec4(planetColor + sunColor, 1.0);
         //gl_FragColor = vec4(vec3(planetAtten(normal)), 1.0);
         
         float r = sqrt(rsq);

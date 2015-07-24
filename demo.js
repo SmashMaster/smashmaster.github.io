@@ -43,7 +43,8 @@ function addEvent(elem, type, eventHandle) {
 
 function loadShader(drawer, url, type) {
     var req = new XMLHttpRequest();
-    req.open("GET", url, false);
+    //req.open("GET", url, false);
+    req.open("GET", url + ((/\?/).test(url) ? "&" : "?") + (new Date()).getTime(), false); //Bypass cache
     req.send(null);
     var src = (req.status == 200) ? req.responseText : null;
 
