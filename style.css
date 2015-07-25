@@ -12,6 +12,7 @@ body {
     width: 100%;
     max-width: 1024px;
     margin: 0 auto;
+    padding-bottom: 24px;
     background-image: url("http://truereality.org/wp-content/uploads/2014/02/hubble-space-wallpapers.jpg");
     background-size: cover;
     background-repeat: no-repeat;
@@ -158,6 +159,12 @@ body {
             transform: rotate(-360deg) translateX(200%) rotate(360deg); }
 }
 
+#sun-scale-slider {
+    width: 192px;
+    max-width: 50vw;
+    margin: 0 auto;
+}
+
 /*MAIN STYLES*/
 
 #body {
@@ -167,12 +174,12 @@ body {
 }
 
 hr {
-    background-color: #bbb;
-    color: #bbb;
     margin: 0px;
     padding: 0px;
     height: 2px;
     border: none;
+    background-color: #bbb;
+    color: #bbb;
 }
 
 #title {

@@ -82,7 +82,7 @@ function loadTexture(drawer, url, wrap) {
 }
 
 var SUN_LIGHT_COLOR = {x:2.0, y:1.0, z:0.3};
-var SUN_SIZE_FACTOR = 0.25;
+var sunScaleSlider;
 var cloudTexture;
 var sunDrawer, planetDrawer, moonDrawer;
 
@@ -206,17 +206,30 @@ function animate() {
     }
 }
 
+function initSunScaleSlider() {
+    sunScaleSlider = $("#sun-scale-slider")[0];
+    
+    noUiSlider.create(sunScaleSlider, {
+		start: 0.25,
+		orientation: "horizontal",
+		range: {
+			'min': 0.125,
+			'max': 0.75
+		}
+	});
+}
+
 function loadSun() {
     sunDrawer = makeDrawer("#sun-canvas", "sun");
     var gl = sunDrawer.gl;
     sunDrawer.texture = loadTexture(sunDrawer, "clouds.png", gl.REPEAT);
     sunDrawer.onDraw = function(time) {
-        gl.uniform1f(this.uLoc("size_factor"), SUN_SIZE_FACTOR);
+        gl.uniform1f(this.uLoc("size_factor"), sunScaleSlider.noUiSlider.get());
         gl.uniform1f(this.uLoc("time"), time);
         gl.bindTexture(gl.TEXTURE_2D, this.texture);
     }
     sunDrawer.radius = function() {
-        return (this.width + this.height)*SUN_SIZE_FACTOR/2.0;
+        return (this.width + this.height)*sunScaleSlider.noUiSlider.get()/2.0;
     }
     sunDrawer.loading--;
 }
@@ -241,6 +254,7 @@ function loadPlanet() {
 function loadMoon() {
     moonDrawer = makeDrawer("#moon-canvas", "moon");
     var gl = moonDrawer.gl;
+    moonDrawer.texture = loadTexture(moonDrawer, "moon_normals.png", gl.REPEAT);
     moonDrawer.onDraw = function(time) {
         gl.uniform3f(this.uLoc("sun_light_color"), SUN_LIGHT_COLOR.x, SUN_LIGHT_COLOR.y, SUN_LIGHT_COLOR.z);
         gl.uniform1f(this.uLoc("sun_radius"), sunDrawer.relRadius(this));
@@ -249,12 +263,14 @@ function loadMoon() {
         gl.uniform2f(this.uLoc("sun_pos"), sunPos.x, sunPos.y);
         var planetPos = this.relPosition(planetDrawer);
         gl.uniform2f(this.uLoc("planet_pos"), planetPos.x, planetPos.y);
+        gl.bindTexture(gl.TEXTURE_2D, this.texture);
     }
     moonDrawer.loading--;
 }
 
 function main() {
     try {
+        initSunScaleSlider();
         loadSun();
         loadPlanet();
         loadMoon();

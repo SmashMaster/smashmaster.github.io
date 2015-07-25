@@ -149,9 +149,6 @@ void main() {
         gl_FragColor = vec4(sunColor + moonColor, 1.0);
         
         float r = sqrt(rsq);
-        /*vec2 uv = v_pos/(TEX_SCALE*(DISTORT_AMT - r));
-        
-        gl_FragColor = texture2D(u_tex_normals, v_pos*0.5 + 0.5);*/
         
         if (r > AA_THRESHOLD) {
             gl_FragColor *= (1.0-r)/AA_SIZE;

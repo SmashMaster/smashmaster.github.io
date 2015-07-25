@@ -4,6 +4,7 @@
 
 precision lowp float;
 
+uniform sampler2D u_tex_normals;
 uniform vec3 u_sun_light_color;
 uniform float u_sun_radius;
 uniform float u_planet_radius;
@@ -130,18 +131,21 @@ void main() {
         gl_FragColor = vec4(0.0);
     }
     else {
-        vec3 normal = vec3(v_pos, sqrt(1.0 - rsq));
+        vec2 uv = v_pos*0.5 + 0.5;
+        uv.y = -uv.y;
+        
+        vec3 pos = vec3(v_pos, sqrt(1.0 - rsq));
+        vec3 normal = normalize(texture2D(u_tex_normals, uv).xyz*2.0 - 1.0);
         
         vec3 sunLightDir = normalize(vec3(u_sun_pos - v_pos, 0.0));
-        float sb = 0.75*dot(sunLightDir, normal)*sunAtten(normal);
+        float sb = 0.75*dot(sunLightDir, normal)*sunAtten(pos);
         vec3 sunColor = u_sun_light_color*sb;
         
         vec3 planetLightDir = normalize(vec3(u_planet_pos - v_pos, 0.0));
-        float pb = 0.25*dot(planetLightDir, normal)*planetAtten(normal);
+        float pb = 0.25*dot(planetLightDir, normal)*planetAtten(pos);
         vec3 planetColor = u_sun_light_color*pb;
         
         gl_FragColor = vec4(planetColor + sunColor, 1.0);
-        //gl_FragColor = vec4(vec3(planetAtten(normal)), 1.0);
         
         float r = sqrt(rsq);
         
