@@ -84,6 +84,9 @@ float sunAtten(vec3 p) {
     float selfSunOverlap = capOverlap(PI_OVER_2, sunAR, 0.5, sunFC, selfSunDistance);
     attenuation *= clamp((sunFC - selfSunOverlap)/sunFC, 0.0, 1.0);
     
+    //Attenuation due to distance of sun
+    attenuation *= sunFC;
+    
     return attenuation;
 }
 
@@ -112,11 +115,17 @@ float moonAtten(vec3 p) {
         float hemiSunDistance = greatCircleDistance(hemiDir, sunDir);
         float hemiSunOverlap = capOverlap(PI_OVER_2, PI_OVER_2, 0.5, 0.5, hemiSunDistance);
         attenuation *= hemiSunOverlap*2.0;
+        
+        //Attenuation due to distance of sun
+        attenuation *= sunFC;
     }
     
     vec3 moonDir = vec3(u_moon_pos, 0.0) - p;
     float moonAR, moonFC;
     sphereCap(u_moon_radius, length(moonDir), moonAR, moonFC);
+    
+    //Attenuation due to distance of moon
+    attenuation *= moonFC;
     
     //Finally, compute occlusion due to moon being on horizon
     float selfMoonDistance = greatCircleDistance(-p, moonDir);
@@ -139,12 +148,12 @@ void main() {
         vec3 normal = normalize(texture2D(u_tex_normals, uv).xyz*2.0 - 1.0);
         
         vec3 sunLightDir = normalize(vec3(u_sun_pos - v_pos, 0.0));
-        float sb = 0.75*dot(sunLightDir, normal)*sunAtten(pos);
+        float sb = dot(sunLightDir, normal)*sunAtten(pos);
         vec3 sunColor = u_sun_light_color*sb;
         
         vec3 moonLightDir = normalize(vec3(u_moon_pos - v_pos, 0.0));
-        float mb = 0.25*dot(moonLightDir, normal)*moonAtten(pos);
-        vec3 moonColor = u_sun_light_color*mb;
+        float mb = dot(moonLightDir, normal)*moonAtten(pos);
+        vec3 moonColor = u_sun_light_color*(4.0*mb);
         
         gl_FragColor = vec4(sunColor + moonColor, 1.0);
         
