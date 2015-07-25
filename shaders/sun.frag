@@ -5,13 +5,14 @@
 precision lowp float;
 
 uniform sampler2D u_texture;
+uniform vec3 u_sun_light_color;
 uniform float u_size_factor;
 uniform float u_time;
 
 varying vec2 v_pos;
 
-#define COLOR_A vec3(0.7, 0.0, 0.0)
-#define COLOR_B vec3(2.0, 1.0, 0.3)
+#define COLOR_A vec3(0.0625, 0.03, 0.01)
+#define COLOR_B vec3(0.15)
 
 #define SUN_PERTURB_AMT 0.75
 #define SUN_PERTURB_RATE (1.0/64.0)
@@ -89,5 +90,7 @@ void main() {
         z *= zm*zm*CORONA_ALPHA*texture2D(u_texture, uv).r;
         z = clamp(z, 0.0, 1.0);
         alphaBlend(gl_FragColor, COLOR_B, z);
+        
+        gl_FragColor.rgb *= u_sun_light_color;
     }
 }
