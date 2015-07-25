@@ -11,7 +11,7 @@ uniform float u_time;
 
 varying vec2 v_pos;
 
-#define COLOR_A vec3(0.0625, 0.03, 0.01)
+#define COLOR_A vec3(0.0625, 0.01, 0.005)
 #define COLOR_B vec3(0.15)
 
 #define SUN_PERTURB_AMT 0.75
