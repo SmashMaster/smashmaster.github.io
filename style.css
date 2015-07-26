@@ -6,7 +6,7 @@ body {
     background-color: #222;
 }
 
-/*ORBITAL DEMO STYLES*/
+/* ORBITAL DEMO STYLES */
 
 #demo-background {
     width: 100%;
@@ -23,9 +23,13 @@ body {
 }
 
 #demo {
-    position: relative; /*Hack so that we can center stuff more easily.*/
+    position: relative; /* Hack so that we can center stuff more easily. */
     width: 100vmin;
     height: 100vmin;
+    width/*\**/: 256px\9; /* IE8 hack. Won't see the demo, just the background.*/
+    height/*\**/: 256px\9;
+    width: 100vm; /* IE9 */
+    height: 100vm;
     max-width: 75vh;
     max-height: 75vh;
     margin: 0 auto;
@@ -165,7 +169,7 @@ body {
     margin: 0 auto;
 }
 
-/*MAIN STYLES*/
+/* MAIN STYLES */
 
 #body {
     width: 100%;

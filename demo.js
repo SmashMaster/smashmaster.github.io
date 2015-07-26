@@ -2,6 +2,16 @@
 /* Copyright: 2014 Samuel Johnson */
 /* License: https://github.com/SmashMaster/smashmaster.github.io/blob/master/LICENSE */
 
+/* Browser update prompt: https://browser-update.org/ */
+var $buoop = {c:2}; 
+function $buo_f(){ 
+ var e = document.createElement("script"); 
+ e.src = "//browser-update.org/update.min.js"; 
+ document.body.appendChild(e);
+};
+try {document.addEventListener("DOMContentLoaded", $buo_f,false)}
+catch(e){window.attachEvent("onload", $buo_f)}
+
 /* requestAnimationFrame polyfill - https://gist.github.com/paulirish/1579671 */
 /* MIT license */
 (function() {
@@ -316,6 +326,7 @@ function main() {
         window.requestAnimationFrame(animate);
     }
     catch (e) {
-        alert("Load error: " + e);
+        //alert("Load error in main(): " + e);
+        //Do nuffin. Fail silently and let the user go about their business.
     }
 }
