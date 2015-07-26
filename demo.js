@@ -83,7 +83,7 @@ function loadTexture(drawer, url, wrap) {
 
 var SUN_COLOR_DWARF = {x:1.0, y:1.1, z:1.2};
 var SUN_COLOR_MAIN = {x:1.0, y:0.78, z:0.44};
-var SUN_COLOR_GIANT = {x:1.0, y:0.2, z:0.1};
+var SUN_COLOR_GIANT = {x:1.0, y:0.4, z:0.2};
 var SUN_SIZE_MIN = 0.125, SUN_SIZE_MAIN = 0.25, SUN_SIZE_MAX = 0.65;
 var SUN_SMID = (SUN_SIZE_MAIN - SUN_SIZE_MIN)/(SUN_SIZE_MAX - SUN_SIZE_MIN);
 

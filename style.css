@@ -3,7 +3,7 @@
 /* License: https://github.com/SmashMaster/smashmaster.github.io/blob/master/LICENSE */
 body {
     margin: 0;
-    background-color: #333;
+    background-color: #222;
 }
 
 /*ORBITAL DEMO STYLES*/
@@ -17,9 +17,9 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
     
-    -webkit-box-shadow: inset -128px 0px 64px -64px #333, inset 128px 0px 64px -64px #333;
-       -moz-box-shadow: inset -128px 0px 64px -64px #333, inset 128px 0px 64px -64px #333;
-            box-shadow: inset -128px 0px 64px -64px #333, inset 128px 0px 64px -64px #333;
+    -webkit-box-shadow: inset -128px 0px 64px -64px #222, inset 128px 0px 64px -64px #222;
+       -moz-box-shadow: inset -128px 0px 64px -64px #222, inset 128px 0px 64px -64px #222;
+            box-shadow: inset -128px 0px 64px -64px #222, inset 128px 0px 64px -64px #222;
 }
 
 #demo {
@@ -173,6 +173,14 @@ body {
     margin: 0 auto;
 }
 
+#body .content {
+    text-align: center;
+    margin: 0px auto;
+    padding-top: 10px;
+    padding-bottom: 40px;
+    overflow: hidden;
+}
+
 hr {
     margin: 0px;
     padding: 0px;
@@ -189,9 +197,35 @@ hr {
     color: #bbb;
 }
 
-.heading {
-    font-family: "Raleway";
-    font-size: 32px;
-    text-align: center;
+p, ul {
+    font-family: "Prociono";
+    font-size: 18px;
     color: #bbb;
+    margin: 15px 10%;
 }
+
+p {
+    text-align: center;
+}
+
+ul {
+    text-align: left;
+}
+
+li {
+    margin: 5px 0px;
+}
+
+/* CONTACT INFO */
+
+#contactinfo a {
+    display: inline-block;
+    font-size: 48px;
+    line-height: 48px;
+    vertical-align: bottom;
+    margin: 10px;
+}
+#contactinfo a:link    {color: #bbb;}
+#contactinfo a:visited {color: #bbb;}
+#contactinfo a:hover   {color: #eee;}
+#contactinfo a:active  {color: #fff;}
