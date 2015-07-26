@@ -172,17 +172,13 @@ body {
 /* MAIN STYLES */
 
 #body {
+    font-family: "Prociono";
+    font-size: 18px;
+    color: #bbb;
     width: 100%;
     max-width: 1024px;
     margin: 0 auto;
-}
-
-#body .content {
     text-align: center;
-    margin: 0px auto;
-    padding-top: 10px;
-    padding-bottom: 40px;
-    overflow: hidden;
 }
 
 hr {
@@ -197,39 +193,45 @@ hr {
 #title {
     font-family: "Raleway";
     font-size: 48px;
-    text-align: center;
     color: #bbb;
 }
 
-p, ul {
-    font-family: "Prociono";
-    font-size: 18px;
-    color: #bbb;
-    margin: 15px 10%;
-}
+p, ul {margin: 15px 10%;}
+ul {text-align: left;}
+li {margin: 5px 0px;}
 
-p {
-    text-align: center;
-}
+/* LINKS AND EMAIL */
 
-ul {
-    text-align: left;
-}
-
-li {
-    margin: 5px 0px;
-}
-
-/* CONTACT INFO */
-
-#contactinfo a {
+#links a {
     display: inline-block;
     font-size: 48px;
     line-height: 48px;
     vertical-align: bottom;
+    padding: 0px;
     margin: 10px;
 }
-#contactinfo a:link    {color: #bbb;}
-#contactinfo a:visited {color: #bbb;}
-#contactinfo a:hover   {color: #eee;}
-#contactinfo a:active  {color: #fff;}
+
+a:link    {color: #bbb;}
+a:visited {color: #bbb;}
+a:hover   {color: #fff;}
+a:active  {color: #fff;}
+
+#email {
+    display: inline-block;
+    padding: 0px 10px 5px 10px;
+    margin: 10px auto 15px auto;
+    border: 2px solid #bbb;
+    border-radius: 12px;
+    background-color: #444;
+}
+
+#email:hover   {background-color: #888; border-color: #fff;}
+#email:active  {background-color: #888; border-color: #fff;}
+
+/* FOOTER */
+
+#footer p {
+    font-size: 14px;
+    color: #666;
+    margin: 10px auto;
+}
