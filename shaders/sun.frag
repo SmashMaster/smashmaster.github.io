@@ -21,7 +21,7 @@ varying vec2 v_pos;
 #define SUN_AA_SIZE (1.0/128.0)
 
 #define CORONA_RPOW 0.0625
-#define CORONA_SPEED (1.0/8.0)
+#define CORONA_SPEED (1.0/4.0)
 #define CORONA_ASCALE (1.0/8.0)
 #define CORONA_RSCALE (1.0/8.0)
 #define CORONA_Z_START 0.25

@@ -25,8 +25,7 @@ varying vec2 v_pos;
  * the origin, creating a spherical cap. Returns the angular radius of the cap,
  * as well as its surface area as a fraction of the total solid angle.
  */
-void sphereCap(float radius, float distance, out float angularRadius, out float solidAngleFrac) {
-    float apparentRadius = radius/distance;
+void sphereCap(float apparentRadius, out float angularRadius, out float solidAngleFrac) {
     angularRadius = asin(apparentRadius);
     solidAngleFrac = 0.5 - sqrt(1.0 - apparentRadius)*0.5;
 }
@@ -62,16 +61,23 @@ float capOverlap(float ar0, float ar1, float fc0, float fc1, float gcd) {
     return fcMin*smoothstep(0.0, 1.0, 1.0 - (gcd - arDif)/(arSum - arDif));
 }
 
+//Approximate integral of lambertian reflectance by spherical light source
+float bigLambert(vec3 lightDir, vec3 normal, float apparentRadius) {
+    return cos(greatCircleDistance(lightDir, normal)/(1.0 + apparentRadius));
+}
+
 //Calculate attenuation of direct light from the sun.
-float sunAtten(vec3 p) {
+//Now includes lambertian reflectance.
+float sunAtten(vec3 p, vec3 normal) {
     vec3 moonDir = vec3(u_moon_pos, 0.0) - p;
     vec3 sunDir = vec3(u_sun_pos, 0.0) - p;
     
     float moonAR, sunAR;
     float moonFC, sunFC;
+    float apparenSunRadius = u_sun_radius/length(sunDir);
     
-    sphereCap(u_moon_radius, length(moonDir), moonAR, moonFC);
-    sphereCap(u_sun_radius, length(sunDir), sunAR, sunFC);
+    sphereCap(u_moon_radius/length(moonDir), moonAR, moonFC);
+    sphereCap(apparenSunRadius, sunAR, sunFC);
     
     float attenuation = 1.0;
     
@@ -88,11 +94,15 @@ float sunAtten(vec3 p) {
     //Attenuation due to distance of sun
     attenuation *= sunFC;
     
+    //Lambertian reflectance
+    attenuation *= bigLambert(sunDir, normal, apparenSunRadius);
+    
     return attenuation;
 }
 
 //Calculate attenuation of indirect light, bouncing off of the moon.
-float moonAtten(vec3 p) {
+//Now includes lambertian reflectance.
+float moonAtten(vec3 p, vec3 normal) {
     float attenuation = 1.0;
 
     {//First we will consider the situation from the moon's perspective.
@@ -103,8 +113,8 @@ float moonAtten(vec3 p) {
         float planetAR, sunAR;
         float planetFC, sunFC;
         
-        sphereCap(1.0, length(planetDir), planetAR, planetFC);
-        sphereCap(u_sun_radius, length(sunDir), sunAR, sunFC);
+        sphereCap(1.0/length(planetDir), planetAR, planetFC);
+        sphereCap(u_sun_radius/length(sunDir), sunAR, sunFC);
         
         //Compute occlusion due to lunar eclipse
         //This could be moved outside of shader code.
@@ -123,7 +133,8 @@ float moonAtten(vec3 p) {
     
     vec3 moonDir = vec3(u_moon_pos, 0.0) - p;
     float moonAR, moonFC;
-    sphereCap(u_moon_radius, length(moonDir), moonAR, moonFC);
+    float apparentMoonRadius = u_moon_radius/length(moonDir);
+    sphereCap(apparentMoonRadius, moonAR, moonFC);
     
     //Attenuation due to distance of moon
     attenuation *= moonFC;
@@ -132,6 +143,9 @@ float moonAtten(vec3 p) {
     float selfMoonDistance = greatCircleDistance(-p, moonDir);
     float selfMoonOverlap = capOverlap(PI_OVER_2, moonAR, 0.5, moonFC, selfMoonDistance);
     attenuation *= clamp((moonFC - selfMoonOverlap)/moonFC, 0.0, 1.0);
+    
+    //Lambertian reflectance
+    attenuation *= bigLambert(moonDir, normal, apparentMoonRadius);
     
     return attenuation;
 }
@@ -148,13 +162,8 @@ void main() {
         vec3 pos = vec3(v_pos, sqrt(1.0 - rsq));
         vec3 normal = normalize(texture2D(u_tex_normals, uv).xyz*2.0 - 1.0);
         
-        vec3 sunLightDir = normalize(vec3(u_sun_pos - v_pos, 0.0));
-        float sb = dot(sunLightDir, normal)*sunAtten(pos);
-        vec3 sunColor = u_sun_light_color*(24.0*sb);
-        
-        vec3 moonLightDir = normalize(vec3(u_moon_pos - v_pos, 0.0));
-        float mb = dot(moonLightDir, normal)*moonAtten(pos);
-        vec3 moonColor = u_sun_light_color*(96.0*mb);
+        vec3 sunColor = u_sun_light_color*(24.0*sunAtten(pos, normal));
+        vec3 moonColor = u_sun_light_color*(96.0*moonAtten(pos, normal));
         
         gl_FragColor = texture2D(u_tex_albedo, uv);
         gl_FragColor.rgb *= sunColor + moonColor;

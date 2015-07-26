@@ -22,8 +22,7 @@ varying vec2 v_pos;
  * the origin, creating a spherical cap. Returns the angular radius of the cap,
  * as well as its surface area as a fraction of the total solid angle.
  */
-void sphereCap(float radius, float distance, out float angularRadius, out float solidAngleFrac) {
-    float apparentRadius = radius/distance;
+void sphereCap(float apparentRadius, out float angularRadius, out float solidAngleFrac) {
     angularRadius = asin(apparentRadius);
     solidAngleFrac = 0.5 - sqrt(1.0 - apparentRadius)*0.5;
 }
@@ -59,16 +58,22 @@ float capOverlap(float ar0, float ar1, float fc0, float fc1, float gcd) {
     return fcMin*smoothstep(0.0, 1.0, 1.0 - (gcd - arDif)/(arSum - arDif));
 }
 
+//Approximate integral of lambertian reflectance by spherical light source
+float bigLambert(vec3 lightDir, vec3 normal, float apparentRadius) {
+    return cos(greatCircleDistance(lightDir, normal)/(1.0 + apparentRadius));
+}
+
 //Calculate attenuation of direct light from the sun.
-float sunAtten(vec3 p) {
+float sunAtten(vec3 p, vec3 normal) {
     vec3 planetDir = vec3(u_planet_pos, 0.0) - p;
     vec3 sunDir = vec3(u_sun_pos, 0.0) - p;
     
     float planetAR, sunAR;
     float planetFC, sunFC;
+    float apparenSunRadius = u_sun_radius/length(sunDir);
     
-    sphereCap(u_planet_radius, length(planetDir), planetAR, planetFC);
-    sphereCap(u_sun_radius, length(sunDir), sunAR, sunFC);
+    sphereCap(u_planet_radius/length(planetDir), planetAR, planetFC);
+    sphereCap(apparenSunRadius, sunAR, sunFC);
     
     float attenuation = 1.0;
     
@@ -85,11 +90,14 @@ float sunAtten(vec3 p) {
     //Attenuation due to distance of sun
     attenuation *= sunFC;
     
+    //Lambertian reflectance
+    attenuation *= bigLambert(sunDir, normal, apparenSunRadius);
+    
     return attenuation;
 }
 
 //Calculate attenuation of indirect light, bouncing off of the planet.
-float planetAtten(vec3 p) {
+float planetAtten(vec3 p, vec3 normal) {
     float attenuation = 1.0;
 
     {//First we will consider the situation from the planet's perspective.
@@ -100,8 +108,8 @@ float planetAtten(vec3 p) {
         float moonAR, sunAR;
         float moonFC, sunFC;
         
-        sphereCap(1.0, length(moonDir) + u_planet_radius, moonAR, moonFC);
-        sphereCap(u_sun_radius, length(sunDir), sunAR, sunFC);
+        sphereCap(1.0/length(moonDir) + u_planet_radius, moonAR, moonFC);
+        sphereCap(u_sun_radius/length(sunDir), sunAR, sunFC);
         
         //Compute occlusion due to solar eclipse
         //This could be moved outside of shader code.
@@ -121,7 +129,8 @@ float planetAtten(vec3 p) {
     
     vec3 planetDir = vec3(u_planet_pos, 0.0) - p;
     float planetAR, planetFC;
-    sphereCap(u_planet_radius, length(planetDir), planetAR, planetFC);
+    float apparentPlanetRadius = u_planet_radius/length(planetDir);
+    sphereCap(apparentPlanetRadius, planetAR, planetFC);
     
     //Attenuation due to distance of planet
     attenuation *= planetFC;
@@ -130,6 +139,9 @@ float planetAtten(vec3 p) {
     float selfPlanetDistance = greatCircleDistance(-p, planetDir);
     float selfPlanetOverlap = capOverlap(PI_OVER_2, planetAR, 0.5, planetFC, selfPlanetDistance);
     attenuation *= clamp((planetFC - selfPlanetOverlap)/planetFC, 0.0, 1.0);
+    
+    //Lambertian reflectance
+    attenuation *= bigLambert(planetDir, normal, apparentPlanetRadius);
     
     return attenuation;
 }
@@ -146,13 +158,8 @@ void main() {
         vec3 pos = vec3(v_pos, sqrt(1.0 - rsq));
         vec3 normal = normalize(texture2D(u_tex_normals, uv).xyz*2.0 - 1.0);
         
-        vec3 sunLightDir = normalize(vec3(u_sun_pos - v_pos, 0.0));
-        float sb = dot(sunLightDir, normal)*sunAtten(pos);
-        vec3 sunColor = u_sun_light_color*(16.0*sb);
-        
-        vec3 planetLightDir = normalize(vec3(u_planet_pos - v_pos, 0.0));
-        float pb = dot(planetLightDir, normal)*planetAtten(pos);
-        vec3 planetColor = u_sun_light_color*(32.0*pb);
+        vec3 sunColor = u_sun_light_color*(12.0*sunAtten(pos, normal));
+        vec3 planetColor = u_sun_light_color*(24.0*planetAtten(pos, normal));
         
         gl_FragColor = vec4(planetColor + sunColor, 1.0);
         
