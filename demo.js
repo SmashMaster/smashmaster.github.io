@@ -261,7 +261,7 @@ function initSunScaleSlider() {
 function loadSun() {
     sunDrawer = makeDrawer("#sun-canvas", "sun");
     var gl = sunDrawer.gl;
-    sunDrawer.texture = loadTexture(sunDrawer, "clouds.png", gl.REPEAT);
+    sunDrawer.texture = loadTexture(sunDrawer, "images/clouds.png", gl.REPEAT);
     sunDrawer.onDraw = function(time) {
         gl.uniform3f(this.uLoc("sun_light_color"), curSunColor.x, curSunColor.y, curSunColor.z);
         gl.uniform1f(this.uLoc("size_factor"), sunScaleSlider.noUiSlider.get());
@@ -277,8 +277,8 @@ function loadSun() {
 function loadPlanet() {
     planetDrawer = makeDrawer("#planet-canvas", "planet");
     var gl = planetDrawer.gl;
-    planetDrawer.albedoTexture = loadTexture(planetDrawer, "planet_albedo.png", gl.REPEAT);
-    planetDrawer.normalTexture = loadTexture(planetDrawer, "planet_normals.png", gl.REPEAT);
+    planetDrawer.albedoTexture = loadTexture(planetDrawer, "images/planet_albedo.png", gl.REPEAT);
+    planetDrawer.normalTexture = loadTexture(planetDrawer, "images/planet_normals.png", gl.REPEAT);
     planetDrawer.onDraw = function(time) {
         gl.uniform1i(this.uLoc("tex_albedo"), 0);
         gl.uniform1i(this.uLoc("tex_normals"), 1);
@@ -301,7 +301,7 @@ function loadPlanet() {
 function loadMoon() {
     moonDrawer = makeDrawer("#moon-canvas", "moon");
     var gl = moonDrawer.gl;
-    moonDrawer.texture = loadTexture(moonDrawer, "moon_normals.png", gl.REPEAT);
+    moonDrawer.texture = loadTexture(moonDrawer, "images/moon_normals.png", gl.REPEAT);
     moonDrawer.onDraw = function(time) {
         gl.uniform3f(this.uLoc("sun_light_color"), curSunColor.x, curSunColor.y, curSunColor.z);
         gl.uniform1f(this.uLoc("sun_radius"), sunDrawer.relRadius(this));
