@@ -148,11 +148,11 @@ void main() {
         
         vec3 sunLightDir = normalize(vec3(u_sun_pos - v_pos, 0.0));
         float sb = dot(sunLightDir, normal)*sunAtten(pos);
-        vec3 sunColor = u_sun_light_color*sb;
+        vec3 sunColor = u_sun_light_color*(16.0*sb);
         
         vec3 planetLightDir = normalize(vec3(u_planet_pos - v_pos, 0.0));
         float pb = dot(planetLightDir, normal)*planetAtten(pos);
-        vec3 planetColor = u_sun_light_color*(4.0*pb);
+        vec3 planetColor = u_sun_light_color*(32.0*pb);
         
         gl_FragColor = vec4(planetColor + sunColor, 1.0);
         

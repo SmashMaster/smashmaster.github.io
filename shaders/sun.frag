@@ -11,15 +11,14 @@ uniform float u_time;
 
 varying vec2 v_pos;
 
-#define COLOR_A vec3(0.0625, 0.01, 0.005)
-#define COLOR_B vec3(0.15)
+#define COLOR_A vec3(0.5, 0.08, 0.04)
+#define COLOR_B vec3(1.5)
 
 #define SUN_PERTURB_AMT 0.75
 #define SUN_PERTURB_RATE (1.0/64.0)
 #define SUN_TEX_SCALE 8.0
 #define SUN_DISTORT_AMT 1.4
-#define SUN_AA_SIZE (1.0/16.0)
-#define SUN_AA_THRESHOLD (1.0 - SUN_AA_SIZE)
+#define SUN_AA_SIZE (1.0/128.0)
 
 #define CORONA_RPOW 0.0625
 #define CORONA_SPEED (1.0/8.0)
@@ -76,7 +75,8 @@ void main() {
             vec2 uv = v_pos/(u_size_factor*SUN_TEX_SCALE*(SUN_DISTORT_AMT - sr));
             float color_lerp = texture2D(u_texture, megaPerturb(uv)).r;
             float a = 1.0;
-            if (sr > SUN_AA_THRESHOLD) a = (1.0-sr)/SUN_AA_SIZE;
+            float aaSize = SUN_AA_SIZE/u_size_factor;
+            if (sr > 1.0 - aaSize) a = (1.0-sr)/aaSize;
             
             alphaBlend(gl_FragColor, mix(COLOR_A, COLOR_B, color_lerp), a);
         }

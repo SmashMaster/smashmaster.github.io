@@ -81,10 +81,11 @@ function loadTexture(drawer, url, wrap) {
     return texture;
 }
 
-var SUN_COLOR_DWARF = {x:12.0, y:13.0, z:14.0};
-var SUN_COLOR_MAIN = {x:9.0, y:7.0, z:4.0};
-var SUN_COLOR_GIANT = {x:8.0, y:3.0, z:1.0};
-var SUN_SIZE_MAIN = 0.25;
+var SUN_COLOR_DWARF = {x:1.2, y:1.3, z:1.4};
+var SUN_COLOR_MAIN = {x:1.0, y:0.78, z:0.44};
+var SUN_COLOR_GIANT = {x:1.0, y:0.2, z:0.1};
+var SUN_SIZE_MIN = 0.125, SUN_SIZE_MAIN = 0.25, SUN_SIZE_MAX = 0.65;
+var SUN_SMID = (SUN_SIZE_MAIN - SUN_SIZE_MIN)/(SUN_SIZE_MAX - SUN_SIZE_MIN);
 
 var sunScaleSlider;
 var cloudTexture;
@@ -192,21 +193,25 @@ function onResize() {
 }
 
 function sunLerp(a, b, c, t) {
-    if (t >= SUN_SIZE_MAIN) {
-        var rt = (t - SUN_SIZE_MAIN)/(1.0 - SUN_SIZE_MAIN);
+    if (t <= 0.0) return a;
+    else if (t >= 1.0) return c;
+    
+    if (t >= SUN_SMID) {
+        var rt = (t - SUN_SMID)/(1.0 - SUN_SMID);
         return b + (c - b)*rt;
     }
     else {
-        var rt = t/SUN_SIZE_MAIN;
+        var rt = t/SUN_SMID;
         return a + (b - a)*rt;
     }
 }
 
 function calcSunColor() {
     var sunSize = sunScaleSlider.noUiSlider.get();
-    curSunColor.x = sunLerp(SUN_COLOR_DWARF.x, SUN_COLOR_MAIN.x, SUN_COLOR_GIANT.x, sunSize);
-    curSunColor.y = sunLerp(SUN_COLOR_DWARF.y, SUN_COLOR_MAIN.y, SUN_COLOR_GIANT.y, sunSize);
-    curSunColor.z = sunLerp(SUN_COLOR_DWARF.z, SUN_COLOR_MAIN.z, SUN_COLOR_GIANT.z, sunSize);
+    var t = (sunSize - SUN_SIZE_MIN)/(SUN_SIZE_MAX - SUN_SIZE_MIN);
+    curSunColor.x = sunLerp(SUN_COLOR_DWARF.x, SUN_COLOR_MAIN.x, SUN_COLOR_GIANT.x, t);
+    curSunColor.y = sunLerp(SUN_COLOR_DWARF.y, SUN_COLOR_MAIN.y, SUN_COLOR_GIANT.y, t);
+    curSunColor.z = sunLerp(SUN_COLOR_DWARF.z, SUN_COLOR_MAIN.z, SUN_COLOR_GIANT.z, t);
 }
 
 var startTime = 0;
@@ -234,11 +239,11 @@ function initSunScaleSlider() {
     sunScaleSlider = $("#sun-scale-slider")[0];
     
     noUiSlider.create(sunScaleSlider, {
-		start: 0.25,
+		start: SUN_SIZE_MAIN,
 		orientation: "horizontal",
 		range: {
-			'min': 0.125,
-			'max': 0.75
+			'min': SUN_SIZE_MIN,
+			'max': SUN_SIZE_MAX
 		}
 	});
 }
@@ -262,8 +267,11 @@ function loadSun() {
 function loadPlanet() {
     planetDrawer = makeDrawer("#planet-canvas", "planet");
     var gl = planetDrawer.gl;
-    planetDrawer.texture = loadTexture(planetDrawer, "planet_normals.png", gl.REPEAT);
+    planetDrawer.albedoTexture = loadTexture(planetDrawer, "planet_albedo.png", gl.REPEAT);
+    planetDrawer.normalTexture = loadTexture(planetDrawer, "planet_normals.png", gl.REPEAT);
     planetDrawer.onDraw = function(time) {
+        gl.uniform1i(this.uLoc("tex_albedo"), 0);
+        gl.uniform1i(this.uLoc("tex_normals"), 1);
         gl.uniform3f(this.uLoc("sun_light_color"), curSunColor.x, curSunColor.y, curSunColor.z);
         gl.uniform1f(this.uLoc("sun_radius"), sunDrawer.relRadius(this));
         gl.uniform1f(this.uLoc("moon_radius"), moonDrawer.relRadius(this));
@@ -271,7 +279,11 @@ function loadPlanet() {
         gl.uniform2f(this.uLoc("sun_pos"), sunPos.x, sunPos.y);
         var moonPos = this.relPosition(moonDrawer);
         gl.uniform2f(this.uLoc("moon_pos"), moonPos.x, moonPos.y);
-        gl.bindTexture(gl.TEXTURE_2D, this.texture);
+        
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, this.albedoTexture);
+        gl.activeTexture(gl.TEXTURE1);
+        gl.bindTexture(gl.TEXTURE_2D, this.normalTexture);
     }
     planetDrawer.loading--;
 }

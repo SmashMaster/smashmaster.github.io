@@ -4,6 +4,7 @@
 
 precision lowp float;
 
+uniform sampler2D u_tex_albedo;
 uniform sampler2D u_tex_normals;
 uniform vec3 u_sun_light_color;
 uniform float u_sun_radius;
@@ -149,18 +150,13 @@ void main() {
         
         vec3 sunLightDir = normalize(vec3(u_sun_pos - v_pos, 0.0));
         float sb = dot(sunLightDir, normal)*sunAtten(pos);
-        vec3 sunColor = u_sun_light_color*sb;
+        vec3 sunColor = u_sun_light_color*(24.0*sb);
         
         vec3 moonLightDir = normalize(vec3(u_moon_pos - v_pos, 0.0));
         float mb = dot(moonLightDir, normal)*moonAtten(pos);
-        vec3 moonColor = u_sun_light_color*(4.0*mb);
+        vec3 moonColor = u_sun_light_color*(96.0*mb);
         
-        gl_FragColor = vec4(sunColor + moonColor, 1.0);
-        
-        float r = sqrt(rsq);
-        
-        if (r > AA_THRESHOLD) {
-            gl_FragColor *= (1.0-r)/AA_SIZE;
-        }
+        gl_FragColor = texture2D(u_tex_albedo, uv);
+        gl_FragColor.rgb *= sunColor + moonColor;
     }
 }
