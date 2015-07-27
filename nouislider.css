@@ -84,3 +84,6 @@
 	border-radius: 6px;
 	background: #bbb;
 }
+
+.noUi-handle:hover {background: #fff;}
+.noUi-active {background: #fff;}
