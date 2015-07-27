@@ -329,4 +329,8 @@ function main() {
         //alert("Load error in main(): " + e);
         //Do nuffin. Fail silently and let the user go about their business.
     }
+    
+    $("#sun-loader").fadeOut(200);
+    $("#planet-loader").fadeOut(200);
+    $("#moon-loader").fadeOut(200);
 }

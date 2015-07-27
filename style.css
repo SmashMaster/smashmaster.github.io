@@ -13,13 +13,6 @@ body {
     max-width: 1024px;
     margin: 0 auto;
     padding-bottom: 24px;
-    background-image: url("http://truereality.org/wp-content/uploads/2014/02/hubble-space-wallpapers.jpg");
-    background-size: cover;
-    background-repeat: no-repeat;
-    
-    -webkit-box-shadow: inset -128px 0px 64px -64px #222, inset 128px 0px 64px -64px #222;
-       -moz-box-shadow: inset -128px 0px 64px -64px #222, inset 128px 0px 64px -64px #222;
-            box-shadow: inset -128px 0px 64px -64px #222, inset 128px 0px 64px -64px #222;
 }
 
 #demo {
@@ -36,19 +29,10 @@ body {
     visibility: hidden;
 }
 
-#demo canvas {
-    display: block;
-    width: 100%;
-    height: 100%;
-    visibility: visible;
-}
-
 .orbiter {
     position: absolute;
     left: 50%;
     top: 50%;
-    border-radius: 50%;
-    visibility: hidden;
 }
 
 #sun {
@@ -161,6 +145,46 @@ body {
 @keyframes moonOrbit { from {
             transform: rotate(0deg)    translateX(200%) rotate(0deg); } to {
             transform: rotate(-360deg) translateX(200%) rotate(360deg); }
+}
+
+/* LOADING SPINNER STYLES */
+.loader {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 100%;
+    height: 100%;
+    margin: -50% 0 0 -50%;
+    border-radius: 50%;
+    visibility: visible;
+}
+
+#sun-loader {
+    width: 25%;
+    height: 25%;
+    margin: -12.5% 0 0 -12.5%;
+    background-color: #FC0;
+}
+
+#planet-loader {background-color: #06F;}
+#moon-loader {background-color: #aaa;}
+
+#demo canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    visibility: visible;
+}
+
+/* Load background image after spinner, so spinner shows up faster. */
+#demo-background {
+    background-image: url("http://truereality.org/wp-content/uploads/2014/02/hubble-space-wallpapers.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    
+    -webkit-box-shadow: inset -128px 0px 64px -64px #222, inset 128px 0px 64px -64px #222;
+       -moz-box-shadow: inset -128px 0px 64px -64px #222, inset 128px 0px 64px -64px #222;
+            box-shadow: inset -128px 0px 64px -64px #222, inset 128px 0px 64px -64px #222;
 }
 
 #sun-scale-slider {
