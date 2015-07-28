@@ -84,7 +84,7 @@ function loadTexture(drawer, url, wrap) {
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrap);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
         gl.bindTexture(gl.TEXTURE_2D, null);
-        drawer.loading--;
+        drawer.decLoad();
     });
     image.src = url;
     
@@ -171,6 +171,11 @@ function makeDrawer(canvasName, shaderName) {
     
     drawer.uLoc = function(name) {
         return gl.getUniformLocation(this.shader, "u_" + name);
+    }
+    
+    drawer.decLoad = function() {
+        this.loading--;
+        if (!this.loading) this.loader.fadeOut(300);
     }
     
     drawer.draw = function(time) {
@@ -260,6 +265,7 @@ function initSunScaleSlider() {
 
 function loadSun() {
     sunDrawer = makeDrawer("#sun-canvas", "sun");
+    sunDrawer.loader = $("#sun-loader");
     var gl = sunDrawer.gl;
     sunDrawer.texture = loadTexture(sunDrawer, "images/clouds.png", gl.REPEAT);
     sunDrawer.onDraw = function(time) {
@@ -271,11 +277,12 @@ function loadSun() {
     sunDrawer.radius = function() {
         return (this.width + this.height)*sunScaleSlider.noUiSlider.get()/2.0;
     }
-    sunDrawer.loading--;
+    sunDrawer.decLoad();
 }
 
 function loadPlanet() {
     planetDrawer = makeDrawer("#planet-canvas", "planet");
+    planetDrawer.loader = $("#planet-loader");
     var gl = planetDrawer.gl;
     planetDrawer.albedoTexture = loadTexture(planetDrawer, "images/planet_albedo.png", gl.REPEAT);
     planetDrawer.normalTexture = loadTexture(planetDrawer, "images/planet_normals.png", gl.REPEAT);
@@ -295,11 +302,12 @@ function loadPlanet() {
         gl.activeTexture(gl.TEXTURE1);
         gl.bindTexture(gl.TEXTURE_2D, this.normalTexture);
     }
-    planetDrawer.loading--;
+    planetDrawer.decLoad();
 }
 
 function loadMoon() {
     moonDrawer = makeDrawer("#moon-canvas", "moon");
+    moonDrawer.loader = $("#moon-loader");
     var gl = moonDrawer.gl;
     moonDrawer.texture = loadTexture(moonDrawer, "images/moon_normals.png", gl.REPEAT);
     moonDrawer.onDraw = function(time) {
@@ -312,7 +320,7 @@ function loadMoon() {
         gl.uniform2f(this.uLoc("planet_pos"), planetPos.x, planetPos.y);
         gl.bindTexture(gl.TEXTURE_2D, this.texture);
     }
-    moonDrawer.loading--;
+    moonDrawer.decLoad();
 }
 
 function main() {
@@ -329,8 +337,4 @@ function main() {
         //alert("Load error in main(): " + e);
         //Do nuffin. Fail silently and let the user go about their business.
     }
-    
-    $("#sun-loader").fadeOut(200);
-    $("#planet-loader").fadeOut(200);
-    $("#moon-loader").fadeOut(200);
 }

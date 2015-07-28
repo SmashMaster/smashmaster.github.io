@@ -178,7 +178,7 @@ body {
 
 /* Load background image after spinner, so spinner shows up faster. */
 #demo-background {
-    background-image: url("http://truereality.org/wp-content/uploads/2014/02/hubble-space-wallpapers.jpg");
+    background-image: url("images/demo_background.jpg");
     background-size: cover;
     background-repeat: no-repeat;
     
