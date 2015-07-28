@@ -259,3 +259,8 @@ a:active  {color: #fff;}
     color: #666;
     margin: 10px auto;
 }
+
+#footer a:link    {color: #777;}
+#footer a:visited {color: #777;}
+#footer a:hover   {color: #bbb;}
+#footer a:active  {color: #bbb;}
