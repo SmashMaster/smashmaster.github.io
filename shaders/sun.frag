@@ -11,22 +11,22 @@ uniform float u_time;
 
 varying vec2 v_pos;
 
-#define COLOR_A vec3(0.5, 0.08, 0.04)
-#define COLOR_B vec3(1.5)
+const vec3 COLOR_A = vec3(0.5, 0.08, 0.04);
+const vec3 COLOR_B = vec3(1.5);
 
-#define SUN_PERTURB_AMT 0.75
-#define SUN_PERTURB_RATE (1.0/64.0)
-#define SUN_TEX_SCALE 8.0
-#define SUN_DISTORT_AMT 1.4
-#define SUN_AA_SIZE (1.0/128.0)
+const float SUN_PERTURB_AMT = 0.75;
+const float SUN_PERTURB_RATE = 1.0/64.0;
+const float SUN_TEX_SCALE = 8.0;
+const float SUN_DISTORT_AMT = 1.4;
+const float SUN_AA_SIZE = 1.0/128.0;
 
-#define CORONA_RPOW 0.0625
-#define CORONA_SPEED (1.0/4.0)
-#define CORONA_ASCALE (1.0/8.0)
-#define CORONA_RSCALE (1.0/8.0)
-#define CORONA_Z_START 0.25
-#define CORONA_DEPTH (1.0 - CORONA_Z_START)
-#define CORONA_ALPHA 0.6
+const float CORONA_RPOW = 0.0625;
+const float CORONA_SPEED = 1.0/4.0;
+const float CORONA_ASCALE = 1.0/8.0;
+const float CORONA_RSCALE = 1.0/8.0;
+const float CORONA_Z_START = 0.25;
+const float CORONA_DEPTH = 1.0 - CORONA_Z_START;
+const float CORONA_ALPHA = 0.6;
 
 vec2 perturb(vec2 uv, float t, float ofs, float amt) {
     vec2 dp = vec2(texture2D(u_texture, vec2(uv.x + ofs, uv.y + t)).r,

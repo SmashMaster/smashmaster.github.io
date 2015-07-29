@@ -14,11 +14,7 @@ uniform vec2 u_moon_pos;
 
 varying vec2 v_pos;
 
-#define AA_SIZE (1.0/12.0)
-#define AA_THRESHOLD (1.0 - AA_SIZE)
-#define PI_OVER_2 1.57079632679
-#define TEX_SCALE 4.0
-#define DISTORT_AMT 1.4
+const float PI_OVER_2 = 1.57079632679;
 
 /**
  * Projects a sphere with the given radius and distance onto a unit sphere at

@@ -13,9 +13,9 @@ uniform vec2 u_planet_pos;
 
 varying vec2 v_pos;
 
-#define AA_SIZE (1.0/8.0)
-#define AA_THRESHOLD (1.0 - AA_SIZE)
-#define PI_OVER_2 1.57079632679
+const float AA_SIZE = 1.0/8.0;
+const float AA_THRESHOLD = 1.0 - AA_SIZE;
+const float PI_OVER_2 = 1.57079632679;
 
 /**
  * Projects a sphere with the given radius and distance onto a unit sphere at

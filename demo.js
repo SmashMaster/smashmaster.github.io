@@ -51,13 +51,15 @@ function addEvent(elem, type, eventHandle) {
     }
 }
 
-function loadShader(drawer, url, type) {
+function reqSource(url) {
     var req = new XMLHttpRequest();
     //req.open("GET", url, false);
     req.open("GET", url + ((/\?/).test(url) ? "&" : "?") + (new Date()).getTime(), false); //Bypass cache
     req.send(null);
-    var src = (req.status == 200) ? req.responseText : null;
+    return (req.status == 200) ? req.responseText : null;
+}
 
+function loadShader(drawer, src, type) {
     var gl = drawer.gl;
     var shader = gl.createShader(type);
     gl.shaderSource(shader, src);
@@ -102,7 +104,7 @@ var cloudTexture;
 var sunDrawer, planetDrawer, moonDrawer;
 var curSunColor = {x:0.0, y:0.0, z:0.0};
 
-function makeDrawer(canvasName, shaderName) {
+function makeDrawer(canvasName, shaderName, vertSource) {
     var drawer = {};
     drawer.loading = 1;
     drawer.canvas = $(canvasName);
@@ -110,8 +112,9 @@ function makeDrawer(canvasName, shaderName) {
     drawer.gl = gl;
     
     //INIT SHADERS
-    var fragmentShader = loadShader(drawer, "shaders/" + shaderName + ".frag", gl.FRAGMENT_SHADER);
-    var vertexShader = loadShader(drawer, "shaders/shader.vert", gl.VERTEX_SHADER);
+    var fragSource = reqSource("shaders/" + shaderName + ".frag");
+    var fragmentShader = loadShader(drawer, fragSource, gl.FRAGMENT_SHADER);
+    var vertexShader = loadShader(drawer, vertSource, gl.VERTEX_SHADER);
     
     drawer.shader = gl.createProgram();
     gl.attachShader(drawer.shader, vertexShader);
@@ -263,8 +266,8 @@ function initSunScaleSlider() {
 	});
 }
 
-function loadSun() {
-    sunDrawer = makeDrawer("#sun-canvas", "sun");
+function loadSun(vertSource) {
+    sunDrawer = makeDrawer("#sun-canvas", "sun", vertSource);
     sunDrawer.loader = $("#sun-loader");
     var gl = sunDrawer.gl;
     sunDrawer.texture = loadTexture(sunDrawer, "images/clouds.png", gl.REPEAT);
@@ -280,8 +283,8 @@ function loadSun() {
     sunDrawer.decLoad();
 }
 
-function loadPlanet() {
-    planetDrawer = makeDrawer("#planet-canvas", "planet");
+function loadPlanet(vertSource) {
+    planetDrawer = makeDrawer("#planet-canvas", "planet", vertSource);
     planetDrawer.loader = $("#planet-loader");
     var gl = planetDrawer.gl;
     planetDrawer.albedoTexture = loadTexture(planetDrawer, "images/planet_albedo.png", gl.REPEAT);
@@ -305,8 +308,8 @@ function loadPlanet() {
     planetDrawer.decLoad();
 }
 
-function loadMoon() {
-    moonDrawer = makeDrawer("#moon-canvas", "moon");
+function loadMoon(vertSource) {
+    moonDrawer = makeDrawer("#moon-canvas", "moon", vertSource);
     moonDrawer.loader = $("#moon-loader");
     var gl = moonDrawer.gl;
     moonDrawer.texture = loadTexture(moonDrawer, "images/moon_normals.png", gl.REPEAT);
@@ -326,15 +329,17 @@ function loadMoon() {
 function main() {
     try {
         initSunScaleSlider();
-        loadSun();
-        loadPlanet();
-        loadMoon();
+        
+        var vertSource = reqSource("shaders/shader.vert");
+        loadSun(vertSource);
+        loadPlanet(vertSource);
+        loadMoon(vertSource);
         
         addEvent(window, "resize", onResize);
         window.requestAnimationFrame(animate);
     }
     catch (e) {
-        //alert("Load error in main(): " + e);
+        alert("Load error in main(): " + e);
         //Do nuffin. Fail silently and let the user go about their business.
     }
 }
