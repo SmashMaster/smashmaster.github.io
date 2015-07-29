@@ -75,26 +75,26 @@ body {
 }
 
 @-webkit-keyframes planetMoonSystemOrbit { from {
-    -webkit-transform: rotate(0deg)    translateX(175%) rotate(0deg); } to {
-    -webkit-transform: rotate(-360deg) translateX(175%) rotate(360deg); }
+    -webkit-transform: rotate(0deg)    translateX(200%) rotate(0deg); } to {
+    -webkit-transform: rotate(-360deg) translateX(200%) rotate(360deg); }
 }
 @-moz-keyframes planetMoonSystemOrbit { from {
-       -moz-transform: rotate(0deg)    translateX(175%) rotate(0deg); } to {
-       -moz-transform: rotate(-360deg) translateX(175%) rotate(360deg); }
+       -moz-transform: rotate(0deg)    translateX(200%) rotate(0deg); } to {
+       -moz-transform: rotate(-360deg) translateX(200%) rotate(360deg); }
 }
 @-o-keyframes planetMoonSystemOrbit { from {
-         -o-transform: rotate(0deg)    translateX(175%) rotate(0deg); } to {
-         -o-transform: rotate(-360deg) translateX(175%) rotate(360deg); }
+         -o-transform: rotate(0deg)    translateX(200%) rotate(0deg); } to {
+         -o-transform: rotate(-360deg) translateX(200%) rotate(360deg); }
 }
 @keyframes planetMoonSystemOrbit { from {
-            transform: rotate(0deg)    translateX(175%) rotate(0deg); } to {
-            transform: rotate(-360deg) translateX(175%) rotate(360deg); }
+            transform: rotate(0deg)    translateX(200%) rotate(0deg); } to {
+            transform: rotate(-360deg) translateX(200%) rotate(360deg); }
 }
 
 #planet {
-    width: 50%;
-    height: 50%;
-    margin: -25% 0 0 -25%;
+    width: 80%;
+    height: 80%;
+    margin: -40% 0 0 -40%;
     
     -webkit-animation: planetOrbit 2.2s linear infinite;
        -moz-animation: planetOrbit 2.2s linear infinite;
@@ -103,20 +103,20 @@ body {
 }
 
 @-webkit-keyframes planetOrbit { from {
-    -webkit-transform: rotate(0deg)    translateX(-25%) rotate(0deg); } to {
-    -webkit-transform: rotate(-360deg) translateX(-25%) rotate(360deg); }
+    -webkit-transform: rotate(0deg)    translateX(-10%) rotate(0deg); } to {
+    -webkit-transform: rotate(-360deg) translateX(-10%) rotate(360deg); }
 }
 @-moz-keyframes planetOrbit { from {
-       -moz-transform: rotate(0deg)    translateX(-25%) rotate(0deg); } to {
-       -moz-transform: rotate(-360deg) translateX(-25%) rotate(360deg); }
+       -moz-transform: rotate(0deg)    translateX(-10%) rotate(0deg); } to {
+       -moz-transform: rotate(-360deg) translateX(-10%) rotate(360deg); }
 }
 @-o-keyframes planetOrbit { from {
-         -o-transform: rotate(0deg)    translateX(-25%) rotate(0deg); } to {
-         -o-transform: rotate(-360deg) translateX(-25%) rotate(360deg); }
+         -o-transform: rotate(0deg)    translateX(-10%) rotate(0deg); } to {
+         -o-transform: rotate(-360deg) translateX(-10%) rotate(360deg); }
 }
 @keyframes planetOrbit { from {
-            transform: rotate(0deg)    translateX(-25%) rotate(0deg); } to {
-            transform: rotate(-360deg) translateX(-25%) rotate(360deg); }
+            transform: rotate(0deg)    translateX(-10%) rotate(0deg); } to {
+            transform: rotate(-360deg) translateX(-10%) rotate(360deg); }
 }
 
 #moon {
@@ -131,20 +131,20 @@ body {
 }
 
 @-webkit-keyframes moonOrbit { from {
-    -webkit-transform: rotate(0deg)    translateX(200%) rotate(0deg); } to {
-    -webkit-transform: rotate(-360deg) translateX(200%) rotate(360deg); }
+    -webkit-transform: rotate(0deg)    translateX(300%) rotate(0deg); } to {
+    -webkit-transform: rotate(-360deg) translateX(300%) rotate(360deg); }
 }
 @-moz-keyframes moonOrbit { from {
-       -moz-transform: rotate(0deg)    translateX(200%) rotate(0deg); } to {
-       -moz-transform: rotate(-360deg) translateX(200%) rotate(360deg); }
+       -moz-transform: rotate(0deg)    translateX(300%) rotate(0deg); } to {
+       -moz-transform: rotate(-360deg) translateX(300%) rotate(360deg); }
 }
 @-o-keyframes moonOrbit { from {
-         -o-transform: rotate(0deg)    translateX(200%) rotate(0deg); } to {
-         -o-transform: rotate(-360deg) translateX(200%) rotate(360deg); }
+         -o-transform: rotate(0deg)    translateX(300%) rotate(0deg); } to {
+         -o-transform: rotate(-360deg) translateX(300%) rotate(360deg); }
 }
 @keyframes moonOrbit { from {
-            transform: rotate(0deg)    translateX(200%) rotate(0deg); } to {
-            transform: rotate(-360deg) translateX(200%) rotate(360deg); }
+            transform: rotate(0deg)    translateX(300%) rotate(0deg); } to {
+            transform: rotate(-360deg) translateX(300%) rotate(360deg); }
 }
 
 /* LOADING SPINNER STYLES */

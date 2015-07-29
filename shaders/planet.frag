@@ -14,6 +14,10 @@ uniform vec2 u_moon_pos;
 
 varying vec2 v_pos;
 
+const vec3 ATM_COLOR = vec3(0.25, 0.66, 1.0);
+const float ATM_TURBIDITY = 0.5;
+const float SIZE_FACTOR = 0.85;
+const float SIZE_SQFACTOR = SIZE_FACTOR*SIZE_FACTOR;
 const float PI_OVER_2 = 1.57079632679;
 
 /**
@@ -146,22 +150,49 @@ float moonAtten(vec3 p, vec3 normal) {
     return attenuation;
 }
 
+void alphaBlend(inout vec4 destination, vec3 color, float alpha) {
+    destination *= 1.0 - alpha;
+    destination.rgb += color*alpha;
+    destination.a += alpha;
+}
+
+float expAtten(float x, float factor) {
+    return 1.0 - pow(factor, x);
+}
+
 void main() {
+    gl_FragColor = vec4(0.0);
+    
     float rsq = v_pos.x*v_pos.x + v_pos.y*v_pos.y;
-    if (rsq >= 1.0) {
-        gl_FragColor = vec4(0.0);
-    }
-    else {
+    if (rsq > 1.0) return;
+    
+    float atmEndZ;
+    float atmStZ = sqrt(1.0 - rsq);
+    
+    if (rsq <= SIZE_SQFACTOR) {
         vec2 uv = v_pos*0.5 + 0.5;
         uv.y = -uv.y;
         
-        vec3 pos = vec3(v_pos, sqrt(1.0 - rsq));
+        vec3 pos = vec3(v_pos, sqrt(SIZE_SQFACTOR - rsq));
+        atmEndZ = pos.z;
         vec3 normal = normalize(texture2D(u_tex_normals, uv).xyz*2.0 - 1.0);
         
-        vec3 sunColor = u_sun_light_color*(24.0*sunAtten(pos, normal));
-        vec3 moonColor = u_sun_light_color*(96.0*moonAtten(pos, normal));
+        vec3 sunColor = u_sun_light_color*(25.0*sunAtten(pos, normal));
+        vec3 moonColor = u_sun_light_color*(100.0*moonAtten(pos, normal));
         
         gl_FragColor = texture2D(u_tex_albedo, uv);
         gl_FragColor.rgb *= sunColor + moonColor;
     }
+    else {
+        atmEndZ = -atmStZ;
+    }
+    
+    vec3 pos = vec3(v_pos, atmStZ);
+    vec3 normal = normalize(pos);
+    vec3 sunColor = u_sun_light_color*(25.0*sunAtten(pos, normal));
+    
+    float atmZ = atmStZ - atmEndZ; //Squaring depth to get more natural attenuation
+    float atmAlpha = expAtten(atmZ*atmZ, ATM_TURBIDITY);
+    
+    alphaBlend(gl_FragColor, (sunColor)*ATM_COLOR, atmAlpha);
 }
