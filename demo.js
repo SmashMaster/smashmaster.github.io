@@ -53,8 +53,7 @@ function addEvent(elem, type, eventHandle) {
 
 function reqSource(url) {
     var req = new XMLHttpRequest();
-    //req.open("GET", url, false);
-    req.open("GET", url + ((/\?/).test(url) ? "&" : "?") + (new Date()).getTime(), false); //Bypass cache
+    req.open("GET", url, false);
     req.send(null);
     return (req.status == 200) ? req.responseText : null;
 }
