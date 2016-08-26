@@ -53,6 +53,7 @@ function addEvent(elem, type, eventHandle) {
 var canvas;
 var width, height;
 var gl;
+var shader, fsqBuffer;
 
 function onResize() {
     try {
@@ -74,15 +75,13 @@ function reqSource(url) {
 }
 
 function loadShader(src, type) {
-    var shader = gl.createShader(type);
-    gl.shaderSource(shader, src);
-    gl.compileShader(shader);
-
-    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        throw gl.getShaderInfoLog(shader);
+    var sh = gl.createShader(type);
+    gl.shaderSource(sh, src);
+    gl.compileShader(sh);
+    if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) {
+        throw gl.getShaderInfoLog(sh);
     }
-
-    return shader;
+    return sh;
 }
 
 
@@ -96,6 +95,12 @@ function animate() {
     var time = (currentTime - startTime)/1000.0
     
     try {
+        gl.viewport(0, 0, width, height);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        
+        gl.uniform1f(shader.uniformTimeLocation, time);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, fsqBuffer.numItems);
+        
         window.requestAnimationFrame(animate);
     }
     catch (e) {
@@ -111,15 +116,43 @@ function main() {
         
         gl = canvas[0].getContext('experimental-webgl');
         
+        gl.clearColor(1.0, 1.0, 1.0, 1.0);
+        
         var vertSource = reqSource("shaders/blob.vert");
         var fragSource = reqSource("shaders/blob.frag");
-        var fragmentShader = loadShader(drawer, fragSource, gl.FRAGMENT_SHADER);
-        var vertexShader = loadShader(drawer, vertSource, gl.VERTEX_SHADER);
+        var fragmentShader = loadShader(fragSource, gl.FRAGMENT_SHADER);
+        var vertexShader = loadShader(vertSource, gl.VERTEX_SHADER);
         
-        drawer.shader = gl.createProgram();
-        gl.attachShader(drawer.shader, vertexShader);
-        gl.attachShader(drawer.shader, fragmentShader);
-        gl.linkProgram(drawer.shader);
+        shader = gl.createProgram();
+        gl.attachShader(shader, vertexShader);
+        gl.attachShader(shader, fragmentShader);
+        gl.linkProgram(shader);
+        
+        if (!gl.getProgramParameter(shader, gl.LINK_STATUS)) {
+            throw gl.getProgramInfoLog(shader);
+        }
+        
+        gl.useProgram(shader);
+
+        shader.vertexPositionAttribute = gl.getAttribLocation(shader, "in_pos");
+        gl.enableVertexAttribArray(shader.vertexPositionAttribute);
+        shader.uniformTimeLocation = gl.getUniformLocation(shader, "u_time");
+        
+        //INIT VERTEX BUFFER
+        fsqBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, fsqBuffer);
+        vertices = [
+            -1.0, -1.0,
+             1.0, -1.0,
+            -1.0,  1.0,
+             1.0,  1.0
+        ];
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+        fsqBuffer.itemSize = 2;
+        fsqBuffer.numItems = 4;
+        
+        gl.bindBuffer(gl.ARRAY_BUFFER, fsqBuffer);
+        gl.vertexAttribPointer(shader.vertexPositionAttribute, fsqBuffer.itemSize, gl.FLOAT, false, 0, 0);
         
         canvas.fadeIn("slow", function() {
             $("#spinner").fadeOut("fast");
