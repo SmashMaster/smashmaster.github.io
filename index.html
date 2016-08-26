@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!-- Author: Samuel Johnson (SmashMaster) -->
-<!-- Copyright: 2014 Samuel Johnson -->
+<!-- Copyright: 2016 Samuel Johnson -->
 <!-- License: https://github.com/SmashMaster/smashmaster.github.io/blob/master/LICENSE -->
 <html>
 
@@ -18,12 +18,13 @@
 <div id="body">
     <p id="title">Sam Johnson</p>
     <p id="subtitle">Game Developer</p>
-    
-    <div>//demo here</div>
-    
     <p id="quote">"What I cannot create, I do not understand."</p>
     <p id="quoteSource"><a href="https://en.wikipedia.org/wiki/Richard_Feynman">-Richard Feynman</a></p>
-    <p>Hi! My name is Sam, and I'm a programmer and indie game developer. If you're reading this, I want to work for you! I currently live in Boulder, Colorado, but I am looking to relocate.</p>
+    
+    <div style="text-align:center">(demo goes here)</div>
+    
+    <p>Hi! My name is Sam, and I'm a programmer and indie game developer.</p>
+    <p>If you're reading this, I want to work for you! I currently live in Boulder, Colorado, but I am looking to relocate.</p>
     
     <p class="section">Portfolio</p>
     
@@ -37,10 +38,15 @@
     </ul>
     <div class="tab-content">
         <div class="tab-pane fade" id="shatteredLords" role="tabpanel">
-            //shattered lords content here
+            <p>I'm working on a fantasy action RPG called Shattered Lords. It's about uncovering the mysteries of a long dead crystal kingdom, overcoming madness, and surviving in the face of all odds. Check out the latest development video:</p>
+            <div class="video"><iframe allowFullScreen="allowFullScreen" src="https://www.youtube.com/embed/t_gFeAwPM8g" frameborder="0"></iframe></div>
+            <p>I built its engine from scratch, with Java and OpenGL. I also did all the animation and modeling.</p>
         </div>
         <div class="tab-pane fade" id="devilUtil" role="tabpanel">
-            //devilutil content here
+            <p>Over the past few years, I've written a very complete game library in Java. It forms the backbone of Shattered Lords; and handles math, physics, animation, model loading, sound, window creation, and more. It's open source!</p>
+            <div style="text-align:center">
+                <a href="https://github.com/SmashMaster/DevilUtil" title="DevilUtil on GitHub">Browse DevilUtil on GitHub</a>
+            </div>
         </div>
     </div>
     
@@ -59,13 +65,23 @@
     </ul>
     <div class="tab-content">
         <div class="tab-pane fade" id="engine" role="tabpanel">
-            //engine content here
+            <p>Having built my own engine, I have a thorough understanding of game programming at every level. I can write each discrete system, from animation to collision to particles, and string them all together into one cohesive whole. My language of choice is Java; but I know C++, Python, Javascript, and Lua; and I'm always willing to learn.</p>
         </div>
         <div class="tab-pane fade" id="graphics" role="tabpanel">
-            //graphics content here
+            <p>I have a passion for, and deep familiarity with graphics hardware and APIs, especially OpenGL. I'm obsessed with physically based rendering. For the ultra nerdy, here's a list of each graphics algorithm I have personally implemented, just for Shattered Lords. Pictures included!</p>
+            <ul class="list">
+                <li>Cascaded Shadow Maps</li>
+                <li>Horizon-Based Ambient Occlusion</li>
+                <li>Anamorphic Bloom</li>
+                <li>Screen-Space Reflections</li>
+                <li>Reconstruction Motion Blur</li>
+                <li>Image Dithering</li>
+                <li>Tonemapping</li>
+                <li>Fast Approximate Anti-Aliasing</li>
+            </ul>
         </div>
         <div class="tab-pane fade" id="tools" role="tabpanel">
-            //tools content here
+            <p>I routinely write development tools to make it possible to create games. Whether the need is generating cubemaps, computing bounding volume hierarchies, or converting assets; I'll make it automatic and convenient. Also, I love version control, and use it religiously.</p>
         </div>
     </div>
     
@@ -82,13 +98,13 @@
     </ul>
     <div class="tab-content">
         <div class="tab-pane fade" id="science" role="tabpanel">
-            //science content here
+            <p>So often, games are all about simulation! In that vein, I am well versed in math, physics, optics, and more. Perhaps my astronomy knowledge could beef up your space game. Maybe you need a realistic model of atmospheric scattering... for your space game! Or maybe some special relativity will give you that edge in the highly competitive SPACE GAME market. I LIKE SPACE.</p>
         </div>
         <div class="tab-pane fade" id="animation" role="tabpanel">
-            //animation content here
+            <p>I can set your world in motion. I have tons of practice making game animations in Blender. I've used other tools too, like 3ds Max. My technical knowledge complements this skill nicely.</p>
         </div>
         <div class="tab-pane fade" id="design" role="tabpanel">
-            //design content here
+            <p>I made this website! Good design makes me very happy, and this passion rounds me out as a developer. I'm very experienced with Photoshop, HTML5, and CSS. Programmer art doesn't always have to be bad!</p>
         </div>
     </div>
     
@@ -107,13 +123,13 @@
     </ul>
     <div class="tab-content">
         <div class="tab-pane fade" id="relentless" role="tabpanel">
-            //relentless content here
+            <p>I will not stop until it works. At the end of the day, this is the quality you're really looking for. When it matters, I am someone who does not give up. Ever.</p>
         </div>
         <div class="tab-pane fade" id="adaptable" role="tabpanel">
-            //adaptable content here
+            <p>I will learn whatever it takes. That includes new languages, APIs, tools, or even crafts. I will consistently go outside my comfort zone in order to deliver results.</p>
         </div>
         <div class="tab-pane fade" id="creative" role="tabpanel">
-            //creative content here
+            <p>I will treat my work as art. I won't take shortcuts because I'm a perfectionist. This isn't always a good thing&mdash;sometimes I keep working on something when others would rightfully call it finished. Of course, quality takes time.</p>
         </div>
     </div>
     <hr>
@@ -127,7 +143,12 @@
         <a href="http://steamcommunity.com/id/SmashMaster" title="Steam">
             <i class="fa fa-steam"></i></a>
     </div>
-    <p>Feel free to shoot me an email: <a href="mailto:sam@samrj.com" title="Email" id="email">sam@samrj.com</a></p>
+    <p>Feel free to shoot me an email:</p>
+    
+    <div style="text-align:center">
+        <a href="mailto:sam@samrj.com" title="Email" id="email">sam@samrj.com</a>
+    </div>
+    
     <hr>
     <p id="footer">
         &copy; 2016 Sam Johnson - This website is
