@@ -78,7 +78,7 @@ body {
     font-size: 14px;
     text-align: center;
     color: #999;
-    padding: 8px 0px 0px 0px;
+    padding: 0px;
 }
 
 #quoteSource {
@@ -197,6 +197,12 @@ hr {
     vertical-align: bottom;
     padding: 8px;
     margin: 0px;
+}
+
+#email {
+    font-family: "Raleway";
+    font-size: 32px;
+    text-align: center;
 }
 
 #footer {
