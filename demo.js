@@ -66,6 +66,43 @@ function onResize() {
     }
 }
 
+function reqSource(url) {
+    var req = new XMLHttpRequest();
+    req.open("GET", url, false);
+    req.send(null);
+    return (req.status == 200) ? req.responseText : null;
+}
+
+function loadShader(src, type) {
+    var shader = gl.createShader(type);
+    gl.shaderSource(shader, src);
+    gl.compileShader(shader);
+
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        throw gl.getShaderInfoLog(shader);
+    }
+
+    return shader;
+}
+
+
+var startTime = 0;
+
+function animate() {
+    var currentTime = (new Date).getTime();
+    if (!startTime || (currentTime - startTime) >= 1200000) {
+        startTime = currentTime;
+    }
+    var time = (currentTime - startTime)/1000.0
+    
+    try {
+        window.requestAnimationFrame(animate);
+    }
+    catch (e) {
+        alert("Animate error: " + e);
+    }
+}
+
 function main() {
     try {
         canvas = $("#demo");
@@ -74,13 +111,25 @@ function main() {
         
         gl = canvas[0].getContext('experimental-webgl');
         
+        var vertSource = reqSource("shaders/blob.vert");
+        var fragSource = reqSource("shaders/blob.frag");
+        var fragmentShader = loadShader(drawer, fragSource, gl.FRAGMENT_SHADER);
+        var vertexShader = loadShader(drawer, vertSource, gl.VERTEX_SHADER);
+        
+        drawer.shader = gl.createProgram();
+        gl.attachShader(drawer.shader, vertexShader);
+        gl.attachShader(drawer.shader, fragmentShader);
+        gl.linkProgram(drawer.shader);
+        
         canvas.fadeIn("slow", function() {
             $("#spinner").fadeOut("fast");
         });
         
-        //window.requestAnimationFrame(animate);
+        window.requestAnimationFrame(animate);
     }
     catch (e) {
+        $("#demoWrapper").hide();
+        
         alert("Load error in main(): " + e);
     }
 }
