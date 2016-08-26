@@ -2,33 +2,95 @@
 /* Copyright: 2016 Samuel Johnson */
 /* License: https://github.com/SmashMaster/smashmaster.github.io/blob/master/LICENSE */
 body {
-    margin: 0;
-    background-color: #eee;
+    background-color: #fff;
+    margin: 0px;
 }
 
 #body {
-    font-family: "Prociono";
+    font-family: "Open Sans", sans-serif;
     font-size: 18px;
-    color: #000;
-    width: 100%;
+    text-align: left;
+    color: #444;
+    min-width: 320px;
     max-width: 768px;
-    margin: 0 auto;
+    padding: 0px;
+    margin: 0px auto;
+}
+
+#title {
+    font-family: "Raleway";
+    font-size: 48px;
     text-align: center;
+    color: #000;
+    padding: 8px 0px;
+    margin: 0px;
+}
+
+#subtitle {
+    font-family: "Raleway";
+    font-size: 26px;
+    text-align: center;
+    color: #000;
+    padding: 0px;
+}
+
+#quote {
+    font-size: 14px;
+    text-align: center;
+    color: #999;
+    padding: 8px 0px 0px 0px;
+}
+
+#quoteSource {
+    display: inline-block;
+    font-size: 14px;
+    padding: 0px 0px 8px 0px;
+    position: relative;
+    left: 60%;
+}
+
+.section {
+    font-family: "Raleway";
+    font-size: 22px;
+    text-align: center;
+    color: #000;
+    padding: 8px 0px;
+    margin: 0px;
+}
+
+p {
+    padding: 8px 0px;
+    margin: 0px;
+}
+
+a {
+    text-decoration: none;
+    color: #337ab7;
+}
+a:hover,
+a:focus {
+    text-decoration: none;
+    color: #23527c;
+}
+
+hr {
+    padding: 8px 0px;
+    border-color: #ddd;
+    margin: 0px;
 }
 
 .nav-tabs {
-    float:none;
-    display:inline-block;
-    border:0px;
+    padding: 8px 0px 0px 0px;
+    border-bottom: 1px solid #ddd;
+    margin: 0px;
+    width: 100%;
 }
 
 .nav-tabs > li,
 .nav-tabs > li.active {
-    width:128px;
-    height:128px;
-    padding:0px;
-    border:0px;
-    margin:0px;
+    padding: 0px;
+    border: 0px;
+    margin: 0px 0px -1px 0px;
 }
 
 .nav-tabs > li > a:hover,
@@ -37,29 +99,49 @@ body {
 .nav-tabs > li.active > a:hover,
 .nav-tabs > li.active > a:focus,
 .nav-tabs > li.active > a {
-    border-radius:0px;
-    padding:0px;
-    border:0px;
-    margin:0px;
-    width:100%;
-    height:100%;
-    text-align:center;
-    line-height: 32px;
+    background-color: #fff;
+    font-size: 16px;
+    padding: 8px 2vmin;
+    border-radius: 4px 4px 0px 0px;
+    margin: 0px;
+    text-align: center;
 }
 
-.nav-tabs > li > a > .fa {
-    font-size: 40px;
+.nav-tabs > li > a:hover,
+.nav-tabs > li > a:focus,
+.nav-tabs > li > a {
+    border: 0px;
+    border-bottom: 1px solid #ddd;
+}
+
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus,
+.nav-tabs > li.active > a {
+    border: 1px solid #ddd;
+    border-bottom: 0px;
 }
 
 .tab-pane {
     background-color: #fff;
+    padding: 0px;
+    margin: 0px;
+}
+
+#links {
+    text-align: center;
 }
 
 #links a {
     display: inline-block;
-    font-size: 64px;
-    line-height: 64px;
+    font-size: 48px;
+    line-height: 48px;
     vertical-align: bottom;
-    padding: 0px;
-    margin: 10px;
+    padding: 8px;
+    margin: 0px;
+}
+
+#footer {
+    font-size: 14px;
+    text-align: center;
+    color: #999;
 }

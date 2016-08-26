@@ -7,8 +7,8 @@
 <head>
 <title>Sam's Website</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Prociono"> 
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:300">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans"> 
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:500">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link rel="stylesheet" href="style.css">
@@ -16,16 +16,16 @@
 
 <body>
 <div id="body">
-    <p>Sam Johnson</p>
-    <p>Game Developer</p>
+    <p id="title">Sam Johnson</p>
+    <p id="subtitle">Game Developer</p>
     
     <div>//demo here</div>
     
-    <p>"What I cannot create, I do not understand."</p>
-    <p><a href="https://en.wikipedia.org/wiki/Richard_Feynman">-Richard Feynman</a></p>
+    <p id="quote">"What I cannot create, I do not understand."</p>
+    <p id="quoteSource"><a href="https://en.wikipedia.org/wiki/Richard_Feynman">-Richard Feynman</a></p>
     <p>Hi! My name is Sam, and I'm a programmer and indie game developer. If you're reading this, I want to work for you! I currently live in Boulder, Colorado, but I am looking to relocate.</p>
     
-    <p>Portfolio</p>
+    <p class="section">Portfolio</p>
     
     <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#shatteredLords" role="tab">
@@ -44,22 +44,22 @@
         </div>
     </div>
     
-    <p>Skills</p>
+    <p class="section">Skills</p>
     
     <ul class="nav nav-tabs" role="tablist">
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#engines" role="tab">
-            <i class="fa fa-cog"></i><br>Engines
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#engine" role="tab">
+            <i class="fa fa-cog"></i> Engine
         </a></li>
         <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#graphics" role="tab">
-            <i class="fa fa-picture-o"></i><br>Graphics
+            <i class="fa fa-picture-o"></i> Graphics
         </a></li>
         <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tools" role="tab">
-            <i class="fa fa-wrench"></i><br>Tools
+            <i class="fa fa-wrench"></i> Tools
         </a></li>
     </ul>
     <div class="tab-content">
-        <div class="tab-pane fade" id="engines" role="tabpanel">
-            //engines content here
+        <div class="tab-pane fade" id="engine" role="tabpanel">
+            //engine content here
         </div>
         <div class="tab-pane fade" id="graphics" role="tabpanel">
             //graphics content here
@@ -71,13 +71,13 @@
     
     <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#science" role="tab">
-            <i class="fa fa-flask"></i><br>Science
+            <i class="fa fa-flask"></i> Science
         </a></li>
         <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#animation" role="tab">
-            <i class="fa fa-play"></i><br>Animation
+            <i class="fa fa-play"></i> Animation
         </a></li>
         <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#design" role="tab">
-            <i class="fa fa-pencil"></i><br>Design
+            <i class="fa fa-pencil"></i> Design
         </a></li>
     </ul>
     <div class="tab-content">
@@ -92,17 +92,17 @@
         </div>
     </div>
     
-    <p>Personality</p>
+    <p class="section">Personality</p>
     
     <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#relentless" role="tab">
-            <i class="fa fa-crosshairs"></i><br>Relentless
+            <i class="fa fa-crosshairs"></i> Relentless
         </a></li>
         <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#adaptable" role="tab">
-            <i class="fa fa-book"></i><br>Adaptable
+            <i class="fa fa-book"></i> Adaptable
         </a></li>
         <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#creative" role="tab">
-            <i class="fa fa-paint-brush"></i><br>Creative
+            <i class="fa fa-paint-brush"></i> Creative
         </a></li>
     </ul>
     <div class="tab-content">
@@ -116,6 +116,7 @@
             //creative content here
         </div>
     </div>
+    <hr>
     
     <p>You can check out my resume or GitHub below, or add me on steam.</p>
     <div id="links">
@@ -126,14 +127,13 @@
         <a href="http://steamcommunity.com/id/SmashMaster" title="Steam">
             <i class="fa fa-steam"></i></a>
     </div>
-    <p>Feel free to shoot me an email.</p>
-    <a href="mailto:sam@samrj.com" title="Email" id="email">sam@samrj.com</a>
+    <p>Feel free to shoot me an email: <a href="mailto:sam@samrj.com" title="Email" id="email">sam@samrj.com</a></p>
     <hr>
-    <div id="footer">
-        <p>&copy; 2015 Sam Johnson - This website is
-            <a href="http://github.com/SmashMaster/smashmaster.github.io" title="Site Source">open source</a>
-            and published under the MIT license.</p>
-</div>
+    <p id="footer">
+        &copy; 2016 Sam Johnson - This website is
+        <a href="http://github.com/SmashMaster/smashmaster.github.io" title="Site Source">open source</a>
+        and published under the MIT license.
+    </p>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
