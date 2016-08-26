@@ -7,45 +7,117 @@
 <head>
 <title>Sam's Website</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" type="text/css" href="style.css">
-<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Prociono">
-<link rel="stylesheet" type="text/css" href="nouislider.css">
-<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Raleway:300">
-<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Prociono"> 
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:300">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="style.css">
 </head>
 
-<body onload="main();">
-<div id="demo-background">
-    <div id="demo">
-        <div id="sun" class="orbiter">
-            <canvas id="sun-canvas"></canvas>
-            <div id="sun-loader" class="loader"></div>
+<body>
+<div id="body">
+    <p>Sam Johnson</p>
+    <p>Game Developer</p>
+    
+    <div>//demo here</div>
+    
+    <p>"What I cannot create, I do not understand."</p>
+    <p><a href="https://en.wikipedia.org/wiki/Richard_Feynman">-Richard Feynman</a></p>
+    <p>Hi! My name is Sam, and I'm a programmer and indie game developer. If you're reading this, I want to work for you! I currently live in Boulder, Colorado, but I am looking to relocate.</p>
+    
+    <p>Portfolio</p>
+    
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#shatteredLords" role="tab">
+            Shattered Lords
+        </a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#devilUtil" role="tab">
+            DevilUtil
+        </a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane fade" id="shatteredLords" role="tabpanel">
+            //shattered lords content here
         </div>
-        <div id="planet-moon-system" class="orbiter">
-            <div id="planet" class="orbiter">
-                <canvas id="planet-canvas"></canvas>
-                <div id="planet-loader" class="loader"></div>
-            </div>
-            <div id="moon" class="orbiter">
-                <canvas id="moon-canvas"></canvas>
-                <div id="moon-loader" class="loader"></div>
-            </div>
+        <div class="tab-pane fade" id="devilUtil" role="tabpanel">
+            //devilutil content here
         </div>
     </div>
-    <div id="sun-scale-slider"></div>
-</div>
-
-<div id="body">
-    <hr>
-    <div id="title">Sam Johnson</div>
-    <p>Hi. If you're looking for a developer, you've found your guy. Here's who I am.</p>
-    <ul>
-        <li>Expert in programming with Java, Python, JavaScript, and GLSL</li>
-        <li>Designer and artist in 2D and 3D</li>
-        <li>Web developer; made this website</li>
-        <li>Gamer and all-around nice guy</li>
+    
+    <p>Skills</p>
+    
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#engines" role="tab">
+            <i class="fa fa-cog"></i><br>Engines
+        </a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#graphics" role="tab">
+            <i class="fa fa-picture-o"></i><br>Graphics
+        </a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tools" role="tab">
+            <i class="fa fa-wrench"></i><br>Tools
+        </a></li>
     </ul>
-    <p>Check out my resume and GitHub below, or add me on Steam.</p>
+    <div class="tab-content">
+        <div class="tab-pane fade" id="engines" role="tabpanel">
+            //engines content here
+        </div>
+        <div class="tab-pane fade" id="graphics" role="tabpanel">
+            //graphics content here
+        </div>
+        <div class="tab-pane fade" id="tools" role="tabpanel">
+            //tools content here
+        </div>
+    </div>
+    
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#science" role="tab">
+            <i class="fa fa-flask"></i><br>Science
+        </a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#animation" role="tab">
+            <i class="fa fa-play"></i><br>Animation
+        </a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#design" role="tab">
+            <i class="fa fa-pencil"></i><br>Design
+        </a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane fade" id="science" role="tabpanel">
+            //science content here
+        </div>
+        <div class="tab-pane fade" id="animation" role="tabpanel">
+            //animation content here
+        </div>
+        <div class="tab-pane fade" id="design" role="tabpanel">
+            //design content here
+        </div>
+    </div>
+    
+    <p>Personality</p>
+    
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#relentless" role="tab">
+            <i class="fa fa-crosshairs"></i><br>Relentless
+        </a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#adaptable" role="tab">
+            <i class="fa fa-book"></i><br>Adaptable
+        </a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#creative" role="tab">
+            <i class="fa fa-paint-brush"></i><br>Creative
+        </a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane fade" id="relentless" role="tabpanel">
+            //relentless content here
+        </div>
+        <div class="tab-pane fade" id="adaptable" role="tabpanel">
+            //adaptable content here
+        </div>
+        <div class="tab-pane fade" id="creative" role="tabpanel">
+            //creative content here
+        </div>
+    </div>
+    
+    <p>You can check out my resume or GitHub below, or add me on steam.</p>
     <div id="links">
         <a href="resume/sam-johnson-resume.pdf" title="Resume">
             <i class="fa fa-file-text"></i></a>
@@ -61,12 +133,11 @@
         <p>&copy; 2015 Sam Johnson - This website is
             <a href="http://github.com/SmashMaster/smashmaster.github.io" title="Site Source">open source</a>
             and published under the MIT license.</p>
-    </div>
+</div>
 </div>
 
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script type="text/javascript" src="nouislider.min.js"></script>
-<script type="text/javascript" src="demo.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </body>
 
 </html>

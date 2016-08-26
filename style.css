@@ -1,266 +1,65 @@
 /* Author: Samuel Johnson (SmashMaster) */
-/* Copyright: 2014 Samuel Johnson */
+/* Copyright: 2016 Samuel Johnson */
 /* License: https://github.com/SmashMaster/smashmaster.github.io/blob/master/LICENSE */
 body {
     margin: 0;
-    background-color: #222;
+    background-color: #eee;
 }
-
-/* ORBITAL DEMO STYLES */
-
-#demo-background {
-    width: 100%;
-    max-width: 1024px;
-    margin: 0 auto;
-    padding-bottom: 24px;
-}
-
-#demo {
-    position: relative; /* Hack so that we can center stuff more easily. */
-    width: 100vmin;
-    height: 100vmin;
-    width/*\**/: 256px\9; /* IE8 hack. Won't see the demo, just the background.*/
-    height/*\**/: 256px\9;
-    width: 100vm; /* IE9 */
-    height: 100vm;
-    max-width: 75vh;
-    max-height: 75vh;
-    margin: 0 auto;
-    visibility: hidden;
-}
-
-.orbiter {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-}
-
-#sun {
-    width: 80%;
-    height: 80%;
-    margin: -40% 0 0 -40%;
-    
-    -webkit-animation: sunOrbit 15.5s linear infinite;
-       -moz-animation: sunOrbit 15.5s linear infinite;
-         -o-animation: sunOrbit 15.5s linear infinite;
-            animation: sunOrbit 15.5s linear infinite;
-}
-
-@-webkit-keyframes sunOrbit { from {
-    -webkit-transform: rotate(0deg)    translateX(-10%) rotate(0deg); } to {
-    -webkit-transform: rotate(-360deg) translateX(-10%) rotate(360deg); }
-}
-@-moz-keyframes sunOrbit { from {
-       -moz-transform: rotate(0deg)    translateX(-10%) rotate(0deg); } to {
-       -moz-transform: rotate(-360deg) translateX(-10%) rotate(360deg); }
-}
-@-o-keyframes sunOrbit { from {
-         -o-transform: rotate(0deg)    translateX(-10%) rotate(0deg); } to {
-         -o-transform: rotate(-360deg) translateX(-10%) rotate(360deg); }
-}
-@keyframes sunOrbit { from {
-            transform: rotate(0deg)    translateX(-10%) rotate(0deg); } to {
-            transform: rotate(-360deg) translateX(-10%) rotate(360deg); }
-}
-
-#planet-moon-system {
-    width: 20%;
-    height: 20%;
-    margin: -10% 0 0 -10%;
-    
-    -webkit-animation: planetMoonSystemOrbit 15.5s linear infinite;
-       -moz-animation: planetMoonSystemOrbit 15.5s linear infinite;
-         -o-animation: planetMoonSystemOrbit 15.5s linear infinite;
-            animation: planetMoonSystemOrbit 15.5s linear infinite;
-}
-
-@-webkit-keyframes planetMoonSystemOrbit { from {
-    -webkit-transform: rotate(0deg)    translateX(200%) rotate(0deg); } to {
-    -webkit-transform: rotate(-360deg) translateX(200%) rotate(360deg); }
-}
-@-moz-keyframes planetMoonSystemOrbit { from {
-       -moz-transform: rotate(0deg)    translateX(200%) rotate(0deg); } to {
-       -moz-transform: rotate(-360deg) translateX(200%) rotate(360deg); }
-}
-@-o-keyframes planetMoonSystemOrbit { from {
-         -o-transform: rotate(0deg)    translateX(200%) rotate(0deg); } to {
-         -o-transform: rotate(-360deg) translateX(200%) rotate(360deg); }
-}
-@keyframes planetMoonSystemOrbit { from {
-            transform: rotate(0deg)    translateX(200%) rotate(0deg); } to {
-            transform: rotate(-360deg) translateX(200%) rotate(360deg); }
-}
-
-#planet {
-    width: 80%;
-    height: 80%;
-    margin: -40% 0 0 -40%;
-    
-    -webkit-animation: planetOrbit 2.2s linear infinite;
-       -moz-animation: planetOrbit 2.2s linear infinite;
-         -o-animation: planetOrbit 2.2s linear infinite;
-            animation: planetOrbit 2.2s linear infinite;
-}
-
-@-webkit-keyframes planetOrbit { from {
-    -webkit-transform: rotate(0deg)    translateX(-10%) rotate(0deg); } to {
-    -webkit-transform: rotate(-360deg) translateX(-10%) rotate(360deg); }
-}
-@-moz-keyframes planetOrbit { from {
-       -moz-transform: rotate(0deg)    translateX(-10%) rotate(0deg); } to {
-       -moz-transform: rotate(-360deg) translateX(-10%) rotate(360deg); }
-}
-@-o-keyframes planetOrbit { from {
-         -o-transform: rotate(0deg)    translateX(-10%) rotate(0deg); } to {
-         -o-transform: rotate(-360deg) translateX(-10%) rotate(360deg); }
-}
-@keyframes planetOrbit { from {
-            transform: rotate(0deg)    translateX(-10%) rotate(0deg); } to {
-            transform: rotate(-360deg) translateX(-10%) rotate(360deg); }
-}
-
-#moon {
-    width: 24%;
-    height: 24%;
-    margin: -12% 0 0 -12%;
-    
-    -webkit-animation: moonOrbit 2.2s linear infinite;
-       -moz-animation: moonOrbit 2.2s linear infinite;
-         -o-animation: moonOrbit 2.2s linear infinite;
-            animation: moonOrbit 2.2s linear infinite;
-}
-
-@-webkit-keyframes moonOrbit { from {
-    -webkit-transform: rotate(0deg)    translateX(300%) rotate(0deg); } to {
-    -webkit-transform: rotate(-360deg) translateX(300%) rotate(360deg); }
-}
-@-moz-keyframes moonOrbit { from {
-       -moz-transform: rotate(0deg)    translateX(300%) rotate(0deg); } to {
-       -moz-transform: rotate(-360deg) translateX(300%) rotate(360deg); }
-}
-@-o-keyframes moonOrbit { from {
-         -o-transform: rotate(0deg)    translateX(300%) rotate(0deg); } to {
-         -o-transform: rotate(-360deg) translateX(300%) rotate(360deg); }
-}
-@keyframes moonOrbit { from {
-            transform: rotate(0deg)    translateX(300%) rotate(0deg); } to {
-            transform: rotate(-360deg) translateX(300%) rotate(360deg); }
-}
-
-/* LOADING SPINNER STYLES */
-.loader {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 100%;
-    height: 100%;
-    margin: -50% 0 0 -50%;
-    border-radius: 50%;
-    visibility: visible;
-}
-
-#sun-loader {
-    width: 25%;
-    height: 25%;
-    margin: -12.5% 0 0 -12.5%;
-    background-color: #FC0;
-}
-
-#planet-loader {background-color: #06F;}
-#moon-loader {background-color: #aaa;}
-
-#demo canvas {
-    display: block;
-    width: 100%;
-    height: 100%;
-    visibility: visible;
-}
-
-/* Load background image after spinner, so spinner shows up faster. */
-#demo-background {
-    background-image: url("images/demo_background.jpg");
-    background-size: cover;
-    background-repeat: no-repeat;
-    
-    -webkit-box-shadow: inset -128px 0px 64px -64px #222, inset 128px 0px 64px -64px #222;
-       -moz-box-shadow: inset -128px 0px 64px -64px #222, inset 128px 0px 64px -64px #222;
-            box-shadow: inset -128px 0px 64px -64px #222, inset 128px 0px 64px -64px #222;
-}
-
-#sun-scale-slider {
-    width: 192px;
-    max-width: 50vw;
-    margin: 0 auto;
-}
-
-/* MAIN STYLES */
 
 #body {
     font-family: "Prociono";
     font-size: 18px;
-    color: #bbb;
+    color: #000;
     width: 100%;
-    max-width: 1024px;
+    max-width: 768px;
     margin: 0 auto;
     text-align: center;
 }
 
-hr {
-    margin: 0px;
-    padding: 0px;
-    height: 2px;
-    border: none;
-    background-color: #bbb;
-    color: #bbb;
+.nav-tabs {
+    float:none;
+    display:inline-block;
+    border:0px;
 }
 
-#title {
-    font-family: "Raleway";
-    font-size: 48px;
-    color: #bbb;
+.nav-tabs > li,
+.nav-tabs > li.active {
+    width:128px;
+    height:128px;
+    padding:0px;
+    border:0px;
+    margin:0px;
 }
 
-p, ul {margin: 15px 10%;}
-ul {text-align: left;}
-li {margin: 5px 0px;}
+.nav-tabs > li > a:hover,
+.nav-tabs > li > a:focus,
+.nav-tabs > li > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus,
+.nav-tabs > li.active > a {
+    border-radius:0px;
+    padding:0px;
+    border:0px;
+    margin:0px;
+    width:100%;
+    height:100%;
+    text-align:center;
+    line-height: 32px;
+}
 
-/* LINKS AND EMAIL */
+.nav-tabs > li > a > .fa {
+    font-size: 40px;
+}
+
+.tab-pane {
+    background-color: #fff;
+}
 
 #links a {
     display: inline-block;
-    font-size: 48px;
-    line-height: 48px;
+    font-size: 64px;
+    line-height: 64px;
     vertical-align: bottom;
     padding: 0px;
     margin: 10px;
 }
-
-a:link    {color: #bbb;}
-a:visited {color: #bbb;}
-a:hover   {color: #fff;}
-a:active  {color: #fff;}
-
-#email {
-    display: inline-block;
-    padding: 0px 10px 5px 10px;
-    margin: 10px auto 15px auto;
-    border: 2px solid #bbb;
-    border-radius: 12px;
-    background-color: #444;
-}
-
-#email:hover   {background-color: #888; border-color: #fff;}
-#email:active  {background-color: #888; border-color: #fff;}
-
-/* FOOTER */
-
-#footer p {
-    font-size: 14px;
-    color: #666;
-    margin: 10px auto;
-}
-
-#footer a:link    {color: #777;}
-#footer a:visited {color: #777;}
-#footer a:hover   {color: #bbb;}
-#footer a:active  {color: #bbb;}
