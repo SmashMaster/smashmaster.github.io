@@ -141,7 +141,6 @@ hr {
 .nav-tabs > li.active > a {
     background-color: #fff;
     font-size: 16px;
-    -webkit-text-size-adjust:none;
     padding: 8px;
     border-radius: 4px 4px 0px 0px;
     margin: 0px;
