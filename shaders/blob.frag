@@ -10,29 +10,29 @@ uniform float u_aspect_ratio;
 varying vec2 v_pos;
 
 const int MAX_STEPS = 16;
-const float INTERSECT_EPSILON = 1.0/64.0;
+const float INTERSECT_EPSILON = 1.0/128.0;
 const vec3 CAMERA_POS = vec3(0.0, 0.0, 3.0);
 const float FLOOR_Y = -2.0;
 const vec3 LIGHT_DIR = normalize(vec3(-1.0, 1.0, 1.25));
-const float SHADOW_HARDNESS = 32.0;
+const float SHADOW_HARDNESS = 16.0;
+const mat3 BLOB_MATRIX = mat3(-0.8,  0.5,  1.5,
+                               1.5,  0.8, -0.5,
+                               0.5, -1.5,  0.8);
+const float BLOB_TIME_SCALE = 1.11111;
+const float BLOB_SCALE = 0.5;
 
 float dist_blob(vec3 pos) {
     float time = u_time;
-    float ts = 1.111111;
-    float scale = 1.0/2.0;
-    mat3 mat = mat3(-0.8, 0.5, 1.5,
-                    1.5, 0.8, -0.5,
-                    0.5, -1.5, 0.8);
-    
+    float ts = BLOB_TIME_SCALE;
+    float scale = BLOB_SCALE;
     float dist = length(pos) - 1.0;
-    for (int i=0; i<6; i++)
+    for (int i=0; i<5; i++)
     {
         dist += sin(pos.x + pos.y + pos.z + time)*scale;
-        pos *= mat;
-        time *= ts;
-        scale *= 0.5;
+        pos *= BLOB_MATRIX;
+        time *= BLOB_TIME_SCALE;
+        scale *= BLOB_SCALE;
     }
-
     return dist;
 }
 
@@ -71,6 +71,8 @@ vec3 frag_color() {
         
         t += d;
     }
+    
+    if (ray.y >= -0.125 || ray.x <= -0.25) return vec3(1.0);
     
     float t_floor = (FLOOR_Y - CAMERA_POS.y)/ray.y;
     vec3 p_floor = CAMERA_POS + ray*t_floor;
