@@ -9,8 +9,8 @@ uniform float u_aspect_ratio;
 
 varying vec2 v_pos;
 
-const int MAX_STEPS = 24;
-const float INTERSECT_EPSILON = 1.0/128.0;
+const int MAX_STEPS = 16;
+const float INTERSECT_EPSILON = 1.0/64.0;
 const vec3 CAMERA_POS = vec3(0.0, 0.0, 3.0);
 const float FLOOR_Y = -2.0;
 const vec3 LIGHT_DIR = normalize(vec3(-1.0, 1.0, 1.25));
@@ -25,7 +25,7 @@ float dist_blob(vec3 pos) {
                     0.5, -1.5, 0.8);
     
     float dist = length(pos) - 1.0;
-    for (int i=0; i<8; i++)
+    for (int i=0; i<6; i++)
     {
         dist += sin(pos.x + pos.y + pos.z + time)*scale;
         pos *= mat;
@@ -37,7 +37,7 @@ float dist_blob(vec3 pos) {
 }
 
 vec3 normal_blob(vec3 pos) {
-	vec2 delta = vec2(0.001, 0.0);
+	vec2 delta = vec2(0.01, 0.0);
 	return normalize(vec3(dist_blob(pos + delta.xyy) - dist_blob(pos - delta.xyy),
                           dist_blob(pos + delta.yxy) - dist_blob(pos - delta.yxy),
                           dist_blob(pos + delta.yyx) - dist_blob(pos - delta.yyx)));
