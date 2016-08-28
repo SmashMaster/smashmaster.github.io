@@ -52,6 +52,7 @@ function addEvent(elem, type, eventHandle) {
 
 var canvas;
 var width, height;
+var aspectRatio;
 var gl;
 var shader, fsqBuffer;
 
@@ -59,6 +60,7 @@ function onResize() {
     try {
         width = canvas.width();
         height = canvas.height();
+        aspectRatio = width/height;
         canvas[0].width = width;
         canvas[0].height = height;
     }
@@ -99,6 +101,7 @@ function animate() {
         gl.clear(gl.COLOR_BUFFER_BIT);
         
         gl.uniform1f(shader.uniformTimeLocation, time);
+        gl.uniform1f(shader.uniformAspectRatioLocation, aspectRatio);
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, fsqBuffer.numItems);
         
         window.requestAnimationFrame(animate);
@@ -136,7 +139,9 @@ function main() {
 
         shader.vertexPositionAttribute = gl.getAttribLocation(shader, "in_pos");
         gl.enableVertexAttribArray(shader.vertexPositionAttribute);
+        
         shader.uniformTimeLocation = gl.getUniformLocation(shader, "u_time");
+        shader.uniformAspectRatioLocation = gl.getUniformLocation(shader, "u_aspect_ratio");
         
         //INIT VERTEX BUFFER
         fsqBuffer = gl.createBuffer();
