@@ -5,7 +5,7 @@
 <html>
 
 <head>
-<title>Sam's Website</title>
+<title>Sam Johnson - Game Developer</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans"> 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:500">
@@ -14,14 +14,20 @@
 <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body onload="main();">
 <div id="body">
     <p id="title">Sam Johnson</p>
     <p id="subtitle">Game Developer</p>
+    
+    <div id="demoWrapper">
+        <canvas id="demo"></canvas>
+        <span id="spinner" class="glyphicon glyphicon-refresh"></span>
+    </div>
+    
     <p id="quote">"What I cannot create, I do not understand."</p>
     <p id="quoteSource"><a href="https://en.wikipedia.org/wiki/Richard_Feynman">-Richard Feynman</a></p>
     
-    <p>Hi! My name is Sam, and I'm a programmer and indie game developer.</p>
+    <p>Hi! My name is Sam. I'm a programmer and an indie game developer.</p>
     <p>I want to work for you! I currently live in Boulder, Colorado, but I am willing to relocate.</p>
     
     <p class="section">Portfolio</p>
@@ -41,7 +47,7 @@
             <p>I built its engine from scratch, with Java and OpenGL. I also did all the animation and modeling.</p>
         </div>
         <div class="tab-pane fade" id="devilUtil" role="tabpanel">
-            <p>Over the past few years, I've written a very complete game library in Java. It forms the backbone of Shattered Lords; and handles math, physics, animation, model loading, sound, window creation, and more. It's open source!</p>
+            <p>Over the past few years, I've written a very complete game library in Java. It forms the backbone of Shattered Lords; and handles math, physics, animation, model loading, sound, window creation, and&nbsp;more. It's open source!</p>
             <div style="text-align:center">
                 <a href="https://github.com/SmashMaster/DevilUtil" title="DevilUtil on GitHub">Browse DevilUtil on GitHub</a>
             </div>
@@ -51,8 +57,8 @@
     <p class="section">Skills</p>
     
     <ul class="nav nav-tabs" role="tablist">
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#engine" role="tab">
-            <i class="fa fa-cog"></i> Engine
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#code" role="tab">
+            <i class="fa fa-cog"></i> Code
         </a></li>
         <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#graphics" role="tab">
             <i class="fa fa-picture-o"></i> Graphics
@@ -62,11 +68,11 @@
         </a></li>
     </ul>
     <div class="tab-content">
-        <div class="tab-pane fade" id="engine" role="tabpanel">
-            <p>Having built my own engine, I have a thorough understanding of game programming. I can write each discrete system, from animation to collision to particles, and string them all together cohesively. My language of choice is Java; but I know C++, Python, Javascript, and Lua; and I'm always willing to learn.</p>
+        <div class="tab-pane fade" id="code" role="tabpanel">
+            <p>Having built my own engine, I have a thorough understanding of game programming. I can write each discrete system, from animation to collision to particles, and string them all together cohesively. My&nbsp;language of choice is Java; but I know C++, Python, Javascript, and Lua; and I'm always willing to&nbsp;learn.</p>
         </div>
         <div class="tab-pane fade" id="graphics" role="tabpanel">
-            <p>I have a passion for, and deep familiarity with graphics hardware and APIs, especially OpenGL. I'm obsessed with physically based rendering. For the ultra nerdy, here's a list of each graphics algorithm I have personally implemented, just for Shattered Lords.</p>
+            <p>I have a passion for, and deep familiarity with graphics hardware and APIs, especially OpenGL. I'm&nbsp;obsessed with physically based rendering. For the ultra nerdy, here's a list of each graphics algorithm I have personally implemented, just for Shattered Lords.</p>
             <ul class="list">
                 <li>Cascaded Shadow Maps</li>
                 <li>Horizon-Based Ambient Occlusion</li>
@@ -79,7 +85,9 @@
             </ul>
         </div>
         <div class="tab-pane fade" id="tools" role="tabpanel">
-            <p>I routinely write development tools to make it possible to create games. Whether the need is generating cubemaps, computing bounding volume hierarchies, or converting assets; I'll make it automatic and convenient. Also, I love version control, and use it religiously.</p>
+            <p>I routinely write development tools to make it possible to create games. Whether the need is rendering cubemaps, computing bounding volume hierarchies, or converting assets; I'll make it automatic and&nbsp;convenient.</p>
+            
+            <p>I also use third-party tools, of course. I love version control, and use it religiously&mdash;I currently use Git, and I've used Mercurial and SVN before.</p>
         </div>
     </div>
     
@@ -96,13 +104,13 @@
     </ul>
     <div class="tab-content">
         <div class="tab-pane fade" id="science" role="tabpanel">
-            <p>So often, games are all about simulation! In that vein, I am well versed in math, physics, optics, and more. Perhaps my astronomy knowledge could beef up your space game. Maybe you need a realistic model of atmospheric scattering... for your space game! Or maybe some special relativity will give you that edge in the highly competitive SPACE GAME market. I LIKE SPACE.</p>
+            <p>So often, games are all about simulation! In that vein, I am well versed in math, physics, optics, and&nbsp;more. Perhaps my astronomy knowledge could beef up your space game. Maybe you need a realistic model of atmospheric scattering... for your space game! Or maybe some special relativity will give you that edge in the highly competitive SPACE GAME market. I LIKE SPACE.</p>
         </div>
         <div class="tab-pane fade" id="animation" role="tabpanel">
             <p>I can set your world in motion. I have tons of practice making game animations in Blender. I've used other tools too, like 3ds Max. My technical knowledge complements this skill nicely.</p>
         </div>
         <div class="tab-pane fade" id="design" role="tabpanel">
-            <p>I made this website! Good design makes me very happy, and this passion rounds me out as a developer. I'm very experienced with Photoshop, HTML5, and CSS. Programmer art doesn't always have to be bad!</p>
+            <p>I made this website! Good design makes me very happy, and this passion rounds me out as a&nbsp;developer. I'm very experienced with Photoshop, HTML5, and CSS. Programmer art doesn't always have to be bad!</p>
         </div>
     </div>
     
@@ -122,15 +130,17 @@
     <div class="tab-content">
         <div class="tab-pane fade" id="relentless" role="tabpanel">
             <p>I will not stop until it works. At the end of the day, this is the quality you're really looking for. When it matters, I am someone who does not give up. Ever.</p>
+            <hr>
         </div>
         <div class="tab-pane fade" id="adaptable" role="tabpanel">
             <p>I will learn whatever it takes. That includes new languages, APIs, tools, or even crafts. I will consistently go outside my comfort zone in order to deliver results.</p>
+            <hr>
         </div>
         <div class="tab-pane fade" id="creative" role="tabpanel">
             <p>I will treat my work as art. I won't take shortcuts because I'm a perfectionist. This isn't always a good thing&mdash;sometimes I keep working on something when others would rightfully call it finished. Of course, quality takes time.</p>
+            <hr>
         </div>
     </div>
-    <hr>
     
     <p>You can check out my resume or GitHub below, or add me on steam.</p>
     <div id="links">
@@ -143,8 +153,8 @@
     </div>
     <p>Feel free to shoot me an email:</p>
     
-    <div style="text-align:center">
-        <a href="mailto:sam@samrj.com" title="Email" id="email">sam@samrj.com</a>
+    <div id="email">
+        <a href="mailto:sam@samrj.com" title="Email">sam@samrj.com</a>
     </div>
     
     <hr>
@@ -157,6 +167,7 @@
 
 <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="demo.js"></script>
 </body>
 
 </html>
