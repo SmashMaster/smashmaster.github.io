@@ -65,7 +65,7 @@ function onResize() {
         canvas[0].height = height;
     }
     catch (e) {
-        alert("Resize error: " + e);
+        //alert("Resize error: " + e);
     }
 }
 
@@ -107,7 +107,7 @@ function animate() {
         window.requestAnimationFrame(animate);
     }
     catch (e) {
-        alert("Animate error: " + e);
+        //alert("Animate error: " + e);
     }
 }
 
@@ -167,7 +167,6 @@ function main() {
     }
     catch (e) {
         $("#demoWrapper").hide();
-        
-        alert("Load error in main(): " + e);
+        //alert("Load error in main(): " + e);
     }
 }
