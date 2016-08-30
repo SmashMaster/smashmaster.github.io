@@ -2,7 +2,7 @@
 /* Copyright: 2016 Samuel Johnson */
 /* License: https://github.com/SmashMaster/smashmaster.github.io/blob/master/LICENSE */
 
-precision lowp float;
+precision mediump float;
 
 uniform samplerCube u_cubemap;
 
