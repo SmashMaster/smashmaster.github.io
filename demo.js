@@ -89,12 +89,12 @@ function makeCubemap() {
     gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_R, gl.CLAMP_TO_EDGE);
 
-    loadFace(gl.TEXTURE_CUBE_MAP_POSITIVE_X, "/cubemap/posx.png");
-    loadFace(gl.TEXTURE_CUBE_MAP_NEGATIVE_X, "/cubemap/negx.png");
-    loadFace(gl.TEXTURE_CUBE_MAP_POSITIVE_Y, "/cubemap/posy.png");
-    loadFace(gl.TEXTURE_CUBE_MAP_NEGATIVE_Y, "/cubemap/negy.png");
-    loadFace(gl.TEXTURE_CUBE_MAP_POSITIVE_Z, "/cubemap/posz.png");
-    loadFace(gl.TEXTURE_CUBE_MAP_NEGATIVE_Z, "/cubemap/negz.png");
+    loadFace(gl.TEXTURE_CUBE_MAP_POSITIVE_X, "cubemap/posx.png");
+    loadFace(gl.TEXTURE_CUBE_MAP_NEGATIVE_X, "cubemap/negx.png");
+    loadFace(gl.TEXTURE_CUBE_MAP_POSITIVE_Y, "cubemap/posy.png");
+    loadFace(gl.TEXTURE_CUBE_MAP_NEGATIVE_Y, "cubemap/negy.png");
+    loadFace(gl.TEXTURE_CUBE_MAP_POSITIVE_Z, "cubemap/posz.png");
+    loadFace(gl.TEXTURE_CUBE_MAP_NEGATIVE_Z, "cubemap/negz.png");
 }
 
 function reqSource(url) {
@@ -116,8 +116,8 @@ function loadShader(src, type) {
 }
 
 function makeShader() {
-    var vertSource = reqSource("/shaders/blob.vert");
-    var fragSource = reqSource("/shaders/blob.frag");
+    var vertSource = reqSource("shaders/blob.vert");
+    var fragSource = reqSource("shaders/blob.frag");
     var fragmentShader = loadShader(fragSource, gl.FRAGMENT_SHADER);
     var vertexShader = loadShader(vertSource, gl.VERTEX_SHADER);
 
