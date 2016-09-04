@@ -11,8 +11,8 @@ uniform float u_aspect_ratio;
 
 varying vec2 v_pos;
 
-const int MAX_STEPS = 48;
-const float INTERSECT_EPSILON = 1.0/512.0;
+const int MAX_STEPS = 16;
+const float INTERSECT_EPSILON = 1.0/256.0;
 const vec3 CAMERA_POS = vec3(0.0, 0.0, 2.0);
 const float FLOOR_Y = -2.0;
 const vec3 LIGHT_DIR = normalize(vec3(-1.0, 1.0, 1.25));
@@ -21,11 +21,13 @@ const float FRESNEL_R0 = 0.03;
 const float HIGHLIGHT_BRIGHTNESS = 0.75;
 
 float dist_sphere(vec3 pos, float scale) {
+    if (scale > 3.5) return -16.0;
     scale *= 0.675;
     return length(pos) - scale;
 }
 
 float dist_tetra(vec3 pos, float scale) {
+    if (scale > 3.5) return -16.0;
     scale *= 0.25;
     float dist = dot(pos, vec3(0.0, -1.0, 0.0)) - scale;
     dist = max(dist, dot(pos, vec3(0.81650615, 0.33330014, 0.47141153)) - scale);
@@ -34,11 +36,13 @@ float dist_tetra(vec3 pos, float scale) {
 }
 
 float dist_hexa(vec3 pos, float scale) {
+    if (scale > 3.5) return -16.0;
     scale *= 0.5;
     return length(max(abs(pos) - scale, 0.0));
 }
 
 float dist_octa(vec3 pos, float scale) {
+    if (scale > 3.5) return -16.0;
     scale *= 0.5773445;
     float dist = dot(pos, vec3(-0.5773503, -0.5773503, -0.5773503)) - scale;
     dist = max(dist, dot(pos, vec3(-0.5773503, -0.5773503, 0.5773503)) - scale);
@@ -51,6 +55,7 @@ float dist_octa(vec3 pos, float scale) {
 }
 
 float dist_dodeca(vec3 pos, float scale) {
+    if (scale > 3.5) return -16.0;
     scale *= 0.6317063;
     float dist = dot(pos, vec3(0.0, 0.0, 1.0)) - scale;
     dist = max(dist, dot(pos, vec3(0.27639428, -0.8506485, 0.44721735)) - scale);
@@ -67,6 +72,7 @@ float dist_dodeca(vec3 pos, float scale) {
 }
 
 float dist_icosa(vec3 pos, float scale) {
+    if (scale > 3.5) return -16.0;
     scale *= 0.5;
     float dist = dot(pos, vec3(0.14907, -0.45879, -0.63148)) - scale;
     dist = max(dist, dot(pos, vec3(-0.39027, -0.28355, -0.63148)) - scale);
