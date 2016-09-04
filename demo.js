@@ -56,6 +56,7 @@ var aspectRatio;
 var gl;
 var texture;
 var shader, fsqBuffer;
+var loadCount = 0;
 
 function onResize() {
     try {
@@ -74,6 +75,7 @@ function loadFace(target, url) {
     var image = new Image();
     $(image).one('load', function() {
         gl.texImage2D(target, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
+        run();
     });
     image.src = url;
 
@@ -187,6 +189,17 @@ function animate() {
     }
 }
 
+function run() {
+    loadCount++;
+    if (loadCount < 7) return;
+
+    canvas.fadeIn("slow", function() {
+        $("#spinner").fadeOut("fast");
+    });
+
+    window.requestAnimationFrame(animate);
+}
+
 function main() {
     try {
         canvas = $("#demo");
@@ -200,11 +213,7 @@ function main() {
         makeShader();
         makeVBO();
 
-        canvas.fadeIn("slow", function() {
-            $("#spinner").fadeOut("fast");
-        });
-
-        window.requestAnimationFrame(animate);
+        run();
     }
     catch (e) {
         $("#demoWrapper").hide();
