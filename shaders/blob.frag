@@ -11,8 +11,8 @@ uniform float u_aspect_ratio;
 
 varying vec2 v_pos;
 
-const int MAX_STEPS = 128;
-const float INTERSECT_EPSILON = 1.0/2048.0;
+const int MAX_STEPS = 48;
+const float INTERSECT_EPSILON = 1.0/512.0;
 const vec3 CAMERA_POS = vec3(0.0, 0.0, 2.0);
 const float FLOOR_Y = -2.0;
 const vec3 LIGHT_DIR = normalize(vec3(-1.0, 1.0, 1.25));
