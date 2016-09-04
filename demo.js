@@ -50,6 +50,8 @@ function addEvent(elem, type, eventHandle) {
     }
 }
 
+var DEBUG = false;
+
 var canvas;
 var width, height;
 var aspectRatio;
@@ -67,15 +69,21 @@ function onResize() {
         canvas[0].height = height;
     }
     catch (e) {
-        //alert("Resize error: " + e);
+        if (DEBUG) alert("Resize error: " + e);
+        else throw e;
     }
 }
 
 function loadFace(target, url) {
     var image = new Image();
     $(image).one('load', function() {
-        gl.texImage2D(target, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
-        run();
+        try {
+            gl.texImage2D(target, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
+            run();
+        } catch (e) {
+            if (DEBUG) alert("Face load error: " + e);
+            else throw e;
+        }
     });
     image.src = url;
 
@@ -185,7 +193,8 @@ function animate() {
         window.requestAnimationFrame(animate);
     }
     catch (e) {
-        //alert("Animate error: " + e);
+        if (DEBUG) alert("Animate error: " + e);
+        else throw e;
     }
 }
 
@@ -217,6 +226,8 @@ function main() {
     }
     catch (e) {
         $("#demoWrapper").hide();
-        //alert("Load error in main(): " + e);
+
+        if (DEBUG) alert("Load error in main(): " + e);
+        else throw e;
     }
 }
