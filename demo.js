@@ -155,6 +155,12 @@ function makeVBO() {
     gl.vertexAttribPointer(shader.vertexPositionAttribute, fsqBuffer.itemSize, gl.FLOAT, false, 0, 0);
 }
 
+function checkVisible(elm) {
+    var rect = elm.getBoundingClientRect();
+    var viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
+    return !(rect.bottom < 0 || rect.top - viewHeight >= 0);
+}
+
 var startTime = 0;
 
 function animate() {
@@ -165,12 +171,14 @@ function animate() {
     var time = (currentTime - startTime)/1000.0;
 
     try {
-        gl.viewport(0, 0, width, height);
-        gl.clear(gl.COLOR_BUFFER_BIT);
+        if (checkVisible(canvas[0])) {
+            gl.viewport(0, 0, width, height);
+            gl.clear(gl.COLOR_BUFFER_BIT);
 
-        gl.uniform1f(shader.uniformTimeLocation, time);
-        gl.uniform1f(shader.uniformAspectRatioLocation, aspectRatio);
-        gl.drawArrays(gl.TRIANGLE_STRIP, 0, fsqBuffer.numItems);
+            gl.uniform1f(shader.uniformTimeLocation, time);
+            gl.uniform1f(shader.uniformAspectRatioLocation, aspectRatio);
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0, fsqBuffer.numItems);
+        }
 
         window.requestAnimationFrame(animate);
     }
