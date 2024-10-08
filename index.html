@@ -17,167 +17,36 @@
 <meta name="theme-color" content="#ffffff">
 
 <!-- CSS -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:500">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Raleway:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="style.css">
 </head>
 
-<body onload="main();">
+<body>
 <div id="body">
     <p id="title">Sam Johnson</p>
-    <p id="subtitle">Game Developer</p>
+    
+    <div class="video"><iframe src="https://www.youtube.com/embed/eZLJIzMPJOI?si=b_WsBLw_O4-P77nj" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></iframe></div>
+    
+    <p id="subtitle">I Play Piano and Write Code</p>
+    <p>I do lots of other things too, like climbing stairs too fast and nearly tripping, or putting both sweetener and sugar in my coffee. But there's no reason to put those things on my website where the entire human species can read them. Oh well.</p>
 
-    <div id="demoWrapper">
-        <canvas id="demo"></canvas>
-        <span id="spinner" class="glyphicon glyphicon-refresh"></span>
-    </div>
-
-    <p id="quote">"What I cannot create, I do not understand."</p>
-    <p id="quoteSource"><a href="https://en.wikipedia.org/wiki/Richard_Feynman">-Richard Feynman</a></p>
-
-    <p>Hi! My name is Sam. I'm a programmer and an indie game developer.</p>
-    <p>I want to work for you! I currently live in Boulder, Colorado, but I am willing to relocate.</p>
-
-    <p class="section">Portfolio</p>
-
-    <ul class="nav nav-tabs" role="tablist">
-        <li class="nav-item active"><a class="nav-link" data-toggle="tab" href="#shatteredLords" role="tab">
-            Shattered Lords
-        </a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#devilUtil" role="tab">
-            DevilUtil
-        </a></li>
-    </ul>
-    <div class="tab-content">
-        <div class="tab-pane fade in active" id="shatteredLords" role="tabpanel">
-            <p>I'm working on a fantasy action RPG called Shattered Lords. It's about uncovering the mysteries of a long dead crystal kingdom, overcoming madness, and surviving in the face of all odds. Check out the latest development video:</p>
-            <div class="video"><iframe allowFullScreen="allowFullScreen" src="https://www.youtube.com/embed/t_gFeAwPM8g" frameborder="0"></iframe></div>
-            <p>I built its engine from scratch, with Java and OpenGL. I also did all the animation and modeling myself, in Blender.</p>
-        </div>
-        <div class="tab-pane fade" id="devilUtil" role="tabpanel">
-            <p>Over the past few years, I've written a very complete game library in Java. It forms the backbone of Shattered Lords; and handles math, physics, animation, model loading, sound, window creation, and&nbsp;more. It's open source!</p>
-            <div style="text-align:center">
-                <a href="https://github.com/SmashMaster/DevilUtil" title="DevilUtil on GitHub">Browse DevilUtil on GitHub</a>
-            </div>
-        </div>
-    </div>
-
-    <p class="section">Skills</p>
-
-    <ul class="nav nav-tabs" role="tablist">
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#code" role="tab">
-            <i class="fa fa-cog"></i> Code
-        </a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#graphics" role="tab">
-            <i class="fa fa-picture-o"></i> Graphics
-        </a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tools" role="tab">
-            <i class="fa fa-wrench"></i> Tools
-        </a></li>
-    </ul>
-    <div class="tab-content">
-        <div class="tab-pane fade" id="code" role="tabpanel">
-            <p>Having built my own engine, I have a thorough understanding of game programming. I've written systems ranging from collision detection to skeletal animation; optimized and tested them; and&nbsp;weaved them together into a cohesive, modular whole.</p>
-            <p>My language of choice is <b>Java</b>; but I know <b>C++</b>, <b>Python</b>, <b>Javascript</b>, and <b>Lua</b>; and I'm always willing to&nbsp;learn.</p>
-        </div>
-        <div class="tab-pane fade" id="graphics" role="tabpanel">
-            <p>I have a passion for, and deep familiarity with graphics hardware and APIs, especially <b>OpenGL</b>. I'm&nbsp;obsessed with physically based rendering. For the ultra nerdy, here's a list of each graphics algorithm I personally implemented, just for Shattered Lords.</p>
-            <ul class="list">
-                <li>Cascaded Shadow Maps</li>
-                <li>Horizon-Based Ambient Occlusion</li>
-                <li>Anamorphic Bloom</li>
-                <li>Screen-Space Reflections</li>
-                <li>Reconstruction Motion Blur</li>
-                <li>Dithering</li>
-                <li>Tonemapping</li>
-                <li>Fast Approximate Anti-Aliasing</li>
-            </ul>
-        </div>
-        <div class="tab-pane fade" id="tools" role="tabpanel">
-            <p>I routinely write development tools to make it possible to create games. Whether the need is rendering cubemaps, computing bounding volume hierarchies, or converting assets; I'll make it automatic and&nbsp;convenient.</p>
-
-            <p>Also, I love version control, and use it religiously&mdash;I use <b>Git</b>, and I've used <b>Mercurial</b> and <b>SVN</b> before.</p>
-        </div>
-    </div>
-
-    <ul class="nav nav-tabs" role="tablist">
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#science" role="tab">
-            <i class="fa fa-flask"></i> Science
-        </a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#animation" role="tab">
-            <i class="fa fa-play"></i> Animation
-        </a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#design" role="tab">
-            <i class="fa fa-pencil"></i> Design
-        </a></li>
-    </ul>
-    <div class="tab-content">
-        <div class="tab-pane fade" id="science" role="tabpanel">
-            <p>So often, games are all about simulation! In that vein, I am well versed in physics, optics, and more. Perhaps my astronomy knowledge could beef up your space game. Maybe you need a realistic model of atmospheric scattering... for your space game! Or maybe some special relativity will give you that edge in the highly competitive SPACE GAME market. I LIKE SPACE.</p>
-            <p>The flip side of science is math. I have extensive knowledge in <b>linear algebra</b>, <b>numerical analysis</b>, <b>geometry</b>, and a dash of <b>calculus</b>.
-        </div>
-        <div class="tab-pane fade" id="animation" role="tabpanel">
-            <p>I can set your world in motion. I have tons of practice making game animations in <b>Blender</b>. I've also used <b>3ds Max</b>. My technical knowledge complements this skill nicely. I can make the animations; write the tools to convert and process them; and write the engine that blends, plays, and renders them.</p>
-        </div>
-        <div class="tab-pane fade" id="design" role="tabpanel">
-            <p>I made this website! Good design makes me very happy, and this passion rounds me out as a&nbsp;developer. I'm very experienced with <b>Photoshop</b>, <b>HTML5</b>, and <b>CSS</b>. Programmer art doesn't always have to be bad!</p>
-        </div>
-    </div>
-
-    <p class="section">Personality</p>
-
-    <ul class="nav nav-tabs" role="tablist">
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#relentless" role="tab">
-            <i class="fa fa-crosshairs"></i> Relentless
-        </a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#adaptable" role="tab">
-            <i class="fa fa-book"></i> Adaptable
-        </a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#creative" role="tab">
-            <i class="fa fa-paint-brush"></i> Creative
-        </a></li>
-    </ul>
-    <div class="tab-content">
-        <div class="tab-pane fade" id="relentless" role="tabpanel">
-            <p>I will not stop until it works. At the end of the day, this is the quality you're really looking for. When it matters, I am someone who does not give up. Ever.</p>
-            <hr>
-        </div>
-        <div class="tab-pane fade" id="adaptable" role="tabpanel">
-            <p>I will learn whatever it takes. That includes new languages, APIs, tools, or even entire crafts. I will consistently go outside my comfort zone in order to deliver results.</p>
-            <hr>
-        </div>
-        <div class="tab-pane fade" id="creative" role="tabpanel">
-            <p>I will treat my work as art. I won't take shortcuts because I'm a perfectionist. This isn't always a good thing&mdash;sometimes I keep working on something when others would rightfully call it finished. Of course, quality takes time.</p>
-            <hr>
-        </div>
-    </div>
-
-    <p>Below you can find my resume and my GitHub page.</p>
     <div id="links">
-        <a href="resume/sam-johnson-resume.pdf" title="Resume">
-            <i class="fa fa-file-text"></i></a>
+        <a href="https://www.youtube.com/@SamRJ-Piano" title="Youtube">
+            <i class="fa fa-youtube-play"></i></a>
         <a href="https://github.com/SmashMaster" title="GitHub">
             <i class="fa fa-github"></i></a>
+        <a href="https://www.facebook.com/profile.php?id=61566750757975" title="Facebook">
+            <i class="fa fa-facebook"></i></a>
+        <a href="https://x.com/SamRJPiano" title="Twitter">
+            <i class="fa fa-twitter"></i></a>
     </div>
-    <p>Feel free to shoot me an email:</p>
-
+    
     <div id="email">
-        <a href="mailto:sam@samrj.com" title="sam@samrj.com">sam@samrj.com</a>
+        Email: <a href="mailto:sam@samrj.com" title="sam@samrj.com">sam@samrj.com</a>
     </div>
-
-    <hr>
-    <p id="footer">
-        &copy; 2016 Sam Johnson - This website is
-        <a href="https://github.com/SmashMaster/smashmaster.github.io" title="Site Source">open source</a>
-        and published under the MIT license.
-    </p>
 </div>
-
-<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<script src="demo.js"></script>
 </body>
-
 </html>
